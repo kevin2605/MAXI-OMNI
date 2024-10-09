@@ -1,0 +1,26 @@
+{
+  "data": [ 
+    {
+      "logId": "1",
+      "Tanggal": "2024-05-16",
+      "Waktu": "15:36:45",
+      "Divisi": "Landing Page",
+      "User": "Kevin",
+      "Action": "Login",
+      "Status": "Success",
+      "Message": "User login successfully",
+      "Databse": "ptindopackmultiperkasa"
+    },
+    {
+      "logId": "2",
+      "Tanggal": "2024-05-16",
+      "Waktu": "15:38:03",
+      "Divisi": "Barang",
+      "User": "Kevin",
+      "Action": "Create",
+      "Status": "Success",
+      "Message": "Barang baru berhasil ditambahkan ke dalam database",
+      "Databse": "ptindopackmultiperkasa"
+    }
+  ]
+}

@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <?php
+    include "../headcontent.php";
+    session_start();
+    include "../DBConnection.php";
+    $userID = $_COOKIE['UserID'];
+
+    $query = "SELECT rPMasuk FROM useraccesslevel WHERE UserID = '$userID'";
+    $result = mysqli_query($conn, $query);
+    $row = mysqli_fetch_assoc($result);
+
+    $hasCRUDAccess = strpos($row['rPMasuk'], 'C') !== false || // Create
+        strpos($row['rPMasuk'], 'R') !== false || // Read
+        strpos($row['rPMasuk'], 'U') !== false || // Update
+        strpos($row['rPMasuk'], 'D') !== false;  // Delete
+    
+    $accessDenied = !$hasCRUDAccess;
+    ?>
+
+    <!-- AJAX SCRIPT and DYNAMIC TABLE -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js"></script>
+    <!-- script sweetaler2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- use xlsx.mini.min.js from version 0.20.3 -->
+    <script lang="javascript" src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.mini.min.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script>
+        function showDropdown() {
+            $('#productDropdown').show();
+        }
+
+        function filterFunction() {
+            var input, filter, ul, li, a, i;
+            input = document.getElementById("productname");
+            filter = input.value.toLowerCase();
+            ul = document.getElementById("productDropdown");
+            li = ul.getElementsByTagName("li");
+            ul.style.display = "block";
+            for (i = 0; i < li.length; i++) {
+                a = li[i].innerText;
+                if (a.toLowerCase().indexOf(filter) > -1) {
+                    li[i].style.display = "";
+                } else {
+                    li[i].style.display = "none";
+                }
+            }
+        }
+
+        $(document).ready(function () {
+            $('#productDropdown').on('click', 'li', function () {
+                $('#productname').val($(this).text());
+                $('#productDropdown').hide();
+            });
+
+            $(document).click(function (event) {
+                if (!$(event.target).closest('#productname, #productDropdown').length) {
+                    $('#productDropdown').hide();
+                }
+            });
+        });
+    </script>
+
+    <script>
+        /*
+          function submitFilter(){
+              var customer = document.getElementById("customer").value;
+              var startdate = document.getElementById("startdate").value;
+              var enddate = document.getElementById("enddate").value;
+              var startdatefaktur = document.getElementById("startdatefaktur").value;
+              var enddatefaktur = document.getElementById("enddatefaktur").value;
+    
+              $.ajax({
+                  type: "POST",
+                  url: "../Process/reportInvoice.php", 
+                  data: "customer="+customer+"&startdate="+startdate+"&enddate="+enddate+"&startdatefaktur="+startdatefaktur+"&enddatefaktur="+enddatefaktur,
+                  success: function(result){
+                      $("#export-button tbody tr").remove(); 
+                      var res = JSON.parse(result);
+                      console.log(res.length);
+                      $.each(res, function(index, value) {
+                          let dpp = value.TotalInvoice/1.11;
+                          let ppn = value.TotalInvoice - dpp;
+                          $('#export-button tbody').append("<tr><td>"+ value.InvoiceID +"</td><td>"+ value.CreatedOn.substring(0,10) +"</td><td>"+ value.CustName +"</td><td>"+ value.NPWPNum +"</td><td>"+ value.TaxInvoiceNumber +"</td><td>"+ value.TaxInvoiceDate +"</td><td>"+ numeral(value.TotalInvoice).format("0,0.00") +"</td><td> 0 </td><td>"+ numeral(value.TotalInvoice).format("0,0.00") +"</td><td>"+ numeral(dpp).format("0,0.00") +"</td><td>"+ numeral(ppn).format("0,0.00") +"</td><td>"+ numeral(value.TotalInvoice).format("0,0.00") +"</td></tr>");
+                      });
+                      if(res.length < 1){
+                          Swal.fire({
+                              position: "center",
+                              icon: "error",
+                              title: "Pencarian tidak ditemukan!",
+                              showConfirmButton: false,
+                              timer:2000
+                          });
+                      }
+                  }
+              });
+          }*/
+    </script>
+</head>
+<style>
+    .hidden {
+        display: none;
+    }
+</style>
+
+<body>
+    <?php if ($accessDenied): ?>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script>
+            window.addEventListener('DOMContentLoaded', (event) => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Akses Ditolak',
+                    text: 'Anda tidak memiliki akses.',
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'OK'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = '../Dashboard/'; // Redirect ke halaman lain atau homepage
+                    }
+                });
+            });
+        </script>
+        <!-- loader starts-->
+        <div class="loader-wrapper">
+            <div class="theme-loader">
+                <div class="loader-p"></div>
+            </div>
+        </div>
+        <!-- loader ends-->
+        <!-- tap on top starts-->
+        <div class="tap-top"><i data-feather="chevrons-up"></i></div>
+        <!-- tap on tap ends-->
+        <!-- page-wrapper Start-->
+        <div class="page-wrapper compact-wrapper" id="pageWrapper">
+            <!-- Page Header Start-->
+            <div class="page-header">
+
+                <?php include "../topmenu.php"; ?>
+
+            </div>
+            <!-- Page Header Ends-->
+            <!-- Page Body Start-->
+            <div class="page-body-wrapper">
+                <!-- Page Sidebar Start-->
+
+                <?php include "../sidemenu.php"; ?>
+
+                <!-- Page Sidebar Ends-->
+                <div class="page-body">
+                    <div class="container-fluid">
+                        <div class="page-title">
+                            <div class="row">
+                                <div class="col-sm-6 ps-0">
+                                    <h3>LAPORAN PRODUK KELUAR</h3>
+                                </div>
+                                <div class="col-sm-6 pe-0">
+                                    <ol class="breadcrumb">
+                                        <li class="breadcrumb-item"><a href="index.html">
+                                                <svg class="stroke-icon">
+                                                    <use href="../../assets/svg/icon-sprite.svg#stroke-home"></use>
+                                                </svg></a></li>
+                                        <li class="breadcrumb-item">Report</li>
+                                        <li class="breadcrumb-item">Produk</li>
+                                        <li class="breadcrumb-item">Keluar</li>
+                                    </ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Container-fluid starts-->
+                    <div class="container-fluid <?php echo $accessDenied ? 'hidden' : ''; ?>">
+                    <?php endif; ?>
+                    <div class="loader-wrapper">
+                        <div class="theme-loader">
+                            <div class="loader-p"></div>
+                        </div>
+                    </div>
+                    <!-- loader ends-->
+                    <!-- tap on top starts-->
+                    <div class="tap-top"><i data-feather="chevrons-up"></i></div>
+                    <!-- tap on tap ends-->
+                    <!-- page-wrapper Start-->
+                    <div class="page-wrapper compact-wrapper" id="pageWrapper">
+                        <!-- Page Header Start-->
+                        <div class="page-header">
+
+                            <?php include "../topmenu.php"; ?>
+
+                        </div>
+                        <!-- Page Header Ends-->
+                        <!-- Page Body Start-->
+                        <div class="page-body-wrapper">
+                            <!-- Page Sidebar Start-->
+
+                            <?php include "../sidemenu.php"; ?>
+
+                            <!-- Page Sidebar Ends-->
+                            <div class="page-body">
+                                <div class="container-fluid">
+                                    <div class="page-title">
+                                        <div class="row">
+                                            <div class="col-sm-6 ps-0">
+                                                <h3>LAPORAN PRODUK KELUAR</h3>
+                                            </div>
+                                            <div class="col-sm-6 pe-0">
+                                                <ol class="breadcrumb">
+                                                    <li class="breadcrumb-item"><a href="index.html">
+                                                            <svg class="stroke-icon">
+                                                                <use
+                                                                    href="../../assets/svg/icon-sprite.svg#stroke-home">
+                                                                </use>
+                                                            </svg></a></li>
+                                                    <li class="breadcrumb-item">Report</li>
+                                                    <li class="breadcrumb-item">Produk</li>
+                                                    <li class="breadcrumb-item">Keluar</li>
+                                                </ol>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h3>FILTER</h3>
+                                            </div>
+                                            <div class="card-body">
+                                                <form class="form theme-form" method="POST">
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="row">
+                                                                <div class="mb-3 row">
+                                                                    <label class="col-sm-2">Nama Produk</label>
+                                                                    <div class="col-sm-10">
+                                                                        <input class="form-control" id="productname"
+                                                                            name="productname" type="text"
+                                                                            autocomplete="off" onfocus="showDropdown()"
+                                                                            oninput="filterFunction()">
+                                                                        <ul id="productDropdown" class="list-unstyled">
+                                                                            <?php
+                                                                            include "../DBConnection.php";
+                                                                            $query = "SELECT ProductName FROM product WHERE Status='1'";
+                                                                            $result = mysqli_query($conn, $query);
+                                                                            while ($row = mysqli_fetch_assoc($result)) {
+                                                                                echo '<li>' . htmlspecialchars($row['ProductName']) . '</li>';
+                                                                            }
+                                                                            ?>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="mb-3 row">
+                                                                    <label class="col-sm-2">Tanggal Awal</label>
+                                                                    <div class="col-sm-10">
+                                                                        <input class="form-control" id="startdate"
+                                                                            name="startdate" type="date">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="mb-3 row">
+                                                                    <label class="col-sm-2">Tanggal Akhir</label>
+                                                                    <div class="col-sm-10">
+                                                                        <input class="form-control" id="enddate"
+                                                                            name="enddate" type="date">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!--<button class="btn btn-primary" type="button" onclick="submitFilter()"><i class="fa fa-search"></i> Search</button>-->
+                                                    <button class="btn btn-primary" name="btnSearch"><i
+                                                            class="fa fa-search"></i>
+                                                        Search</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h3>REPORT</h3>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="dt-ext table-responsive custom-scrollbar">
+                                                    <table class="display" id="export-button">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>KODE</th>
+                                                                <th>NAMA</th>
+                                                                <th>TANGGAL</th>
+                                                                <th>KELUAR</th>
+                                                                <th>NOMOR</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <?php
+                                                            $startDate = isset($_POST['startdate']) ? $_POST['startdate'] : '';
+                                                            $endDate = isset($_POST['enddate']) ? $_POST['enddate'] : '';
+                                                            $produkname = isset($_POST['productname']) ? $_POST['productname'] : '';
+                                                            $queryReception = "SELECT r.ProductCD, r.Date, r.ProductCD, m.ProductName, r.FlowOut, r.ReferenceKey 
+                                                    FROM productflowhistory r
+                                                    JOIN product m ON r.ProductCD = m.ProductCD
+                                                    WHERE r.FlowOut > 0";
+                                                            if (isset($_POST["startdate"]) && $_POST["startdate"] != '') {
+                                                                $queryReception .= " AND substr(r.Date,1,10) >= '" . $_POST["startdate"] . "'";
+                                                            }
+                                                            if (isset($_POST["enddate"]) && $_POST["enddate"] != '') {
+                                                                $queryReception .= " AND substr(r.Date,1,10) <= '" . $_POST["enddate"] . "'";
+                                                            }
+
+
+                                                            if ($produkname != '') {
+                                                                $produkname = mysqli_real_escape_string($conn, $produkname);
+                                                                $queryReception .= " AND m.ProductName LIKE '%" . $produkname . "%'";
+                                                            }
+
+                                                            $resultReception = mysqli_query($conn, $queryReception);
+                                                            while ($rowReception = mysqli_fetch_array($resultReception)) {
+                                                                echo '<tr>
+                                                            <td>' . $rowReception["ProductCD"] . '</td>
+                                                            <td>' . $rowReception["ProductName"] . '</td>
+                                                            <td>' . substr($rowReception["Date"], 0, 10) . '</td>
+                                                             <td>' . $rowReception["FlowOut"] . ' </td>
+                                                            <td>' . $rowReception["ReferenceKey"] . '</td>
+                                                        </tr>';
+                                                            }
+                                                            ?>
+                                                            <!-- APPEND BY AJAX -->
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Container-fluid Ends-->
+                        <!-- footer start-->
+                        <footer class="footer">
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-6 p-0 footer-copyright">
+                                        <p class="mb-0">Copyright 2023 © Dunzo theme by pixelstrap.</p>
+                                    </div>
+                                    <div class="col-md-6 p-0">
+                                        <p class="heart mb-0">Hand crafted &amp; made with
+                                            <svg class="footer-icon">
+                                                <use href="../../assets/svg/icon-sprite.svg#heart"></use>
+                                            </svg>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </footer>
+                    </div>
+                </div>
+                <style>
+                    #productDropdown {
+                        position: absolute;
+                        z-index: 1000;
+                        background-color: #fff;
+                        border: 1px solid #ddd;
+                        max-height: 200px;
+                        overflow-y: auto;
+                        display: none;
+                        /* Initially hide the dropdown */
+                    }
+
+                    #productDropdown li {
+                        padding: 10px;
+                        cursor: pointer;
+                    }
+
+                    #productDropdown li:hover {
+                        background-color: #f1f1f1;
+                    }
+                </style>
+                <!-- latest jquery-->
+                <script src="../../assets/js/jquery.min.js"></script>
+                <!-- Bootstrap js-->
+                <script src="../../assets/js/bootstrap/bootstrap.bundle.min.js"></script>
+                <!-- feather icon js-->
+                <script src="../../assets/js/icons/feather-icon/feather.min.js"></script>
+                <script src="../../assets/js/icons/feather-icon/feather-icon.js"></script>
+                <!-- scrollbar js-->
+                <script src="../../assets/js/scrollbar/simplebar.js"></script>
+                <script src="../../assets/js/scrollbar/custom.js"></script>
+                <!-- Sidebar jquery-->
+                <script src="../../assets/js/config.js"></script>
+                <!-- Plugins JS start-->
+                <script src="../../assets/js/sidebar-menu.js"></script>
+                <script src="../../assets/js/sidebar-pin.js"></script>
+                <script src="../../assets/js/slick/slick.min.js"></script>
+                <script src="../../assets/js/slick/slick.js"></script>
+                <script src="../../assets/js/header-slick.js"></script>
+                <script src="../../assets/js/form-validation-custom.js"></script>
+                <script src="../../assets/js/notify/bootstrap-notify.min.js"></script>
+                <script src="../../assets/js/datatable/datatables/jquery.dataTables.min.js"></script>
+                <script src="../../assets/js/datatable/datatable-extension/dataTables.buttons.min.js"></script>
+                <script src="../../assets/js/datatable/datatable-extension/jszip.min.js"></script>
+                <script src="../../assets/js/datatable/datatable-extension/buttons.colVis.min.js"></script>
+                <script src="../../assets/js/datatable/datatable-extension/pdfmake.min.js"></script>
+                <script src="../../assets/js/datatable/datatable-extension/buttons.bootstrap4.min.js"></script>
+                <script src="../../assets/js/datatable/datatable-extension/buttons.html5.min.js"></script>
+                <script src="../../assets/js/datatable/datatable-extension/custom.js"></script>
+                <!-- Plugins JS Ends-->
+                <!-- Theme js-->
+                <script src="../../assets/js/script.js"></script>
+                <!-- Plugin used-->
+</body>
+
+</html>
