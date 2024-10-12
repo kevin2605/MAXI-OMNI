@@ -42,8 +42,8 @@
             <div>
               <div><a class="logo text-start" href="index.php"><img class="img-fluid for-light" src="../assets/images/logo-icon.png" width="150px"><img class="img-fluid for-dark" src="../assets/images/logo-icon.png" width="150px"></a></div>
               <div class="login-main"> 
-                <form class="theme-form" action="Process/login.php" method="POST">
-                  <h4>Sign in to PT INDOPACK MULTI PERKASA</h4>
+                <form class="theme-form" action="login.php" method="POST">
+                  <h4>Sign in to your account.</h4>
                   <p>Masukkan username & password untuk login</p>
                   <div class="form-group">
                     <label class="col-form-label">Username</label>

@@ -3,7 +3,7 @@
 // Set timezone
 date_default_timezone_set("Asia/Jakarta");
 
-include "../DBConnection.php";
+include "DBConnection.php";
 
 $username = $_POST["username"];
 $password = $_POST["password"];
@@ -34,7 +34,7 @@ if ($row) {
     mysqli_query($conn, $logQuery);
 
     // Redirect to dashboard
-    header("Location:../Dashboard/");
+    header("Location:ui-navigator.php");
 } else {
     // Log failed login attempt
     $datetime = date('Y-m-d H:i:s');

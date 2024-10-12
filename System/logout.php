@@ -3,7 +3,7 @@
 // Set timezone
 date_default_timezone_set("Asia/Jakarta");
 
-include "../DBConnection.php";
+include "DBConnection.php";
 
 if (isset($_COOKIE["UserID"])) {
     $userID = $_COOKIE["UserID"];
@@ -28,7 +28,7 @@ if (isset($_COOKIE["UserID"])) {
     mysqli_query($conn, $logQuery);
 
     // Redirect to home page
-    header("Location:../index.php");
+    header("Location:index.php");
 } else {
     // Log failed logout attempt
     $datetime = date('Y-m-d H:i:s');
@@ -41,7 +41,7 @@ if (isset($_COOKIE["UserID"])) {
     mysqli_query($conn, $logQuery);
 
     // Redirect to home page
-    header("Location:../index.php");
+    header("Location:index.php");
 }
 
 ?>
