@@ -1,5 +1,5 @@
 <?php
-include '../DBConnection.php'; // Pastikan Anda menyertakan file koneksi ke database
+include '../../DBConnection.php'; // Pastikan Anda menyertakan file koneksi ke database
 $userID = isset($_COOKIE["UserID"]) ? $_COOKIE["UserID"] : '';
 
 // Default tidak bisa update

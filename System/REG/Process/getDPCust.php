@@ -1,6 +1,6 @@
 <?php
 
-include "../DBConnection.php";
+include "../../DBConnection.php";
 
 $salesOrderID = $_POST["id"];
 $salesOrderID = mysqli_real_escape_string($conn, $salesOrderID);

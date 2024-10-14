@@ -1,5 +1,5 @@
 <?php
-include "../DBConnection.php";
+include "../../DBConnection.php";
 
 // Set timezone
 date_default_timezone_set("Asia/Jakarta");

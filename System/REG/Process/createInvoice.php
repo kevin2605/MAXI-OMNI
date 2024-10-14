@@ -1,6 +1,6 @@
 <?php
 
-include "../DBConnection.php";
+include "../../DBConnection.php";
 
 if (!isset($_POST["submitInv"])) {
     header("Location:../Sales/sales.php?status=no-entry");

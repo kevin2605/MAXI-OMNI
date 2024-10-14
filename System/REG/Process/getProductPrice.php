@@ -1,6 +1,6 @@
 <?php
 
-include "../DBConnection.php";
+include "../../DBConnection.php";
 
 $rows = array();
 $kueri = "SELECT Price FROM pricelistdetail WHERE PriceListCD='" . $_POST["plcd"] . "' AND ProductCD='" . $_POST["prodcd"] . "'";

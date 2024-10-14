@@ -1,6 +1,6 @@
 <?php
 
-include "../DBConnection.php";
+include "../../DBConnection.php";
 
 //set timezone
 date_default_timezone_set("Asia/Jakarta");
@@ -8,13 +8,13 @@ date_default_timezone_set("Asia/Jakarta");
 //generate random serialid
 $serialid = 0;
 $duplicate = true;
-while($duplicate){
-    $serialid = rand(10000,99999);
-    $query = "SELECT COUNT(*) as duplicate FROM taxserialnumber WHERE SerialID='".$serialid."'";
+while ($duplicate) {
+    $serialid = rand(10000, 99999);
+    $query = "SELECT COUNT(*) as duplicate FROM taxserialnumber WHERE SerialID='" . $serialid . "'";
     $result = mysqli_query($conn, $query);
     $row = mysqli_fetch_assoc($result);
     echo $serialid;
-    ($row["duplicate"] > 0)? $duplicate = true : $duplicate = false;
+    ($row["duplicate"] > 0) ? $duplicate = true : $duplicate = false;
 }
 
 //parameter

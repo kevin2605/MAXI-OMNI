@@ -1,5 +1,5 @@
 <?php
-include '../DBConnection.php';
+include '../../DBConnection.php';
 if (isset($_COOKIE["UserID"]) && !empty($_COOKIE["UserID"])) {
     $creator = $_COOKIE["UserID"];
 } else {

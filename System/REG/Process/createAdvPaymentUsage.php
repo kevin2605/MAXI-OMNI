@@ -1,13 +1,13 @@
 <?php
 
-include "../DBConnection.php";
+include "../../DBConnection.php";
 
 //set timezone
 date_default_timezone_set("Asia/Jakarta");
 
 $advid = $_POST["advpaymentid"];
 $invoice = $_POST["invoice"];
-$invoiceid = explode(" ",$invoice);
+$invoiceid = explode(" ", $invoice);
 $nominal = $_POST["nominal"];
 $keterangan = $_POST["keterangan"];
 $creator = $_COOKIE["UserID"] ?? 'unknown'; // Using cookie for creator
@@ -18,21 +18,21 @@ $query = "INSERT INTO `advancepaymentusage`(`AdvPaymentID`, `CreatedOn`, `Invoic
 $result = mysqli_query($conn, $query);
 
 //check if total usage same as amount, if yes update status 1.
-$query = "SELECT * FROM advancepayment WHERE AdvPaymentID='".$advid."'";
+$query = "SELECT * FROM advancepayment WHERE AdvPaymentID='" . $advid . "'";
 $result = mysqli_query($conn, $query);
 $row = mysqli_fetch_assoc($result);
 
 $tempTotal = $nominal + $row["TotalUsage"];
-if($row["Amount"] == $tempTotal){
-    $query = "UPDATE advancepayment SET TotalUsage =  TotalUsage+".$nominal.", Status='1' WHERE AdvPaymentID='".$advid."'";
+if ($row["Amount"] == $tempTotal) {
+    $query = "UPDATE advancepayment SET TotalUsage =  TotalUsage+" . $nominal . ", Status='1' WHERE AdvPaymentID='" . $advid . "'";
     $result = mysqli_query($conn, $query);
-}else{
-    $query = "UPDATE advancepayment SET TotalUsage =  TotalUsage+".$nominal." WHERE AdvPaymentID='".$advid."'";
+} else {
+    $query = "UPDATE advancepayment SET TotalUsage =  TotalUsage+" . $nominal . " WHERE AdvPaymentID='" . $advid . "'";
     $result = mysqli_query($conn, $query);
-} 
+}
 
 //update invoice jadi lunas
-$query = "UPDATE invoiceheader SET InvoiceStatus='1', TotalInvoice='".$nominal."', PaidDate='".$createdOn."' WHERE InvoiceID='".$invoiceid[0]."'";
+$query = "UPDATE invoiceheader SET InvoiceStatus='1', TotalInvoice='" . $nominal . "', PaidDate='" . $createdOn . "' WHERE InvoiceID='" . $invoiceid[0] . "'";
 $result = mysqli_query($conn, $query);
 
 

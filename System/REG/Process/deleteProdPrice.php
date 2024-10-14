@@ -1,6 +1,6 @@
 <?php
 
-include "../DBConnection.php";
+include "../../DBConnection.php";
 
 $hasil = 0;
 

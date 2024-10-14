@@ -1,6 +1,6 @@
 <?php
 
-include "../DBConnection.php";
+include "../../DBConnection.php";
 
 //set timezone
 date_default_timezone_set("Asia/Jakarta");
@@ -21,7 +21,7 @@ $advid = "ADV-" . date("ym") . "-" . str_pad($lastnumber, 4, "0", STR_PAD_LEFT);
 $customer = $_POST["customer"];
 $tanggal = $_POST["tanggal"];
 $nominal = $_POST["nominal"];
-$account = explode(" - ",$_POST["account"]);
+$account = explode(" - ", $_POST["account"]);
 $accountcode = "2-1250";//$account[0];
 $desc = $_POST["desc"];
 $paymentoption = $_POST["paymentoption"];

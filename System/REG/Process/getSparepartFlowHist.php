@@ -1,5 +1,5 @@
 <?php
-include "../DBConnection.php";
+include "../../DBConnection.php";
 
 // Validasi apakah parameter 'partname' ada
 if (isset($_GET["partname"])) {

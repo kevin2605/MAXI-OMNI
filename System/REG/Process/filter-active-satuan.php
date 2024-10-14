@@ -1,5 +1,5 @@
 <?php
-include '../DBConnection.php'; // Sesuaikan dengan lokasi file koneksi database
+include '../../DBConnection.php'; // Sesuaikan dengan lokasi file koneksi database
 if (isset($_COOKIE["UserID"]) && !empty($_COOKIE["UserID"])) {
     $creator = $_COOKIE["UserID"];
 } else {

@@ -1,6 +1,6 @@
 <?php
 
-include "../DBConnection.php";
+include "../../DBConnection.php";
 
 // Set timezone
 date_default_timezone_set("Asia/Jakarta");
@@ -31,14 +31,14 @@ $resultU = mysqli_query($conn, $queryU);
 $queryc = "SELECT * FROM productionorder WHERE ProductionOrderID='" . $spk . "'";
 $resultc = mysqli_query($conn, $queryc);
 $rowc = mysqli_fetch_assoc($resultc);
-$totalproduction = $rowc["ExactOutcome"]+$rowc["ProdLoss"];
-if($rowc["EstimateOutcome"] == $totalproduction){
+$totalproduction = $rowc["ExactOutcome"] + $rowc["ProdLoss"];
+if ($rowc["EstimateOutcome"] == $totalproduction) {
     $queryU = "UPDATE productionorder SET Status='1' WHERE ProductionOrderID='" . $spk . "'";
     $resultU = mysqli_query($conn, $queryU);
 }
 
 // Check if closeorder value is 1
-if($closeorder == 1){
+if ($closeorder == 1) {
     $queryU = "UPDATE productionorder SET Status='1' WHERE ProductionOrderID='" . $spk . "'";
     $resultU = mysqli_query($conn, $queryU);
 }

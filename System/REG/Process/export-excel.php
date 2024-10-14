@@ -3,7 +3,7 @@ require '../vendor/autoload.php';
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
-include "../DBConnection.php";
+include "../../DBConnection.php";
 
 // Cek koneksi
 if ($conn->connect_error) {

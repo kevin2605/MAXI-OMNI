@@ -1,6 +1,6 @@
 <?php
 
-include "../DBConnection.php";
+include "../../DBConnection.php";
 
 date_default_timezone_set("Asia/Jakarta");
 
@@ -13,7 +13,7 @@ $kategori = $_POST["kategori"];
 $group = $_POST["group"];
 $gudang = $_POST["gudang"];
 $supplier = isset($_POST["supplier"]) ? $_POST["supplier"] : NULL;
-$products = explode(" - ",$_POST["produk"]);
+$products = explode(" - ", $_POST["produk"]);
 $product = $products[0];
 $keterangan1 = $_POST["keterangan1"];
 $keterangan2 = $_POST["keterangan2"];

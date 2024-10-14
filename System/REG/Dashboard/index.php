@@ -5,7 +5,7 @@
   <?php
   include "../headcontent.php";
   session_start();
-  include "../DBConnection.php";
+  include "../../DBConnection.php";
   $userID = $_COOKIE['UserID'];
 
   $query = "SELECT dashboard FROM useraccesslevel WHERE UserID = '$userID'";
@@ -105,7 +105,7 @@
                 <ol class="breadcrumb">
                   <li class="breadcrumb-item"><a href="dashboard.php">
                       <svg class="stroke-icon">
-                        <use href="../../assets/svg/icon-sprite.svg#stroke-home"></use>
+                        <use href="../../../assets/svg/icon-sprite.svg#stroke-home"></use>
                       </svg></a></li>
                   <li class="breadcrumb-item">Dashboard</li>
                 </ol>
@@ -175,9 +175,9 @@
                               <div>
                                 <svg width="1in" height="1in" viewBox="0 0 600 450" style="display:block;margin:auto;">
                                   <?php if ($percentageChange < 0): ?>
-                                    <use href="../../assets/svg/icon-sprite.svg#arrow-chart"></use>
+                                    <use href="../../../assets/svg/icon-sprite.svg#arrow-chart"></use>
                                   <?php else: ?>
-                                    <use href="../../assets/svg/icon-sprite.svg#arrow-chart-up"></use>
+                                    <use href="../../../assets/svg/icon-sprite.svg#arrow-chart-up"></use>
                                   <?php endif; ?>
                                 </svg>
                               </div>
@@ -266,7 +266,7 @@
                             <div class="col-sm-5 box-col-5 p-0">
                               <div>
                                 <svg width="1in" height="1in" viewBox="0 0 600 450" style="display:block;margin:auto;">
-                                  <use href="../../assets/svg/icon-sprite.svg#arrow-chart"></use>
+                                  <use href="../../../assets/svg/icon-sprite.svg#arrow-chart"></use>
                                 </svg>
                               </div>
                             </div>
@@ -297,7 +297,7 @@
                             </div>
                             <div class="dashboard-user bg-light-success"><span></span>
                               <svg>
-                                <use href="../../assets/svg/icon-sprite.svg#invoice"></use>
+                                <use href="../../../assets/svg/icon-sprite.svg#invoice"></use>
                               </svg>
                             </div>
                           </div>
@@ -325,7 +325,7 @@
                             </div>
                             <div class="dashboard-user bg-light-danger"><span></span>
                               <svg>
-                                <use href="../../assets/svg/icon-sprite.svg#profile"></use>
+                                <use href="../../../assets/svg/icon-sprite.svg#profile"></use>
                               </svg>
                             </div>
                           </div>
@@ -353,7 +353,7 @@
                       <div class="d-flex align-items-center pt-0">
                           <div class="notification-box">
                               <svg class="bell-icon" width="24" height="50">
-                                  <use href="../../assets/svg/icon-sprite.svg#fill-Bell"></use>
+                                  <use href="../../../assets/svg/icon-sprite.svg#fill-Bell"></use>
                               </svg>
                           </div>
                           <div class="flex-grow-1 ms-3">
@@ -1073,45 +1073,44 @@
     </script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <!-- latest jquery-->
-    <script src="../../assets/js/jquery.min.js"></script>
+    <script src="../../../assets/js/jquery.min.js"></script>
     <!-- Bootstrap js-->
-    <script src="../../assets/js/bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="../../../assets/js/bootstrap/bootstrap.bundle.min.js"></script>
     <!-- feather icon js-->
-    <script src="../../assets/js/icons/feather-icon/feather.min.js"></script>
-    <script src="../../assets/js/icons/feather-icon/feather-icon.js"></script>
+    <script src="../../../assets/js/icons/feather-icon/feather.min.js"></script>
+    <script src="../../../assets/js/icons/feather-icon/feather-icon.js"></script>
     <!-- scrollbar js-->
-    <script src="../../assets/js/scrollbar/simplebar.js"></script>
-    <script src="../../assets/js/scrollbar/custom.js"></script>
+    <script src="../../../assets/js/scrollbar/simplebar.js"></script>
+    <script src="../../../assets/js/scrollbar/custom.js"></script>
     <!-- Sidebar jquery-->
-    <script src="../../assets/js/config.js"></script>
+    <script src="../../../assets/js/config.js"></script>
     <!-- Plugins JS start-->
-    <script src="../../assets/js/sidebar-menu.js"></script>
-    <script src="../../assets/js/sidebar-pin.js"></script>
-    <script src="../../assets/js/slick/slick.min.js"></script>
-    <script src="../../assets/js/slick/slick.js"></script>
-    <script src="../../assets/js/header-slick.js"></script>
+    <script src="../../../assets/js/sidebar-menu.js"></script>
+    <script src="../../../assets/js/sidebar-pin.js"></script>
+    <script src="../../../assets/js/slick/slick.min.js"></script>
+    <script src="../../../assets/js/slick/slick.js"></script>
+    <script src="../../../assets/js/header-slick.js"></script>
     <!-- Apex Chart JS-->
-    <script src="../../assets/js/chart/apex-chart/apex-chart.js"></script>
-    <script src="../../assets/js/chart/apex-chart/stock-prices.js"></script>
-    <script src="../../assets/js/chart/apex-chart/chart-custom.js"></script>
-
-    <script src="../../assets/js/notify/bootstrap-notify.min.js"></script>
-    <script src="../../assets/js/dashboard/default.js"></script>
-    <script src="../../assets/js/notify/index.js"></script>
-    <script src="../../assets/js/datatable/datatables/jquery.dataTables.min.js"></script>
-    <script src="../../assets/js/datatable/datatables/datatable.custom.js"></script>
-    <script src="../../assets/js/datatable/datatables/datatable.custom1.js"></script>
-    <script src="../../assets/js/owlcarousel/owl.carousel.js"></script>
-    <script src="../../assets/js/owlcarousel/owl-custom.js"></script>
-    <script src="../../assets/js/typeahead/handlebars.js"></script>
-    <script src="../../assets/js/typeahead/typeahead.bundle.js"></script>
-    <script src="../../assets/js/typeahead/typeahead.custom.js"></script>
-    <script src="../../assets/js/typeahead-search/handlebars.js"></script>
-    <script src="../../assets/js/typeahead-search/typeahead-custom.js"></script>
-    <script src="../../assets/js/height-equal.js"></script>
+    <script src="../../../assets/js/chart/apex-chart/apex-chart.js"></script>
+    <script src="../../../assets/js/chart/apex-chart/stock-prices.js"></script>
+    <script src="../../../assets/js/chart/apex-chart/chart-custom.js"></script>
+    <script src="../../../assets/js/notify/bootstrap-notify.min.js"></script>
+    <script src="../../../assets/js/dashboard/default.js"></script>
+    <script src="../../../assets/js/notify/index.js"></script>
+    <script src="../../../assets/js/datatable/datatables/jquery.dataTables.min.js"></script>
+    <script src="../../../assets/js/datatable/datatables/datatable.custom.js"></script>
+    <script src="../../../assets/js/datatable/datatables/datatable.custom1.js"></script>
+    <script src="../../../assets/js/owlcarousel/owl.carousel.js"></script>
+    <script src="../../../assets/js/owlcarousel/owl-custom.js"></script>
+    <script src="../../../assets/js/typeahead/handlebars.js"></script>
+    <script src="../../../assets/js/typeahead/typeahead.bundle.js"></script>
+    <script src="../../../assets/js/typeahead/typeahead.custom.js"></script>
+    <script src="../../../assets/js/typeahead-search/handlebars.js"></script>
+    <script src="../../../assets/js/typeahead-search/typeahead-custom.js"></script>
+    <script src="../../../assets/js/height-equal.js"></script>
     <!-- Plugins JS Ends-->
     <!-- Theme js-->
-    <script src="../../assets/js/script.js"></script>
+    <script src="../../../assets/js/script.js"></script>
 
     <!-- Plugin used-->
 </body>

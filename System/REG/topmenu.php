@@ -1,18 +1,20 @@
 <?php
-include "../DBConnection.php";
+include "../../DBConnection.php";
 ?>
 <div class="header-wrapper row m-0">
     <div class="header-logo-wrapper col-auto p-0">
-    <div class="logo-wrapper"><a href="index.html"><img class="img-fluid for-light" src="../../assets/images/logo/logo-1.png" alt=""><img class="img-fluid for-dark" src="../../assets/images/logo/logo.png" alt=""></a></div>
-    <div class="toggle-sidebar">
-        <svg class="sidebar-toggle"> 
-        <use href="../../assets/svg/icon-sprite.svg#stroke-animation"></use>
-        </svg>
-    </div>
+        <div class="logo-wrapper"><a href="index.html"><img class="img-fluid for-light"
+                    src="../../../assets/images/logo/logo-1.png" alt=""><img class="img-fluid for-dark"
+                    src="../../../assets/images/logo/logo.png" alt=""></a></div>
+        <div class="toggle-sidebar">
+            <svg class="sidebar-toggle">
+                <use href="../../../assets/svg/icon-sprite.svg#stroke-animation"></use>
+            </svg>
+        </div>
     </div>
     <div class="left-header col-xxl-5 col-xl-6 col-auto box-col-6 horizontal-wrapper p-0">
-    <div class="left-menu-header">
-        <!--<ul class="header-left"> 
+        <div class="left-menu-header">
+            <!--<ul class="header-left"> 
             <li class="onhover-dropdown"><span class="f-w-500">Master</span>
                 <ul class="onhover-show-div left-dropdown">
                     <li><a href="../Product/product.php">Barang</a></li>
@@ -43,11 +45,11 @@ include "../DBConnection.php";
                 </ul>
             </li>
         </ul>-->
-    </div>
+        </div>
     </div>
     <div class="nav-right col-xxl-7 col-xl-6 col-auto box-col-6 pull-right right-header p-0 ms-auto">
-    <ul class="nav-menus">
-        <!--<li class="serchinput">
+        <ul class="nav-menus">
+            <!--<li class="serchinput">
         <div class="serchbox">
             <svg>
             <use href="../../assets/svg/icon-sprite.svg#fill-search"></use>
@@ -69,42 +71,42 @@ include "../DBConnection.php";
             </div>
         </div>
         </li>-->
-        <li class="onhover-dropdown">
-        <div class="notification-box">
-            <svg>
-            <use href="../../assets/svg/icon-sprite.svg#fill-Bell"></use>
-            </svg>
-        </div>
-        <div class="onhover-show-div notification-dropdown">
-            <h6 class="f-18 mb-0 dropdown-title">Notifikasi</h6>
-            <ul>
-            <li class="b-l-primary bg-light-warning border-4 mt-3">
-                <p class="font-primary">Kekurangan Dokumen Lokal
-                    <span class="border-danger bg-danger b-r-10" style="padding: 10px;">
-                        <?php
-                            $query = "SELECT COUNT(*) AS result FROM receptionheader WHERE Invoice IS NULL OR SuratJalan IS NULL";
-                            $result = mysqli_query($conn,$query);
-                            $temp = mysqli_fetch_assoc($result);
+            <li class="onhover-dropdown">
+                <div class="notification-box">
+                    <svg>
+                        <use href="../../../assets/svg/icon-sprite.svg#fill-Bell"></use>
+                    </svg>
+                </div>
+                <div class="onhover-show-div notification-dropdown">
+                    <h6 class="f-18 mb-0 dropdown-title">Notifikasi</h6>
+                    <ul>
+                        <li class="b-l-primary bg-light-warning border-4 mt-3">
+                            <p class="font-primary">Kekurangan Dokumen Lokal
+                                <span class="border-danger bg-danger b-r-10" style="padding: 10px;">
+                                    <?php
+                                    $query = "SELECT COUNT(*) AS result FROM receptionheader WHERE Invoice IS NULL OR SuratJalan IS NULL";
+                                    $result = mysqli_query($conn, $query);
+                                    $temp = mysqli_fetch_assoc($result);
 
-                            echo $temp["result"];
-                        ?>
-                    </span>
-                </p>
-            </li>
-            <li class="b-l-primary bg-light-warning border-4 mt-3">
-                <p class="font-primary">Kekurangan Dokumen Import
-                    <span class="border-danger bg-danger b-r-10" style="padding: 10px;">
-                        <?php
-                            $query = "SELECT COUNT(*) AS result FROM importreceptionheader WHERE Invoice IS NULL OR PackingList IS NULL OR BL IS NULL OR Insurance IS NULL";
-                            $result = mysqli_query($conn,$query);
-                            $temp = mysqli_fetch_assoc($result);
+                                    echo $temp["result"];
+                                    ?>
+                                </span>
+                            </p>
+                        </li>
+                        <li class="b-l-primary bg-light-warning border-4 mt-3">
+                            <p class="font-primary">Kekurangan Dokumen Import
+                                <span class="border-danger bg-danger b-r-10" style="padding: 10px;">
+                                    <?php
+                                    $query = "SELECT COUNT(*) AS result FROM importreceptionheader WHERE Invoice IS NULL OR PackingList IS NULL OR BL IS NULL OR Insurance IS NULL";
+                                    $result = mysqli_query($conn, $query);
+                                    $temp = mysqli_fetch_assoc($result);
 
-                            echo $temp["result"];
-                        ?>
-                    </span>
-                </p>
-            </li>
-            <!--
+                                    echo $temp["result"];
+                                    ?>
+                                </span>
+                            </p>
+                        </li>
+                        <!--
             <li class="b-l-secondary bg-light-secondary border-4 mt-3">
                 <p class="font-secondary">Order Complete<span class="font-secondary">1 hr</span></p>
             </li>
@@ -115,11 +117,11 @@ include "../DBConnection.php";
                 <p class="font-info">Delivery Complete<span class="font-info">6 hr</span></p>
             </li>
             -->
-            <li><a class="f-w-700" href="private-chat.html">Check all</a></li>
-            </ul>
-        </div>
-        </li>
-        <!--<li class="onhover-dropdown">
+                        <li><a class="f-w-700" href="private-chat.html">Check all</a></li>
+                    </ul>
+                </div>
+            </li>
+            <!--<li class="onhover-dropdown">
         <svg>
             <use href="../../assets/svg/icon-sprite.svg#fill-star"></use>
         </svg>
@@ -240,34 +242,35 @@ include "../DBConnection.php";
             </ul>
         </div>
         </li>-->
-        <li>
-        <div class="mode">
-            <svg>
-            <use href="../../assets/svg/icon-sprite.svg#fill-dark"></use>
-            </svg>
-        </div>
-        </li>
-        <li class="profile-nav onhover-dropdown p-0">
-        <div class="d-flex align-items-center profile-media"><img class="b-r-10 img-40" src="../../assets/images/dashboard/profile.png" alt="">
-            <div class="flex-grow-1"><span><?php echo $_COOKIE["Name"]; ?></span>
-            <p class="mb-0">
-                <?php
-                    if(substr($_COOKIE["UserID"],0,3) == "ADM"){
-                        echo 'Admin <i class="middle fa fa-angle-down"></i>';
-                    }else if(substr($_COOKIE["UserID"],0,3) == "MKT"){
-                        echo 'Marketing <i class="middle fa fa-angle-down"></i>';
-                    }
-                ?>
-            </p>
-            </div>
-        </div>
-        <ul class="profile-dropdown onhover-show-div">
-            <li>Status : <?php echo $_COOKIE["Status"]; ?></li>
-            <li><a href="user-profile.html"><i data-feather="user"></i><span>Account </span></a></li>
-            <li><a href="../Process/logout.php"><i data-feather="log-in"> </i><span>Log out</span></a></li>
+            <li>
+                <div class="mode">
+                    <svg>
+                        <use href="../../../assets/svg/icon-sprite.svg#fill-dark"></use>
+                    </svg>
+                </div>
+            </li>
+            <li class="profile-nav onhover-dropdown p-0">
+                <div class="d-flex align-items-center profile-media"><img class="b-r-10 img-40"
+                        src="../../assets/images/dashboard/profile.png" alt="">
+                    <div class="flex-grow-1"><span><?php echo $_COOKIE["Name"]; ?></span>
+                        <p class="mb-0">
+                            <?php
+                            if (substr($_COOKIE["UserID"], 0, 3) == "ADM") {
+                                echo 'Admin <i class="middle fa fa-angle-down"></i>';
+                            } else if (substr($_COOKIE["UserID"], 0, 3) == "MKT") {
+                                echo 'Marketing <i class="middle fa fa-angle-down"></i>';
+                            }
+                            ?>
+                        </p>
+                    </div>
+                </div>
+                <ul class="profile-dropdown onhover-show-div">
+                    <li>Status : <?php echo $_COOKIE["Status"]; ?></li>
+                    <li><a href="user-profile.html"><i data-feather="user"></i><span>Account </span></a></li>
+                    <li><a href="../../logout.php"><i data-feather="log-in"> </i><span>Log out</span></a></li>
+                </ul>
+            </li>
         </ul>
-        </li>
-    </ul>
     </div>
     <script class="result-template" type="text/x-handlebars-template">
     <div class="ProfileCard u-cf">                        
@@ -277,5 +280,6 @@ include "../DBConnection.php";
     </div>
     </div>
     </script>
-    <script class="empty-template" type="text/x-handlebars-template"><div class="EmptyMessage">Your search turned up 0 results. This most likely means the backend is down, yikes!</div></script>
+    <script class="empty-template"
+        type="text/x-handlebars-template"><div class="EmptyMessage">Your search turned up 0 results. This most likely means the backend is down, yikes!</div></script>
 </div>

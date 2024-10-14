@@ -1,6 +1,6 @@
 <?php
 
-include "../DBConnection.php";
+include "../../DBConnection.php";
 
 //set timezone
 date_default_timezone_set("Asia/Jakarta");
@@ -8,8 +8,8 @@ date_default_timezone_set("Asia/Jakarta");
 //create payment id
 $duplicate = true;
 $cpid = 0;
-while($duplicate){
-    $cpid = rand(111111,999999);
+while ($duplicate) {
+    $cpid = rand(111111, 999999);
     $query = "SELECT CreditPaymentID FROM creditpaymentheader WHERE CreditPaymentID = '" . $cpid . "'";
     $result = mysqli_query($conn, $query);
     $row = mysqli_fetch_assoc($result);
@@ -30,7 +30,7 @@ $queryh = "INSERT INTO `creditpaymentheader`(`CreditPaymentID`, `CreatedOn`, `Cr
 $resulth = mysqli_query($conn, $queryh);
 
 if ($resulth == 1) {
-    
+
     $arrID = $_POST["InvID"];
     $arrPayment = $_POST["TotalPayment"];
 
@@ -44,7 +44,7 @@ if ($resulth == 1) {
         $resultd = mysqli_query($conn, $queryd);
 
         //update invoice status = 1
-        $queryu = "UPDATE invoiceheader SET TotalPaid = '".$amount."', InvoiceStatus=1 WHERE InvoiceID='".$id."'";
+        $queryu = "UPDATE invoiceheader SET TotalPaid = '" . $amount . "', InvoiceStatus=1 WHERE InvoiceID='" . $id . "'";
         $resultu = mysqli_query($conn, $queryu);
     }
 }

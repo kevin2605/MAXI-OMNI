@@ -8,7 +8,7 @@
     session_start();
 
     // Koneksi ke database
-    include "../DBConnection.php"; // Sesuaikan dengan file koneksi database Anda
+    include "../../DBConnection.php"; // Sesuaikan dengan file koneksi database Anda
     
     // Ambil ID pengguna dari sesi atau cookie
     $userID = $_COOKIE['UserID']; // Sesuaikan dengan cara Anda menyimpan ID pengguna
@@ -149,7 +149,7 @@
                                     <ol class="breadcrumb">
                                         <li class="breadcrumb-item"><a href="index.html">
                                                 <svg class="stroke-icon">
-                                                    <use href="../../assets/svg/icon-sprite.svg#stroke-home"></use>
+                                                    <use href="../../../assets/svg/icon-sprite.svg#stroke-home"></use>
                                                 </svg></a></li>
                                         <li class="breadcrumb-item">Barang</li>
                                         <li class="breadcrumb-item">Penunjang Produksi</li>
@@ -193,19 +193,19 @@
                                         if (isset($_GET["status"])) {
                                             if ($_GET["status"] == "success") {
                                                 echo '<div class="alert txt-success border-success outline-2x alert-dismissible fade show alert-icons" role="alert">
-                                    <p><b> Selamat! </b>Barang Penunjang Produksi baru berhasil disimpan ke database.</p>
-                                    <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
-                                    </div>';
+                                                <p><b> Selamat! </b>Barang Penunjang Produksi baru berhasil disimpan ke database.</p>
+                                                <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                </div>';
                                             } else if ($_GET["status"] == "error") {
                                                 echo '<div class="alert txt-danger border-danger outline-2x alert-dismissible fade show alert-icons" role="alert">
-                                    <p><b> Error! </b>Terjadi kesalahan saat pembuatan/penyimpanan Barang Penunjang Produksi ke database.</p>
-                                    <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
-                                    </div>';
+                                                <p><b> Error! </b>Terjadi kesalahan saat pembuatan/penyimpanan Barang Penunjang Produksi ke database.</p>
+                                                <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                </div>';
                                             } else if ($_GET["status"] == "success-edit") {
                                                 echo '<div class="alert txt-success border-success outline-2x alert-dismissible fade show alert-icons" role="alert">
-                                    <p><b> Selamat! </b>Barang Penunjang Produksi berhasil disimpan ke database.</p>
-                                    <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
-                                    </div>';
+                                                <p><b> Selamat! </b>Barang Penunjang Produksi berhasil disimpan ke database.</p>
+                                                <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                </div>';
                                             }
                                         }
                                         ?>
@@ -218,7 +218,7 @@
                                                     <li class="breadcrumb-item"><a href="index.html">
                                                             <svg class="stroke-icon">
                                                                 <use
-                                                                    href="../../assets/svg/icon-sprite.svg#stroke-home">
+                                                                    href="../../../assets/svg/icon-sprite.svg#stroke-home">
                                                                 </use>
                                                             </svg></a></li>
                                                     <li class="breadcrumb-item">Barang</li>
@@ -506,7 +506,7 @@
                                                         <h3>Daftar Barang</h3>
                                                         <div class="table-responsive custom-scrollbar user-datatable">
                                                             <?php
-                                                            include "../DBConnection.php";
+                                                            include "../../DBConnection.php";
                                                             if (isset($_COOKIE["UserID"]) && !empty($_COOKIE["UserID"])) {
                                                                 $creator = $_COOKIE["UserID"];
                                                             } else {
@@ -540,7 +540,7 @@
                                                                 </thead>
                                                                 <tbody id="material-table-body">
                                                                     <?php
-                                                                    include "../DBConnection.php";
+                                                                    include "../../DBConnection.php";
 
                                                                     // Ambil status filter dari URL, jika ada
                                                                     $status_filter = isset($_GET['status']) ? $_GET['status'] : 'all';
@@ -620,7 +620,7 @@
                                     <div class="col-md-6 p-0">
                                         <p class="heart mb-0">Hand crafted &amp; made with
                                             <svg class="footer-icon">
-                                                <use href="../../assets/svg/icon-sprite.svg#heart"></use>
+                                                <use href="../../../assets/svg/icon-sprite.svg#heart"></use>
                                             </svg>
                                         </p>
                                     </div>
@@ -630,33 +630,33 @@
                     </div>
                 </div>
                 <!-- latest jquery-->
-                <script src="../../assets/js/jquery.min.js"></script>
+                <script src="../../../assets/js/jquery.min.js"></script>
                 <!-- Bootstrap js-->
-                <script src="../../assets/js/bootstrap/bootstrap.bundle.min.js"></script>
+                <script src="../../../assets/js/bootstrap/bootstrap.bundle.min.js"></script>
                 <!-- feather icon js-->
-                <script src="../../assets/js/icons/feather-icon/feather.min.js"></script>
-                <script src="../../assets/js/icons/feather-icon/feather-icon.js"></script>
+                <script src="../../../assets/js/icons/feather-icon/feather.min.js"></script>
+                <script src="../../../assets/js/icons/feather-icon/feather-icon.js"></script>
                 <!-- scrollbar js-->
-                <script src="../../assets/js/scrollbar/simplebar.js"></script>
-                <script src="../../assets/js/scrollbar/custom.js"></script>
+                <script src="../../../assets/js/scrollbar/simplebar.js"></script>
+                <script src="../../../assets/js/scrollbar/custom.js"></script>
                 <!-- Sidebar jquery-->
-                <script src="../../assets/js/config.js"></script>
+                <script src="../../../assets/js/config.js"></script>
                 <!-- Plugins JS start-->
-                <script src="../../assets/js/sidebar-menu.js"></script>
-                <script src="../../assets/js/sidebar-pin.js"></script>
-                <script src="../../assets/js/slick/slick.min.js"></script>
-                <script src="../../assets/js/slick/slick.js"></script>
-                <script src="../../assets/js/header-slick.js"></script>
-                <script src="../../assets/js/form-validation-custom.js"></script>
-                <script src="../../assets/js/height-equal.js"></script>
-                <script src="../../assets/js/notify/bootstrap-notify.min.js"></script>
-                <script src="../../assets/js/datatable/datatables/jquery.dataTables.min.js"></script>
-                <script src="../../assets/js/datatable/datatables/datatable.custom.js"></script>
-                <script src="../../assets/js/tooltip-init.js"></script>
-                <script src="../../assets/js/modalpage/validation-modal.js"></script>
+                <script src="../../../assets/js/sidebar-menu.js"></script>
+                <script src="../../../assets/js/sidebar-pin.js"></script>
+                <script src="../../../assets/js/slick/slick.min.js"></script>
+                <script src="../../../assets/js/slick/slick.js"></script>
+                <script src="../../../assets/js/header-slick.js"></script>
+                <script src="../../../assets/js/form-validation-custom.js"></script>
+                <script src="../../../assets/js/height-equal.js"></script>
+                <script src="../../../assets/js/notify/bootstrap-notify.min.js"></script>
+                <script src="../../../assets/js/datatable/datatables/jquery.dataTables.min.js"></script>
+                <script src="../../../assets/js/datatable/datatables/datatable.custom.js"></script>
+                <script src="../../../assets/js/tooltip-init.js"></script>
+                <script src="../../../assets/js/modalpage/validation-modal.js"></script>
                 <!-- Plugins JS Ends-->
                 <!-- Theme js-->
-                <script src="../../assets/js/script.js"></script>
+                <script src="../../../assets/js/script.js"></script>
                 <!-- Plugin used-->
 </body>
 

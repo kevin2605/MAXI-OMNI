@@ -1,6 +1,6 @@
 <?php
 
-include "../DBConnection.php";
+include "../../DBConnection.php";
 
 // Set timezone
 date_default_timezone_set("Asia/Jakarta");
@@ -53,7 +53,7 @@ $date = date('Y-m-d');
 
 $queryH = "INSERT INTO `importreceptioninvoiceheader`(`RCV_InvoiceID`, `ReceptionID`, `CategoryCD`, `CreatedOn`, `CreatedBy`, `DPP`, `BM`, `PPN`, `PPH`, `TotalAmount`, `Status`)
           VALUES ('$pinv','$rcvId','$category','$datetime','$creator','$tdpp','$bm','$ppn','$pph','$total','0')";
-$resultH = mysqli_query($conn,$queryH);
+$resultH = mysqli_query($conn, $queryH);
 
 //insert journal data
 $queryjd = "INSERT INTO `journaldata`(`JournalDate`, `AccountCD`, `AccountName`, `Debit`, `Credit`, `Notes`) 

@@ -1,6 +1,6 @@
 <?php
 
-include "../DBConnection.php";
+include "../../DBConnection.php";
 
 $prodcd = $_GET["product"];
 
@@ -23,41 +23,39 @@ echo '<table class="table">
 $stokawal = 0;
 $stokakhir = 0;
 
-$query = "SELECT * FROM productflowhistory WHERE ProductCD='".$prodcd."';";
-$result=mysqli_query($conn,$query);
-while($row=mysqli_fetch_array($result))
-{
+$query = "SELECT * FROM productflowhistory WHERE ProductCD='" . $prodcd . "';";
+$result = mysqli_query($conn, $query);
+while ($row = mysqli_fetch_array($result)) {
     echo ' <tr> 
-                <td>'.substr($row["Date"],0,10).' </td>
-                <td>'.number_format($stokawal,0,'.',',').' </td>
-                <td>'.number_format($row["FlowIn"],0,'.',',').'</td>
-                <td>'.number_format($row["FlowOut"],0,'.',',').'</td>';
+                <td>' . substr($row["Date"], 0, 10) . ' </td>
+                <td>' . number_format($stokawal, 0, '.', ',') . ' </td>
+                <td>' . number_format($row["FlowIn"], 0, '.', ',') . '</td>
+                <td>' . number_format($row["FlowOut"], 0, '.', ',') . '</td>';
 
-                $stokakhir = $stokawal + $row["FlowIn"] - $row["FlowOut"];
+    $stokakhir = $stokawal + $row["FlowIn"] - $row["FlowOut"];
 
-    echo '      <td>'.number_format($stokakhir,0,'.',',').' </td>
-                <td>'.$row["ReferenceKey"].'</td>';
-                if(substr($row["ReferenceKey"],0,3) == "MUT")
-                {
-                    echo '<td></td>';
-                }else if(substr($row["ReferenceKey"],0,3) == "SIN"){
-                    $queryi = "SELECT c.CustName FROM (invoiceheader ih JOIN customer c ON ih.CustID=c.CustID) WHERE InvoiceID='".$row["ReferenceKey"]."'";
-                    $resulti=mysqli_query($conn,$queryi);
-                    $rowi=mysqli_fetch_assoc($resulti);
+    echo '      <td>' . number_format($stokakhir, 0, '.', ',') . ' </td>
+                <td>' . $row["ReferenceKey"] . '</td>';
+    if (substr($row["ReferenceKey"], 0, 3) == "MUT") {
+        echo '<td></td>';
+    } else if (substr($row["ReferenceKey"], 0, 3) == "SIN") {
+        $queryi = "SELECT c.CustName FROM (invoiceheader ih JOIN customer c ON ih.CustID=c.CustID) WHERE InvoiceID='" . $row["ReferenceKey"] . "'";
+        $resulti = mysqli_query($conn, $queryi);
+        $rowi = mysqli_fetch_assoc($resulti);
 
-                    echo '<td>'.$rowi["CustName"].'</td>';
-                }else if(substr($row["ReferenceKey"],0,3) == "SPK"){
-                    $queryi = "SELECT Description
+        echo '<td>' . $rowi["CustName"] . '</td>';
+    } else if (substr($row["ReferenceKey"], 0, 3) == "SPK") {
+        $queryi = "SELECT Description
                                 FROM productionorder
-                                WHERE ProductionOrderID ='".$row["ReferenceKey"]."'";
-                    $resulti=mysqli_query($conn,$queryi);
-                    $rowi=mysqli_fetch_assoc($resulti);
+                                WHERE ProductionOrderID ='" . $row["ReferenceKey"] . "'";
+        $resulti = mysqli_query($conn, $queryi);
+        $rowi = mysqli_fetch_assoc($resulti);
 
-                    echo '<td>'.$rowi["Description"].'</td>';
-                }
+        echo '<td>' . $rowi["Description"] . '</td>';
+    }
     echo '  </tr>';
 
-                $stokawal = $stokakhir;
+    $stokawal = $stokakhir;
 }
 
 echo '  </tbody>

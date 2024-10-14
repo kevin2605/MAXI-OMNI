@@ -7,9 +7,8 @@
 
     session_start();
 
-    // Koneksi ke database
-    include "../DBConnection.php"; // Sesuaikan dengan file koneksi database Anda
-    
+    include "../../DBConnection.php";
+
     // Ambil ID pengguna dari sesi atau cookie
     $userID = $_COOKIE['UserID']; // Sesuaikan dengan cara Anda menyimpan ID pengguna
     
@@ -208,7 +207,7 @@
                                     <ol class="breadcrumb">
                                         <li class="breadcrumb-item"><a href="index.html">
                                                 <svg class="stroke-icon">
-                                                    <use href="../../assets/svg/icon-sprite.svg#stroke-home"></use>
+                                                    <use href="../../../assets/svg/icon-sprite.svg#stroke-home"></use>
                                                 </svg></a></li>
                                         <li class="breadcrumb-item">Barang</li>
                                     </ol>
@@ -251,34 +250,34 @@
                                         if (isset($_GET["status"])) {
                                             if ($_GET["status"] == "success") {
                                                 echo '<div class="alert txt-success border-success outline-2x alert-dismissible fade show alert-icons" role="alert">
-                  <p><b> Selamat! </b>Produk baru berhasil disimpan ke database.</p>
-                  <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>';
+                                                  <p><b> Selamat! </b>Produk baru berhasil disimpan ke database.</p>
+                                                  <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                </div>';
                                             } else if ($_GET["status"] == "error") {
                                                 echo '<div class="alert txt-danger border-danger outline-2x alert-dismissible fade show alert-icons" role="alert">
-                  <p><b> Error! </b>Terjadi kesalahan saat disimpan ke database.</p>
-                  <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>';
+                                                 <p><b> Error! </b>Terjadi kesalahan saat disimpan ke database.</p>
+                                                 <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
+                                             </div>';
                                             } else if ($_GET["status"] == "success-edit") {
                                                 echo '<div class="alert txt-success border-success outline-2x alert-dismissible fade show alert-icons" role="alert">
-                    <p><b> Selamat! </b>Produk berhasil di edit dan disimpan ke database.</p>
-                    <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
-                  </div>';
+                                                    <p><b> Selamat! </b>Produk berhasil di edit dan disimpan ke database.</p>
+                                                    <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                  </div>';
                                             } else if ($_GET["status"] == "error-edit") {
                                                 echo '<div class="alert txt-danger border-danger outline-2x alert-dismissible fade show alert-icons" role="alert">
-                    <p><b> Error! </b>Terjadi kesalahan saat edit produk ke database.</p>
-                    <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
-                  </div>';
+                                                 <p><b> Error! </b>Terjadi kesalahan saat edit produk ke database.</p>
+                                                    <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
+                                                  </div>';
                                             } else if ($_GET["status"] == "success-delete") {
                                                 echo '<div class="alert txt-warning border-warning outline-2x alert-dismissible fade show alert-icons" role="alert">
-                    <p><b> Warning! </b>Produk berhasil di hapus dari database.</p>
-                    <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
-                  </div>';
+                                                 <p><b> Warning! </b>Produk berhasil di hapus dari database.</p>
+                                                 <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
+                                               </div>';
                                             } else if ($_GET["status"] == "error-delete") {
                                                 echo '<div class="alert txt-danger border-danger outline-2x alert-dismissible fade show alert-icons" role="alert">
-                    <p><b> Error! </b>Terjadi kesalahan saat menghapus produk ke database.</p>
-                    <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
-                  </div>';
+                                                 <p><b> Error! </b>Terjadi kesalahan saat menghapus produk ke database.</p>
+                                                 <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
+                                               </div>';
                                             }
                                         }
                                         ?>
@@ -291,7 +290,7 @@
                                                     <li class="breadcrumb-item"><a href="index.html">
                                                             <svg class="stroke-icon">
                                                                 <use
-                                                                    href="../../assets/svg/icon-sprite.svg#stroke-home">
+                                                                    href="../../../assets/svg/icon-sprite.svg#stroke-home">
                                                                 </use>
                                                             </svg></a></li>
                                                     <li class="breadcrumb-item">Barang</li>
@@ -810,26 +809,26 @@
                                                                     $result = mysqli_query($conn, $query);
                                                                     while ($row = mysqli_fetch_array($result)) {
                                                                         echo '
-                                                            <tr>
-                                                                <td>' . $row["Sequence"] . '</td>
-                                                                <td>' . $row["ProductCD"] . '</td>
-                                                                <td><a href="product-history.php?prodcd=' . $row["ProductCD"] . '">' . $row["ProductName"] . '</a></td>
-                                                                <td>' . number_format($row["StockQty"], 0, '.', ',') . '</td>
-                                                                
-                                                                <td>' . $row["GroupCD"] . '</td>
-                                                                <td>' . $row["LastEdit"] . '</td>
-                                                                <td> 
-                                                                <ul> 
-                                                                    <button onclick="viewProduct(this)" type="button" class="light-card border-primary border b-r-10" value="' . $row["ProductCD"] . '"><i class="fa fa-eye txt-primary"></i></button>';
+                                                                        <tr>
+                                                                            <td>' . $row["Sequence"] . '</td>
+                                                                            <td>' . $row["ProductCD"] . '</td>
+                                                                            <td><a href="product-history.php?prodcd=' . $row["ProductCD"] . '">' . $row["ProductName"] . '</a></td>
+                                                                            <td>' . number_format($row["StockQty"], 0, '.', ',') . '</td>
+                                                                            
+                                                                            <td>' . $row["GroupCD"] . '</td>
+                                                                            <td>' . $row["LastEdit"] . '</td>
+                                                                            <td> 
+                                                                            <ul> 
+                                                                                <button onclick="viewProduct(this)" type="button" class="light-card border-primary border b-r-10" value="' . $row["ProductCD"] . '"><i class="fa fa-eye txt-primary"></i></button>';
 
                                                                         if ($can_update) {
                                                                             echo '<button onclick="editProduct(this)" type="button" class="light-card border-warning border b-r-10" value="' . $row["ProductCD"] . '"><i class="icon-pencil-alt txt-warning"></i></button>';
                                                                         }
 
                                                                         echo '</ul>
-                                                                </td>
-                                                            </tr>
-                                                            ';
+                                                                            </td>
+                                                                        </tr>
+                                                                        ';
                                                                     }
                                                                     ?>
                                                                 </tbody>
@@ -878,30 +877,30 @@
                     </div>
                 </div>
                 <!-- latest jquery-->
-                <script src="../../assets/js/jquery.min.js"></script>
+                <script src="../../../assets/js/jquery.min.js"></script>
                 <!-- Bootstrap js-->
-                <script src="../../assets/js/bootstrap/bootstrap.bundle.min.js"></script>
+                <script src="../../../assets/js/bootstrap/bootstrap.bundle.min.js"></script>
                 <!-- feather icon js-->
-                <script src="../../assets/js/icons/feather-icon/feather.min.js"></script>
-                <script src="../../assets/js/icons/feather-icon/feather-icon.js"></script>
+                <script src="../../../assets/js/icons/feather-icon/feather.min.js"></script>
+                <script src="../../../assets/js/icons/feather-icon/feather-icon.js"></script>
                 <!-- scrollbar js-->
-                <script src="../../assets/js/scrollbar/simplebar.js"></script>
-                <script src="../../assets/js/scrollbar/custom.js"></script>
+                <script src="../../../assets/js/scrollbar/simplebar.js"></script>
+                <script src="../../../assets/js/scrollbar/custom.js"></script>
                 <!-- Sidebar jquery-->
-                <script src="../../assets/js/config.js"></script>
+                <script src="../../../assets/js/config.js"></script>
                 <!-- Plugins JS start-->
-                <script src="../../assets/js/sidebar-menu.js"></script>
-                <script src="../../assets/js/sidebar-pin.js"></script>
-                <script src="../../assets/js/slick/slick.min.js"></script>
-                <script src="../../assets/js/slick/slick.js"></script>
-                <script src="../../assets/js/header-slick.js"></script>
-                <script src="../../assets/js/form-validation-custom.js"></script>
-                <script src="../../assets/js/notify/bootstrap-notify.min.js"></script>
-                <script src="../../assets/js/datatable/datatables/jquery.dataTables.min.js"></script>
-                <script src="../../assets/js/datatable/datatables/datatable.custom.js"></script>
-                <script src="../../assets/js/tooltip-init.js"></script>
-                <script src="../../assets/js/modalpage/validation-modal.js"></script>
-                <script src="../../assets/js/height-equal.js"></script>
+                <script src="../../../assets/js/sidebar-menu.js"></script>
+                <script src="../../../assets/js/sidebar-pin.js"></script>
+                <script src="../../../assets/js/slick/slick.min.js"></script>
+                <script src="../../../assets/js/slick/slick.js"></script>
+                <script src="../../../assets/js/header-slick.js"></script>
+                <script src="../../../assets/js/form-validation-custom.js"></script>
+                <script src="../../../assets/js/notify/bootstrap-notify.min.js"></script>
+                <script src="../../../assets/js/datatable/datatables/jquery.dataTables.min.js"></script>
+                <script src="../../../assets/js/datatable/datatables/datatable.custom.js"></script>
+                <script src="../../../assets/js/tooltip-init.js"></script>
+                <script src="../../../assets/js/modalpage/validation-modal.js"></script>
+                <script src="../../../assets/js/height-equal.js"></script>
                 <!-- Plugins JS Ends-->
 
                 <!-- Sweetalert2 -->
@@ -929,7 +928,7 @@
                     });
                 </script>
                 <!-- Theme js-->
-                <script src="../../assets/js/script.js"></script>
+                <script src="../../../assets/js/script.js"></script>
                 <!-- Plugin used-->
 </body>
 

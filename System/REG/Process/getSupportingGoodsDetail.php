@@ -1,5 +1,5 @@
 <?php
-include "../DBConnection.php";
+include "../../DBConnection.php";
 
 // Memeriksa apakah parameter 'prodcd' ada di URL
 if (isset($_GET["prodcd"])) {
