@@ -52,16 +52,18 @@
   .hiddenn {
     display: none;
   }
-  .header-table{
+
+  .header-table {
     border-top: 1px solid #DADCE0;
     border-bottom: 1px solid #DADCE0;
-    padding:10px;
+    padding: 10px;
     /*padding-bottom:10px;*/
   }
-  .body-table{
+
+  .body-table {
     /*border-top: 1px solid #DADCE0;*/
     border-bottom: 1px solid #DADCE0;
-    padding:20px 10px 20px 10px;
+    padding: 20px 10px 20px 10px;
     /*padding-bottom:10px;*/
   }
 </style>
@@ -127,207 +129,249 @@
           </div>
         </div>
         <div class="container-fluid <?php echo $accessDenied ? 'hiddenn' : ''; ?>">
-            <!-- Container-fluid start -->
-            <!--
-            <div class="col-xs-12">
-                <div class="card">
-                    <div class="card-header pb-0 card-no-border">
-                        
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive custom-scrollbar">
-                            <table class="display" id="basic-9">
-                                <thead>
-                                <tr>
-                                    <th width="100px">Foto</th>
-                                    <th width="200px">Name</th>
-                                    <th>Harga</th>
-                                    <th>Stock</th>
-                                    <th>Status</th>
-                                    <th>Action</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <img class="img-fluid" src="../../Product-Image/1.jpg" alt="product_image" width="75px">
-                                        </td>
-                                        <td>IMP Mangkok Kertas 360ml 500ml 650ml 800ml 1000ml / Paper Bowl 12oz 17oz 23oz 28oz 33oz / Mangkok Kertas Polos + Tutup Isi 50 pcs</td>
-                                        <td>25.000</td>
-                                        <td>100</td>
-                                        <td>
-                                            <div class="flex-grow-1 icon-state">
-                                                <label class="switch">
-                                                    <input type="checkbox" checked=""><span class="switch-state"></span>
-                                                </label>
-                                            </div>
-                                        </td>
-                                        <td>61</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+          <!-- Container-fluid start -->
+
+          <div class="col-xs-12">
+            <div class="card">
+              <div class="card-header pb-0 card-no-border">
+
+              </div>
+              <div class="card-body">
+                <div class="table-responsive custom-scrollbar">
+                  <table class="table">
+                    <thead>
+                      <tr class="border-bottom-primary">
+                        <th scope="col">INFO PRODUK</th>
+                        <th scope="col"></th>
+                        <th scope="col">HARGA</th>
+                        <th scope="col">STOCK</th>
+                        <th scope="col">STATUS</th>
+                        <th scope="col"></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr class="border-bottom-secondary">
+                        <td style="width: 10%;"> <!-- Set the width of the image column -->
+                          <img class="img-fluid" src="../../Product-Image/1.jpg" alt="profile"
+                            style="width: 80px; height: auto;"> <!-- Set image size -->
+                        </td>
+                        <td style="width: 30%;">IMP Mangkok Kertas 360ml 500ml 650ml 800ml 1000ml /
+                          Paper Bowl 12oz 17oz 23oz 28oz 33oz /
+                          Mangkok Kertas Polos + Tutup Isi 50 pcs</td>
+                        <td>Wolfe</td>
+                        <td>RamJacob@twitter</td>
+                        <td>Developer</td>
+                        <td>Apple Inc.</td>
+                      </tr>
+                      <tr class="border-bottom-secondary">
+                        <td style="width: 10%; "> <!-- Set the width of the image column -->
+                          <img class="img-fluid" src="../../Product-Image/1.jpg" alt="profile"
+                            style="width: 80px; height: auto;"> <!-- Set image size -->
+                        </td>
+                        <td style="width: 30%;">IMP Mangkok Kertas 360ml 500ml 650ml 800ml 1000ml /
+                          Paper Bowl 12oz 17oz 23oz 28oz 33oz /
+                          Mangkok Kertas Polos + Tutup Isi 50 pcs</td>
+                        <td>Wolfe</td>
+                        <td>RamJacob@twitter</td>
+                        <td>Developer</td>
+                        <td>Apple Inc.</td>
+                      </tr>
+                      <tr class="border-bottom-secondary">
+                        <td style="width: 10%; "> <!-- Set the width of the image column -->
+                          <img class="img-fluid" src="../../Product-Image/1.jpg" alt="profile"
+                            style="width: 80px; height: auto;"> <!-- Set image size -->
+                        </td>
+                        <td style="width: 30%;">IMP Mangkok Kertas 360ml 500ml 650ml 800ml 1000ml /
+                          Paper Bowl 12oz 17oz 23oz 28oz 33oz /
+                          Mangkok Kertas Polos + Tutup Isi 50 pcs</td>
+                        <td>Wolfe</td>
+                        <td>RamJacob@twitter</td>
+                        <td>Developer</td>
+                        <td>Apple Inc.</td>
+                      </tr>
+                      <tr class="border-bottom-secondary">
+                        <td style="width: 10%; "> <!-- Set the width of the image column -->
+                          <img class="img-fluid" src="../../Product-Image/1.jpg" alt="profile"
+                            style="width: 80px; height: auto;"> <!-- Set image size -->
+                        </td>
+                        <td style="width: 30%;">IMP Mangkok Kertas 360ml 500ml 650ml 800ml 1000ml /
+                          Paper Bowl 12oz 17oz 23oz 28oz 33oz /
+                          Mangkok Kertas Polos + Tutup Isi 50 pcs</td>
+                        <td>Wolfe</td>
+                        <td>RamJacob@twitter</td>
+                        <td>Developer</td>
+                        <td>Apple Inc.</td>
+                      </tr>
+                    </tbody>
+
+
+                  </table>
                 </div>
+              </div>
             </div>
-            -->
-            <div class="col-xs-12">
-                <div class="card">
-                    <div class="card-header pb-0 card-no-border">
-                        <div class="row">
-                            <div class="col-lg-4">
-                                <div class="input-group"><span class="input-group-text" id="basic-addon1"><i class="fa fa-search"></i></span>
-                                    <input class="form-control" type="text" placeholder="Cari nama produk atau SKU">
-                                </div>
-                            </div>
-                            <div class="col-lg-1"></div>
-                            <div class="col-lg-2">
-                                <select class="form-select" id="validationDefault04">
-                                    <option selected="" disabled="" value="">Urutan</option>
-                                    <option>Stok Tertinggi</option>
-                                    <option>Stok Terendah</option>
-                                    <option>Harga Tertinggi</option>
-                                    <option>Harga Terendah</option>
-                                    <option>Nama : A-Z</option>
-                                    <option>Nama : Z-A</option>
-                                </select>
-                            </div>
-                        </div>
+          </div>
+
+          <div class="col-xs-12">
+            <div class="card">
+              <div class="card-header pb-0 card-no-border">
+                <div class="row">
+                  <div class="col-lg-4">
+                    <div class="input-group"><span class="input-group-text" id="basic-addon1"><i
+                          class="fa fa-search"></i></span>
+                      <input class="form-control" type="text" placeholder="Cari nama produk atau SKU">
                     </div>
-                    <div class="card-body">
-                        <h5>235 Produk</h5>
-                        <br>
-                        <div class="row header-table">
-                            <div class="col-lg-4 col-xs-4">INFO PRODUK</div>
-                            <div class="col-lg-2 col-xs-2">HARGA</div>
-                            <div class="col-lg-2 col-xs-2">STOK</div>
-                            <div class="col-lg-2 col-xs-2">STATUS</div>
-                            <div class="col-lg-2 col-xs-2"></div>
-                        </div>
-                        <div class="row body-table">
-                            <div class="col-lg-1 col-xs-1">
-                                <img class="img-fluid" src="../../Product-Image/1.jpg" alt="product_image" width="75px">
-                            </div>
-                            <div class="col-lg-3 col-xs-3">
-                                <div style="height:40px; overflow-x: hidden;">
-                                    IMP Mangkok Kertas 360ml 500ml 650ml 800ml 1000ml / Paper Bowl 12oz 17oz 23oz 28oz 33oz / Mangkok Kertas Polos + Tutup Isi 50 pcs
-                                </div>
-                                <div style="margin-top: 5px; color: #9AA0A6;">
-                                    ID (SKU): -
-                                </div>
-                            </div>
-                            <div class="col-lg-2 col-xs-2">
-                                <div style="width:80%;">
-                                    <div class="input-group"><span class="input-group-text" id="basic-addon1">Rp</span>
-                                        <input class="form-control" type="text" value="25.000">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-1 col-xs-1">
-                                <input class="form-control digits" type="number" value="100">
-                            </div>
-                            <div class="col-lg-1 col-xs-1">
-
-                            </div>
-                            <div class="col-lg-2 col-xs-2">
-                                <div class="flex-grow-1 icon-state">
-                                    <label class="switch">
-                                        <input type="checkbox" checked=""><span class="switch-state"></span>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="col-lg-2 col-xs-2">
-                                <select class="form-select" id="validationDefault04">
-                                    <option selected="" disabled="" value="">Action</option>
-                                    <option>Edit Produk </option>
-                                    <option>Non-Aktif</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="row body-table">
-                            <div class="col-lg-1 col-xs-1">
-                                <img class="img-fluid" src="../../Product-Image/1.jpg" alt="product_image" width="75px">
-                            </div>
-                            <div class="col-lg-3 col-xs-3">
-                                <div style="height:40px; overflow-x: hidden;">
-                                    IMP Mangkok Kertas 360ml 500ml 650ml 800ml 1000ml / Paper Bowl 12oz 17oz 23oz 28oz 33oz / Mangkok Kertas Polos + Tutup Isi 50 pcs
-                                </div>
-                                <div style="margin-top: 5px; color: #9AA0A6;">
-                                    ID (SKU): -
-                                </div>
-                            </div>
-                            <div class="col-lg-2 col-xs-2">
-                                <div style="width:80%;">
-                                    <div class="input-group"><span class="input-group-text" id="basic-addon1">Rp</span>
-                                        <input class="form-control" type="text" value="25.000">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-1 col-xs-1">
-                                <input class="form-control digits" type="number" value="100">
-                            </div>
-                            <div class="col-lg-1 col-xs-1">
-
-                            </div>
-                            <div class="col-lg-2 col-xs-2">
-                                <div class="flex-grow-1 icon-state">
-                                    <label class="switch">
-                                        <input type="checkbox" checked=""><span class="switch-state"></span>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="col-lg-2 col-xs-2">
-                                <select class="form-select" id="validationDefault04">
-                                    <option selected="" disabled="" value="">Action</option>
-                                    <option>Edit Produk </option>
-                                    <option>Non-Aktif</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="row body-table">
-                            <div class="col-lg-1 col-xs-1">
-                                <img class="img-fluid" src="../../Product-Image/1.jpg" alt="product_image" width="75px">
-                            </div>
-                            <div class="col-lg-3 col-xs-3">
-                                <div style="height:40px; overflow-x: hidden;">
-                                    IMP Mangkok Kertas 360ml 500ml 650ml 800ml 1000ml / Paper Bowl 12oz 17oz 23oz 28oz 33oz / Mangkok Kertas Polos + Tutup Isi 50 pcs
-                                </div>
-                                <div style="margin-top: 5px; color: #9AA0A6;">
-                                    ID (SKU): -
-                                </div>
-                            </div>
-                            <div class="col-lg-2 col-xs-2">
-                                <div style="width:80%;">
-                                    <div class="input-group"><span class="input-group-text" id="basic-addon1">Rp</span>
-                                        <input class="form-control" type="text" value="25.000">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-1 col-xs-1">
-                                <input class="form-control digits" type="number" value="100">
-                            </div>
-                            <div class="col-lg-1 col-xs-1">
-
-                            </div>
-                            <div class="col-lg-2 col-xs-2">
-                                <div class="flex-grow-1 icon-state">
-                                    <label class="switch">
-                                        <input type="checkbox" checked=""><span class="switch-state"></span>
-                                    </label>
-                                </div>
-                            </div>
-                            <div class="col-lg-2 col-xs-2">
-                                <select class="form-select" id="validationDefault04">
-                                    <option selected="" disabled="" value="">Action</option>
-                                    <option>Edit Produk </option>
-                                    <option>Non-Aktif</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
+                  </div>
+                  <div class="col-lg-1"></div>
+                  <div class="col-lg-2">
+                    <select class="form-select" id="validationDefault04">
+                      <option selected="" disabled="" value="">Urutan</option>
+                      <option>Stok Tertinggi</option>
+                      <option>Stok Terendah</option>
+                      <option>Harga Tertinggi</option>
+                      <option>Harga Terendah</option>
+                      <option>Nama : A-Z</option>
+                      <option>Nama : Z-A</option>
+                    </select>
+                  </div>
                 </div>
+              </div>
+              <div class="card-body">
+                <h5>235 Produk</h5>
+                <br>
+                <div class="row header-table">
+                  <div class="col-lg-4 col-xs-4">INFO PRODUK</div>
+                  <div class="col-lg-2 col-xs-2">HARGA</div>
+                  <div class="col-lg-2 col-xs-2">STOK</div>
+                  <div class="col-lg-2 col-xs-2">STATUS</div>
+                  <div class="col-lg-2 col-xs-2"></div>
+                </div>
+                <div class="row body-table">
+                  <div class="col-lg-1 col-xs-1">
+                    <img class="img-fluid" src="../../Product-Image/1.jpg" alt="product_image" width="75px">
+                  </div>
+                  <div class="col-lg-3 col-xs-3">
+                    <div style="height:40px; overflow-x: hidden;">
+                      IMP Mangkok Kertas 360ml 500ml 650ml 800ml 1000ml / Paper Bowl 12oz 17oz 23oz 28oz 33oz / Mangkok
+                      Kertas Polos + Tutup Isi 50 pcs
+                    </div>
+                    <div style="margin-top: 5px; color: #9AA0A6;">
+                      ID (SKU): -
+                    </div>
+                  </div>
+                  <div class="col-lg-2 col-xs-2">
+                    <div style="width:80%;">
+                      <div class="input-group"><span class="input-group-text" id="basic-addon1">Rp</span>
+                        <input class="form-control" type="text" value="25.000">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-1 col-xs-1">
+                    <input class="form-control digits" type="number" value="100">
+                  </div>
+                  <div class="col-lg-1 col-xs-1">
+
+                  </div>
+                  <div class="col-lg-2 col-xs-2">
+                    <div class="flex-grow-1 icon-state">
+                      <label class="switch">
+                        <input type="checkbox" checked=""><span class="switch-state"></span>
+                      </label>
+                    </div>
+                  </div>
+                  <div class="col-lg-2 col-xs-2">
+                    <select class="form-select" id="validationDefault04">
+                      <option selected="" disabled="" value="">Action</option>
+                      <option>Edit Produk </option>
+                      <option>Non-Aktif</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="row body-table">
+                  <div class="col-lg-1 col-xs-1">
+                    <img class="img-fluid" src="../../Product-Image/1.jpg" alt="product_image" width="75px">
+                  </div>
+                  <div class="col-lg-3 col-xs-3">
+                    <div style="height:40px; overflow-x: hidden;">
+                      IMP Mangkok Kertas 360ml 500ml 650ml 800ml 1000ml / Paper Bowl 12oz 17oz 23oz 28oz 33oz / Mangkok
+                      Kertas Polos + Tutup Isi 50 pcs
+                    </div>
+                    <div style="margin-top: 5px; color: #9AA0A6;">
+                      ID (SKU): -
+                    </div>
+                  </div>
+                  <div class="col-lg-2 col-xs-2">
+                    <div style="width:80%;">
+                      <div class="input-group"><span class="input-group-text" id="basic-addon1">Rp</span>
+                        <input class="form-control" type="text" value="25.000">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-1 col-xs-1">
+                    <input class="form-control digits" type="number" value="100">
+                  </div>
+                  <div class="col-lg-1 col-xs-1">
+
+                  </div>
+                  <div class="col-lg-2 col-xs-2">
+                    <div class="flex-grow-1 icon-state">
+                      <label class="switch">
+                        <input type="checkbox" checked=""><span class="switch-state"></span>
+                      </label>
+                    </div>
+                  </div>
+                  <div class="col-lg-2 col-xs-2">
+                    <select class="form-select" id="validationDefault04">
+                      <option selected="" disabled="" value="">Action</option>
+                      <option>Edit Produk </option>
+                      <option>Non-Aktif</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="row body-table">
+                  <div class="col-lg-1 col-xs-1">
+                    <img class="img-fluid" src="../../Product-Image/1.jpg" alt="product_image" width="75px">
+                  </div>
+                  <div class="col-lg-3 col-xs-3">
+                    <div style="height:40px; overflow-x: hidden;">
+                      IMP Mangkok Kertas 360ml 500ml 650ml 800ml 1000ml / Paper Bowl 12oz 17oz 23oz 28oz 33oz / Mangkok
+                      Kertas Polos + Tutup Isi 50 pcs
+                    </div>
+                    <div style="margin-top: 5px; color: #9AA0A6;">
+                      ID (SKU): -
+                    </div>
+                  </div>
+                  <div class="col-lg-2 col-xs-2">
+                    <div style="width:80%;">
+                      <div class="input-group"><span class="input-group-text" id="basic-addon1">Rp</span>
+                        <input class="form-control" type="text" value="25.000">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-lg-1 col-xs-1">
+                    <input class="form-control digits" type="number" value="100">
+                  </div>
+                  <div class="col-lg-1 col-xs-1">
+
+                  </div>
+                  <div class="col-lg-2 col-xs-2">
+                    <div class="flex-grow-1 icon-state">
+                      <label class="switch">
+                        <input type="checkbox" checked=""><span class="switch-state"></span>
+                      </label>
+                    </div>
+                  </div>
+                  <div class="col-lg-2 col-xs-2">
+                    <select class="form-select" id="validationDefault04">
+                      <option selected="" disabled="" value="">Action</option>
+                      <option>Edit Produk </option>
+                      <option>Non-Aktif</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
             </div>
-            <!-- Container-fluid Ends-->
+          </div>
+          <!-- Container-fluid Ends-->
         </div>
       </div>
     </div>
