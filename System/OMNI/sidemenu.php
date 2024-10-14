@@ -24,15 +24,46 @@
                             <h6>Pinned</h6>
                         </div>
                     </li>
+                    <!-- HOME -->
+                    <li class="sidebar-main-title">
+                        <div>
+                            <h6>HOME</h6>
+                        </div>
+                    </li>
                     <li class="sidebar-list">
                         <i class="fa fa-thumb-tack"></i>
-                        <a id="account-link" class="sidebar-link sidebar-title link-nav" href="">
+                        <a id="account-link" class="sidebar-link sidebar-title link-nav" href="../Dashboard/">
                             <span style="font-size: 1rem; color: white; width: fit-content;">
                                 <i class="icofont icofont-home"></i>
                             </span>
-                            <span>Home</span>
+                            <span>Dashboard</span>
                         </a>
                     </li>
+                    <!-- PRODUK -->
+                    <li class="sidebar-main-title">
+                        <div>
+                            <h6>PRODUK</h6>
+                        </div>
+                    </li>
+                    <li class="sidebar-list">
+                        <i class="fa fa-thumb-tack"></i>
+                        <a id="account-link" class="sidebar-link sidebar-title link-nav" href="../Produk/">
+                            <span style="font-size: 1rem; color: white; width: fit-content;">
+                                <i class="fa fa-cubes"></i>
+                            </span>
+                            <span>Daftar Produk</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-list">
+                        <i class="fa fa-thumb-tack"></i>
+                        <a id="account-link" class="sidebar-link sidebar-title link-nav" href="../Produk/add-produk.php">
+                            <span style="font-size: 1rem; color: white; width: fit-content;">
+                                <i class="fa fa-plus-circle"></i>
+                            </span>
+                            <span>Tambah Produk</span>
+                        </a>
+                    </li>
+                    <!--
                     <li class="sidebar-list"><i class="fa fa-thumb-tack"></i><a class="sidebar-link sidebar-title" href="#">
                             <span style="font-size: 1rem; color: white; width: fit-content;"><i
                                     class="fa fa-cubes"></i></span><span>Produk</span></a>
@@ -41,12 +72,56 @@
                                     <h5 class="sub-arrow"><i class="fa fa-angle-right"></i></h5>
                                 </a>
                             </li>
-                            <li><a href="#">Daftar Produk
+                            <li><a href="../Produk/">Daftar Produk
                                     <h5 class="sub-arrow"><i class="fa fa-angle-right"></i></h5>
                                 </a>
                             </li>
                         </ul>
                     </li>
+                    -->
+                    <!-- PESANAN -->
+                    <li class="sidebar-main-title">
+                        <div>
+                            <h6>PESANAN</h6>
+                        </div>
+                    </li>
+                    <li class="sidebar-list">
+                        <i class="fa fa-thumb-tack"></i>
+                        <a id="account-link" class="sidebar-link sidebar-title link-nav" href="#">
+                            <span style="font-size: 1rem; color: white; width: fit-content;">
+                                <i class="icofont icofont-basket"></i>
+                            </span>
+                            <span>Pesanan Baru</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-list">
+                        <i class="fa fa-thumb-tack"></i>
+                        <a id="account-link" class="sidebar-link sidebar-title link-nav" href="#">
+                            <span style="font-size: 1rem; color: white; width: fit-content;">
+                                <i class="fa fa-plus-circle"></i>
+                            </span>
+                            <span>Pesanan Diproses</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-list">
+                        <i class="fa fa-thumb-tack"></i>
+                        <a id="account-link" class="sidebar-link sidebar-title link-nav" href="#">
+                            <span style="font-size: 1rem; color: white; width: fit-content;">
+                                <i class="fa fa-plus-circle"></i>
+                            </span>
+                            <span>Pesanan Selesai</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-list">
+                        <i class="fa fa-thumb-tack"></i>
+                        <a id="account-link" class="sidebar-link sidebar-title link-nav" href="#">
+                            <span style="font-size: 1rem; color: white; width: fit-content;">
+                                <i class="fa fa-plus-circle"></i>
+                            </span>
+                            <span>Pesanan Batal</span>
+                        </a>
+                    </li>
+                    <!--
                     <li class="sidebar-list"><i class="fa fa-thumb-tack"></i>
                         <a class="sidebar-link sidebar-title" href="#">
                             <span style="font-size: 1rem; color: white; width: fit-content;">
@@ -68,6 +143,13 @@
                                 </a>
                             </li>
                         </ul>
+                    </li>
+                    -->
+                    <!-- SETTING -->
+                    <li class="sidebar-main-title">
+                        <div>
+                            <h6>SETTING</h6>
+                        </div>
                     </li>
                     <li class="sidebar-list">
                         <i class="fa fa-thumb-tack"></i>
