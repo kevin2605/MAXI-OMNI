@@ -56,7 +56,8 @@
                     </li>
                     <li class="sidebar-list">
                         <i class="fa fa-thumb-tack"></i>
-                        <a id="account-link" class="sidebar-link sidebar-title link-nav" href="../Produk/add-produk.php">
+                        <a id="account-link" class="sidebar-link sidebar-title link-nav"
+                            href="../Produk/add-produk.php">
                             <span style="font-size: 1rem; color: white; width: fit-content;">
                                 <i class="fa fa-plus-circle"></i>
                             </span>
@@ -87,7 +88,7 @@
                     </li>
                     <li class="sidebar-list">
                         <i class="fa fa-thumb-tack"></i>
-                        <a id="account-link" class="sidebar-link sidebar-title link-nav" href="#">
+                        <a id="account-link" class="sidebar-link sidebar-title link-nav" href="../Order/new-order.php">
                             <span style="font-size: 1rem; color: white; width: fit-content;">
                                 <i class="icofont icofont-basket"></i>
                             </span>
@@ -96,7 +97,8 @@
                     </li>
                     <li class="sidebar-list">
                         <i class="fa fa-thumb-tack"></i>
-                        <a id="account-link" class="sidebar-link sidebar-title link-nav" href="#">
+                        <a id="account-link" class="sidebar-link sidebar-title link-nav"
+                            href="../Order/processed-order.php">
                             <span style="font-size: 1rem; color: white; width: fit-content;">
                                 <i class="fa fa-plus-circle"></i>
                             </span>
@@ -105,7 +107,8 @@
                     </li>
                     <li class="sidebar-list">
                         <i class="fa fa-thumb-tack"></i>
-                        <a id="account-link" class="sidebar-link sidebar-title link-nav" href="#">
+                        <a id="account-link" class="sidebar-link sidebar-title link-nav"
+                            href="../Order/finish-order.php">
                             <span style="font-size: 1rem; color: white; width: fit-content;">
                                 <i class="fa fa-plus-circle"></i>
                             </span>
@@ -114,7 +117,8 @@
                     </li>
                     <li class="sidebar-list">
                         <i class="fa fa-thumb-tack"></i>
-                        <a id="account-link" class="sidebar-link sidebar-title link-nav" href="#">
+                        <a id="account-link" class="sidebar-link sidebar-title link-nav"
+                            href="../Order/cancel-order.php">
                             <span style="font-size: 1rem; color: white; width: fit-content;">
                                 <i class="fa fa-plus-circle"></i>
                             </span>
@@ -153,7 +157,8 @@
                     </li>
                     <li class="sidebar-list">
                         <i class="fa fa-thumb-tack"></i>
-                        <a id="account-link" class="sidebar-link sidebar-title link-nav" href="../Accounting/chartofaccount.php">
+                        <a id="account-link" class="sidebar-link sidebar-title link-nav"
+                            href="../Accounting/chartofaccount.php">
                             <span style="font-size: 1rem; color: white; width: fit-content;">
                                 <i class="icofont icofont-gears"></i>
                             </span>

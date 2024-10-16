@@ -130,11 +130,9 @@
         </div>
         <div class="container-fluid <?php echo $accessDenied ? 'hiddenn' : ''; ?>">
           <!-- Container-fluid start -->
-
-          <div class="col-xs-12">
+          <!-- <div class="col-xs-12">
             <div class="card">
               <div class="card-header pb-0 card-no-border">
-
               </div>
               <div class="card-body">
                 <div class="table-responsive custom-scrollbar">
@@ -151,9 +149,9 @@
                     </thead>
                     <tbody>
                       <tr class="border-bottom-secondary">
-                        <td style="width: 10%;"> <!-- Set the width of the image column -->
+                        <td style="width: 10%;">  Set the width of the image column 
                           <img class="img-fluid" src="../../Product-Image/1.jpg" alt="profile"
-                            style="width: 80px; height: auto;"> <!-- Set image size -->
+                            style="width: 80px; height: auto;">  Set image size 
                         </td>
                         <td style="width: 30%;">IMP Mangkok Kertas 360ml 500ml 650ml 800ml 1000ml /
                           Paper Bowl 12oz 17oz 23oz 28oz 33oz /
@@ -164,9 +162,9 @@
                         <td>Apple Inc.</td>
                       </tr>
                       <tr class="border-bottom-secondary">
-                        <td style="width: 10%; "> <!-- Set the width of the image column -->
+                        <td style="width: 10%; "> 
                           <img class="img-fluid" src="../../Product-Image/1.jpg" alt="profile"
-                            style="width: 80px; height: auto;"> <!-- Set image size -->
+                            style="width: 80px; height: auto;"> 
                         </td>
                         <td style="width: 30%;">IMP Mangkok Kertas 360ml 500ml 650ml 800ml 1000ml /
                           Paper Bowl 12oz 17oz 23oz 28oz 33oz /
@@ -177,9 +175,9 @@
                         <td>Apple Inc.</td>
                       </tr>
                       <tr class="border-bottom-secondary">
-                        <td style="width: 10%; "> <!-- Set the width of the image column -->
+                        <td style="width: 10%; "> 
                           <img class="img-fluid" src="../../Product-Image/1.jpg" alt="profile"
-                            style="width: 80px; height: auto;"> <!-- Set image size -->
+                            style="width: 80px; height: auto;"> 
                         </td>
                         <td style="width: 30%;">IMP Mangkok Kertas 360ml 500ml 650ml 800ml 1000ml /
                           Paper Bowl 12oz 17oz 23oz 28oz 33oz /
@@ -190,14 +188,18 @@
                         <td>Apple Inc.</td>
                       </tr>
                       <tr class="border-bottom-secondary">
-                        <td style="width: 10%; "> <!-- Set the width of the image column -->
+                        <td style="width: 10%; "> 
                           <img class="img-fluid" src="../../Product-Image/1.jpg" alt="profile"
-                            style="width: 80px; height: auto;"> <!-- Set image size -->
+                            style="width: 80px; height: auto;">
                         </td>
                         <td style="width: 30%;">IMP Mangkok Kertas 360ml 500ml 650ml 800ml 1000ml /
                           Paper Bowl 12oz 17oz 23oz 28oz 33oz /
                           Mangkok Kertas Polos + Tutup Isi 50 pcs</td>
-                        <td>Wolfe</td>
+                        <td style="width: 10%; ">
+                          <div class="col-lg-8">
+                            <input class="form-control digits" type="number" value="100">
+                          </div>
+                        </td>
                         <td>RamJacob@twitter</td>
                         <td>Developer</td>
                         <td>Apple Inc.</td>
@@ -209,7 +211,7 @@
                 </div>
               </div>
             </div>
-          </div>
+          </div> -->
 
           <div class="col-xs-12">
             <div class="card">
