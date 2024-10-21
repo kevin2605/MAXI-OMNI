@@ -573,7 +573,6 @@
                         </div>
                       </div>
                     </div>
-
                     <div class="card mb-3">
                       <div class="card-body">
                         <div class="sidebar-body">
@@ -581,48 +580,87 @@
                           <form>
                             <div class="row g-lg-4 g-3">
                               <div class="col-12">
-                                <div class="row g-3">
-                                  <div class="col-sm-6">
+                                <div class="row g-3" id="input-container">
+                                  <div class="col-sm-5">
                                     <div class="row g-2">
-                                      <div class="col-12">
-                                        <label class="form-label m-0" for="validationDefault04">Product ID (SKU)</label>
-                                      </div>
-                                      <div class="col-12">
-                                        <input class="form-control" id="initialCost" type="number">
+                                      <div class="col-12"> <label class="form-label m-0" for="sku1">Product ID
+                                          (SKU)</label> </div>
+                                      <div class="col-12"> <input class="form-control" id="sku1" type="text"
+                                          placeholder="Enter Product ID"> </div>
+                                    </div>
+                                  </div>
+                                  <div class="col-sm-5">
+                                    <div class="row g-2">
+                                      <div class="col-12"> <label class="form-label m-0" for="qty1">Qty</label> </div>
+                                      <div class="col-12"> <input class="form-control" id="qty1" type="number"
+                                          placeholder="Enter Quantity"> </div>
+                                    </div>
+                                  </div>
+                                  <div class="col-sm-2">
+                                    <div class="row g-2">
+                                      <div class="col-12"> <label class="form-label m-0" for="qty1"></label>
                                       </div>
                                     </div>
                                   </div>
-                                  <div class="col-sm-6">
-                                    <div class="row g-2">
-                                      <div class="col-12">
-                                        <label class="form-label m-0" for="validationDefault04">Qty</label>
+                                </div>
+                              </div>
+                            </div>
+                            <script>
+                              let counter = 2;
+                              const inputContainer = document.getElementById('input-container');
+                              inputContainer.addEventListener('input', function () {
+                                const inputs = inputContainer.querySelectorAll('input');
+                                const allFilled = Array.prototype.every.call(inputs, function (input) {
+                                  return input.value.trim() !== '';
+                                });
+                                if (allFilled) {
+                                  const newInput = `
+                                  <div class="input-group" id="group${counter}" style="margin-bottom: 15px;">
+                                      <div class="col-sm-5" style="padding-right: 15px;">
+                                          <div class="row g-2">
+                                              <div class="col-12">
+                                                  <label class="form-label m-0" for="sku${counter}">Product ID (SKU)</label>
+                                              </div>
+                                              <div class="col-12">
+                                                  <input class="form-control" id="sku${counter}" type="text" placeholder="Enter Product ID" style="margin-bottom: 10px;">
+                                              </div>
+                                          </div>
                                       </div>
-                                      <div class="col-12">
-                                        <input class="form-control" id="initialCost" type="number">
+                                      <div class="col-sm-5" style="padding-right: 5px;">
+                                          <div class="row g-2">
+                                              <div class="col-12">
+                                                  <label class="form-label m-0" for="qty${counter}">Qty</label>
+                                              </div>
+                                              <div class="col-12">
+                                                  <input class="form-control" id="qty${counter}" type="number" placeholder="Enter Quantity" style="margin-bottom: 10px;">
+                                              </div>
+                                          </div>
                                       </div>
-                                    </div>
+                                      <div class="col-sm-2">
+                                          <div class="row g-2">
+                                              <div class="col-12">
+                                              <label>
+                                              </div>
+                                              <div class="col-12">
+                                                  <button class="btn btn-danger" onclick="removeInput('group${counter}')">Remove</button>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        <p><span class="txt-danger">*</span>remove input jika tidak diperlukan</p>
                                   </div>
-                                  <div class="col-sm-6">
-                                    <div class="row g-2">
-                                      <div class="col-12">
-                                        <label class="form-label m-0" for="validationDefault04">Product ID (SKU)</label>
-                                      </div>
-                                      <div class="col-12">
-                                        <input class="form-control" id="initialCost" type="number">
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div class="col-sm-6">
-                                    <div class="row g-2">
-                                      <div class="col-12">
-                                        <label class="form-label m-0" for="validationDefault04">Qty</label>
-                                      </div>
-                                      <div class="col-12">
-                                        <input class="form-control" id="initialCost" type="number">
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <!-- <div class="col-sm-4">
+                              `;
+                                  inputContainer.insertAdjacentHTML('beforeend', newInput);
+                                  counter++;
+                                }
+                              });
+                              function removeInput(groupId) {
+                                const inputGroup = document.getElementById(groupId);
+                                if (inputGroup) {
+                                  inputGroup.remove();
+                                }
+                              }
+                            </script>
+                            <!-- <div class="col-sm-4">
                                     <div class="row g-2">
                                       <div class="col-12">
                                         <label class="form-label m-0" for="categoryDropdown">Add Category</label>
@@ -668,7 +706,7 @@
                                       </div>
                                     </div>
                                   </div> -->
-                                  <!-- <div class="col-sm-6">
+                            <!-- <div class="col-sm-6">
                                     <div class="row g-2 product-tag">
                                       <div class="col-12">
                                         <label class="form-label d-block m-0">Add Tag</label>
@@ -731,11 +769,11 @@
                                       </div>
                                     </div>
                                   </div> -->
-                                </div>
-                              </div>
-                              <div class="col-12">
-                                <div class="row g-3">
-                                  <!-- <div class="col-sm-6">
+                        </div>
+                      </div>
+                      <div class="col-12">
+                        <div class="row g-3">
+                          <!-- <div class="col-sm-6">
                                     <div class="row">
                                       <div class="col-12">
                                         <label class="form-label" for="publishStatus">Publish Status</label>
@@ -758,10 +796,42 @@
                                       </div>
                                     </div>
                                   </div> -->
-                                </div>
-                              </div>
-                            </div>
-                            <!-- <div class="product-buttons">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-xl-12 col-sm-12 order-xl-0 order-sm-1">
+                      <div class="card-wrapper border rounded-3 h-100 checkbox-checked">
+                        <h6 class="sub-title">Icon Checkbox </h6>
+                        <div class="form-check checkbox checkbox-primary ps-0 main-icon-checkbox">
+                          <ul class="checkbox-wrapper">
+                            <li>
+                              <input class="form-check-input checkbox-shadow" id="checkbox-icon" type="checkbox">
+                              <label class="form-check-label" for="checkbox-icon"><i
+                                  class="fa fa-sliders"></i><span>Tokopedia</span></label>
+                            </li>
+                            <li>
+                              <input class="form-check-input checkbox-shadow" id="checkbox-icon1" type="checkbox"
+                                checked="">
+                              <label class="form-check-label" for="checkbox-icon1"><i class="fa fa-user">
+                                </i><span>Shopee
+                                </span></label>
+                            </li>
+                            <li>
+                              <input class="form-check-input checkbox-shadow" id="checkbox-icon2" type="checkbox">
+                              <label class="form-check-label" for="checkbox-icon2"><i class="fa fa-tags">
+                                </i><span>Tiktok</span></label>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                    <br>
+                    <div class="card-footer">
+                      <button class="btn btn-light" type="submit">Cancel </button>
+                      <button class="btn btn-primary m-r-15" type="submit">Submit</button>
+                    </div>
+                    <br>
+                    <!-- <div class="product-buttons">
                               <div class="btn">
                                 <div class="d-flex align-items-center gap-sm-2 gap-1">
                                   <svg>
@@ -777,11 +847,11 @@
                                 </div>
                               </div>
                             </div> -->
-                          </form>
-                        </div>
-                      </div>
-                    </div>
-                    <!-- <div class="card mb-3">
+                    </form>
+                </div>
+              </div>
+            </div>
+            <!-- <div class="card mb-3">
                       <div class="card-body">
                         <div class="sidebar-body advance-options">
                           <ul class="nav nav-tabs border-tab mb-0" id="advance-option-tab" role="tablist">
@@ -1059,14 +1129,14 @@
                       </div>
                     </div>
                     <button>Submit</button> -->
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </div>
-      <!-- Container-fluid Ends-->
     </div>
+  </div>
+  </div>
+  <!-- Container-fluid Ends-->
+  </div>
   </div>
   </div>
   <!-- footer start-->

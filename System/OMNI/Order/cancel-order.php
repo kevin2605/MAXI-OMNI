@@ -71,17 +71,13 @@
     <div class="page-wrapper compact-wrapper" id="pageWrapper">
         <!-- Page Header Start-->
         <div class="page-header">
-
             <?php include "../topmenu.php"; ?>
-
         </div>
         <!-- Page Header Ends-->
         <!-- Page Body Start-->
         <div class="page-body-wrapper">
             <!-- Page Sidebar Start-->
-
             <?php include "../sidemenu.php"; ?>
-
             <!-- Page Sidebar Ends-->
             <div class="page-body">
                 <div class="container-fluid">
@@ -90,14 +86,14 @@
                         if (isset($_GET["status"])) {
                             if ($_GET["status"] == "success") {
                                 echo '<div class="alert txt-success border-success outline-2x alert-dismissible fade show alert-icons" role="alert">
-                  <p><b> Selamat! </b>Kota baru berhasil disimpan ke database.</p>
-                  <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>';
+                                <p><b> Selamat! </b>Kota baru berhasil disimpan ke database.</p>
+                                <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>';
                             } else if ($_GET["status"] == "error") {
                                 echo '<div class="alert txt-danger border-danger outline-2x alert-dismissible fade show alert-icons" role="alert">
-                  <p><b> Error! </b>Terjadi kesalahan saat disimpan ke database.</p>
-                  <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>';
+                                <p><b> Error! </b>Terjadi kesalahan saat disimpan ke database.</p>
+                                <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>';
                             }
                         }
                         ?>
@@ -112,7 +108,6 @@
                                                 <use href="../../../assets/svg/icon-sprite.svg#stroke-home"></use>
                                             </svg></a></li>
                                     <li class="breadcrumb-item">Pesanan Batal</li>
-
                                 </ol>
                             </div>
                         </div>
@@ -159,7 +154,6 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="card">
-
                                 <div class="card-body">
                                     <div class="dt-ext table-responsive custom-scrollbar">
                                         <table class="display" id="export-button">

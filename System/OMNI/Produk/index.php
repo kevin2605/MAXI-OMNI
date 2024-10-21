@@ -18,6 +18,38 @@
     strpos($row['dashboard'], 'R') !== false;  // Delete
   
   $accessDenied = !$hasCRUDAccess;
+  $url = "https://fs.tokopedia.net/inventory/v1/fs/19044/product/info?shop_id=17971369&page=1&per_page=10";
+
+  // Inisialisasi CURL
+  $curl = curl_init($url);
+  curl_setopt($curl, CURLOPT_URL, $url);
+  curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+
+  // Headers (pastikan token Authorization benar)
+  
+  $headers = array(
+    "Authorization: Bearer c:VSF-CjqmQkGmieLVm6E6gA",
+  );
+  curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+
+  // Disable SSL verifikasi (hanya untuk testing, hindari pada production)
+  curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+  curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+
+  // Eksekusi CURL dan dapatkan respons
+  $resp = curl_exec($curl);
+  curl_close($curl);
+
+
+
+  // Decode respons menjadi array
+  $arr = json_decode($resp, true);
+
+  // Debug: Periksa apakah decoding berhasil
+  if (json_last_error() !== JSON_ERROR_NONE) {
+    echo "Error decoding JSON: " . json_last_error_msg();
+    exit; // Hentikan eksekusi jika JSON tidak valid
+  }
   ?>
   <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -44,29 +76,6 @@
     });
   </script>
 </head>
-<style>
-  .hidden {
-    display: none;
-  }
-
-  .hiddenn {
-    display: none;
-  }
-
-  .header-table {
-    border-top: 1px solid #DADCE0;
-    border-bottom: 1px solid #DADCE0;
-    padding: 10px;
-    /*padding-bottom:10px;*/
-  }
-
-  .body-table {
-    /*border-top: 1px solid #DADCE0;*/
-    border-bottom: 1px solid #DADCE0;
-    padding: 20px 10px 20px 10px;
-    /*padding-bottom:10px;*/
-  }
-</style>
 
 <body>
   <?php if ($accessDenied): ?>
@@ -226,7 +235,7 @@
                   <div class="col-lg-1"></div>
                   <div class="col-lg-2">
                     <select class="form-select" id="validationDefault04">
-                      <option selected="" disabled="" value="">Urutan</option>
+                      <option selected="" disabled="">Urutan</option>
                       <option>Stok Tertinggi</option>
                       <option>Stok Terendah</option>
                       <option>Harga Tertinggi</option>
@@ -237,142 +246,120 @@
                   </div>
                 </div>
               </div>
+
               <div class="card-body">
-                <h5>235 Produk</h5>
+                <h5><?php echo count($arr["data"]); ?> Produk</h5>
                 <br>
                 <div class="row header-table">
                   <div class="col-lg-4 col-xs-4">INFO PRODUK</div>
                   <div class="col-lg-2 col-xs-2">HARGA</div>
-                  <div class="col-lg-2 col-xs-2">STOK</div>
-                  <div class="col-lg-2 col-xs-2">STATUS</div>
+                  <div class="col-lg-1 col-xs-1">STOK</div>
+                  <div class="col-lg-2 col-xs-2">STORE</div>
+                  <div class="col-lg-1 col-xs-1">STATUS</div>
+                  <div class="col-lg-2 col-xs-2"></div>
                   <div class="col-lg-2 col-xs-2"></div>
                 </div>
-                <div class="row body-table">
-                  <div class="col-lg-1 col-xs-1">
-                    <img class="img-fluid" src="../../Product-Image/1.jpg" alt="product_image" width="75px">
-                  </div>
-                  <div class="col-lg-3 col-xs-3">
-                    <div style="height:40px; overflow-x: hidden;">
-                      IMP Mangkok Kertas 360ml 500ml 650ml 800ml 1000ml / Paper Bowl 12oz 17oz 23oz 28oz 33oz / Mangkok
-                      Kertas Polos + Tutup Isi 50 pcs
-                    </div>
-                    <div style="margin-top: 5px; color: #9AA0A6;">
-                      ID (SKU): -
-                    </div>
-                  </div>
-                  <div class="col-lg-2 col-xs-2">
-                    <div style="width:80%;">
-                      <div class="input-group"><span class="input-group-text" id="basic-addon1">Rp</span>
-                        <input class="form-control" type="text" value="25.000">
+
+                <?php if (isset($arr["data"])): ?>
+                  <?php foreach ($arr["data"] as $product): ?>
+                    <div class="row body-table">
+                      <div class="col-lg-1 col-xs-1">
+                        <img class="img-fluid" src="../../Product-Image/1.jpg" alt="product_image" width="75px">
+                      </div>
+                      <div class="col-lg-3 col-xs-3">
+                        <div style="height:40px; overflow-x: hidden;">
+                          <?php echo isset($product["basic"]["name"]) ? $product["basic"]["name"] : "Product name not available"; ?>
+                        </div>
+                        <div style="margin-top: 5px; color: #9AA0A6;">
+                          ID (SKU):
+                          <?php echo isset($product["other"]["sku"]) ? $product["other"]["sku"] : "Product SKU not available"; ?>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-2 col-xs-2">
+                        <div style="width:80%;">
+                          <div class="input-group">
+                            <span class="input-group-text" id="basic-addon1">Rp </span>
+                            <input class="form-control price-input" type="text"
+                              value="<?php echo isset($product['price']['value']) ? $product['price']['value'] : 'Product price not available'; ?>"
+                              data-id="<?php echo isset($product['basic']['productID']) ? $product['basic']['productID'] : 'ID tidak tersedia'; ?>" />
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-1 col-xs-1">
+                        <input class="form-control digits" type="text"
+                          value="<?php echo isset($product["stock"]["value"]) ? $product["stock"]["value"] : ""; ?>">
+                      </div>
+                      <div class="col-lg-2 col-xs-2">
+                        <input class="form-control digits" type="text" value="">
+                      </div>
+
+                      <div class="col-lg-1 col-xs-1">
+                        <div class="flex-grow-1 icon-state">
+                          <label class="switch">
+                            <input type="checkbox" <?php echo isset($product["basic"]["status"]) && $product["basic"]["status"] == 1 ? 'checked' : ''; ?>>
+                            <span class="switch-state"></span>
+                          </label>
+                        </div>
+                      </div>
+                      <div class="col-lg-2 col-xs-1">
+                        <select class="form-select" id="validationDefault04">
+                          <option selected="" disabled="">Action</option>
+                          <option>Edit Produk</option>
+                          <option>Non-Aktif</option>
+                        </select>
                       </div>
                     </div>
-                  </div>
-                  <div class="col-lg-1 col-xs-1">
-                    <input class="form-control digits" type="number" value="100">
-                  </div>
-                  <div class="col-lg-1 col-xs-1">
-
-                  </div>
-                  <div class="col-lg-2 col-xs-2">
-                    <div class="flex-grow-1 icon-state">
-                      <label class="switch">
-                        <input type="checkbox" checked=""><span class="switch-state"></span>
-                      </label>
-                    </div>
-                  </div>
-                  <div class="col-lg-2 col-xs-2">
-                    <select class="form-select" id="validationDefault04">
-                      <option selected="" disabled="" value="">Action</option>
-                      <option>Edit Produk </option>
-                      <option>Non-Aktif</option>
-                    </select>
-                  </div>
-                </div>
-                <div class="row body-table">
-                  <div class="col-lg-1 col-xs-1">
-                    <img class="img-fluid" src="../../Product-Image/1.jpg" alt="product_image" width="75px">
-                  </div>
-                  <div class="col-lg-3 col-xs-3">
-                    <div style="height:40px; overflow-x: hidden;">
-                      IMP Mangkok Kertas 360ml 500ml 650ml 800ml 1000ml / Paper Bowl 12oz 17oz 23oz 28oz 33oz / Mangkok
-                      Kertas Polos + Tutup Isi 50 pcs
-                    </div>
-                    <div style="margin-top: 5px; color: #9AA0A6;">
-                      ID (SKU): -
-                    </div>
-                  </div>
-                  <div class="col-lg-2 col-xs-2">
-                    <div style="width:80%;">
-                      <div class="input-group"><span class="input-group-text" id="basic-addon1">Rp</span>
-                        <input class="form-control" type="text" value="25.000">
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-lg-1 col-xs-1">
-                    <input class="form-control digits" type="number" value="100">
-                  </div>
-                  <div class="col-lg-1 col-xs-1">
-
-                  </div>
-                  <div class="col-lg-2 col-xs-2">
-                    <div class="flex-grow-1 icon-state">
-                      <label class="switch">
-                        <input type="checkbox" checked=""><span class="switch-state"></span>
-                      </label>
-                    </div>
-                  </div>
-                  <div class="col-lg-2 col-xs-2">
-                    <select class="form-select" id="validationDefault04">
-                      <option selected="" disabled="" value="">Action</option>
-                      <option>Edit Produk </option>
-                      <option>Non-Aktif</option>
-                    </select>
-                  </div>
-                </div>
-                <div class="row body-table">
-                  <div class="col-lg-1 col-xs-1">
-                    <img class="img-fluid" src="../../Product-Image/1.jpg" alt="product_image" width="75px">
-                  </div>
-                  <div class="col-lg-3 col-xs-3">
-                    <div style="height:40px; overflow-x: hidden;">
-                      IMP Mangkok Kertas 360ml 500ml 650ml 800ml 1000ml / Paper Bowl 12oz 17oz 23oz 28oz 33oz / Mangkok
-                      Kertas Polos + Tutup Isi 50 pcs
-                    </div>
-                    <div style="margin-top: 5px; color: #9AA0A6;">
-                      ID (SKU): -
-                    </div>
-                  </div>
-                  <div class="col-lg-2 col-xs-2">
-                    <div style="width:80%;">
-                      <div class="input-group"><span class="input-group-text" id="basic-addon1">Rp</span>
-                        <input class="form-control" type="text" value="25.000">
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-lg-1 col-xs-1">
-                    <input class="form-control digits" type="number" value="100">
-                  </div>
-                  <div class="col-lg-1 col-xs-1">
-
-                  </div>
-                  <div class="col-lg-2 col-xs-2">
-                    <div class="flex-grow-1 icon-state">
-                      <label class="switch">
-                        <input type="checkbox" checked=""><span class="switch-state"></span>
-                      </label>
-                    </div>
-                  </div>
-                  <div class="col-lg-2 col-xs-2">
-                    <select class="form-select" id="validationDefault04">
-                      <option selected="" disabled="" value="">Action</option>
-                      <option>Edit Produk </option>
-                      <option>Non-Aktif</option>
-                    </select>
-                  </div>
-                </div>
+                  <?php endforeach; ?>
+                <?php endif; ?>
               </div>
+              <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+              <script>
+                $(document).ready(function () {
+                  $('.price-input').on('blur', function () {
+                    const newPrice = $(this).val();
+                    const productID = $(this).data('id');
+
+                    console.log('New Price:', newPrice);
+                    console.log('Product ID:', productID);
+
+                    if (!isNaN(newPrice) && newPrice.trim() !== "" && productID !== 'ID tidak tersedia') {
+                      updateProductPricePHP(productID, newPrice);
+                    } else {
+                      alert("Please enter a valid number for the price.");
+                    }
+                  });
+                });
+
+                function updateProductPricePHP(productID, newPrice) {
+                  $.ajax({
+                    url: '../RequestAPI/tokopedia-update-price.php',
+                    type: 'POST',
+                    data: {
+                      //parameter
+                      product_id: productID,
+                      new_price: newPrice
+                    },
+                    success: function (response) {
+                      console.log('Response:', response);
+                      const responseData = JSON.parse(response);
+                      if (responseData.error) {
+                        alert('Error updating price: ' + responseData.error);
+                      } else {
+                        alert('Price updated successfully!');
+                      }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                      console.error('AJAX Error:', textStatus, errorThrown);
+                      alert('Error updating price: ' + errorThrown);
+                    }
+                  });
+                }
+              </script>
             </div>
           </div>
+
           <!-- Container-fluid Ends-->
         </div>
       </div>
@@ -392,6 +379,28 @@
       </div>
     </footer>
     <style>
+      .hidden {
+        display: none;
+      }
+
+      .hiddenn {
+        display: none;
+      }
+
+      .header-table {
+        border-top: 1px solid #DADCE0;
+        border-bottom: 1px solid #DADCE0;
+        padding: 10px;
+        /*padding-bottom:10px;*/
+      }
+
+      .body-table {
+        /*border-top: 1px solid #DADCE0;*/
+        border-bottom: 1px solid #DADCE0;
+        padding: 20px 10px 20px 10px;
+        /*padding-bottom:10px;*/
+      }
+
       .bell-icon {
         fill: gray;
         /* Warna abu-abu untuk ikon */

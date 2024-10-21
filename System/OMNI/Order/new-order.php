@@ -90,14 +90,14 @@
                         if (isset($_GET["status"])) {
                             if ($_GET["status"] == "success") {
                                 echo '<div class="alert txt-success border-success outline-2x alert-dismissible fade show alert-icons" role="alert">
-                  <p><b> Selamat! </b>Kota baru berhasil disimpan ke database.</p>
-                  <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>';
+                                <p><b> Selamat! </b>Kota baru berhasil disimpan ke database.</p>
+                                <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>';
                             } else if ($_GET["status"] == "error") {
                                 echo '<div class="alert txt-danger border-danger outline-2x alert-dismissible fade show alert-icons" role="alert">
-                  <p><b> Error! </b>Terjadi kesalahan saat disimpan ke database.</p>
-                  <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>';
+                                <p><b> Error! </b>Terjadi kesalahan saat disimpan ke database.</p>
+                                <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>';
                             }
                         }
                         ?>
@@ -127,30 +127,40 @@
                                     <h3>FILTER</h3>
                                 </div>
                                 <div class="card-body">
-                                    <form class="form theme-form" method="POST">
+                                    <form method="GET" action="" class="d-flex flex-wrap align-items-center">
                                         <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="row">
-                                                    <div class="mb-3 row">
-                                                        <label class="col-sm-2">Tanggal Awal Faktur</label>
-                                                        <div class="col-sm-10">
-                                                            <input class="form-control" id="startdatefaktur"
-                                                                name="startdatefaktur" type="date">
-                                                        </div>
-                                                    </div>
-                                                    <div class="mb-3 row">
-                                                        <label class="col-sm-2">Tanggal Akhir Faktur</label>
-                                                        <div class="col-sm-10">
-                                                            <input class="form-control" id="enddatefaktur"
-                                                                name="enddatefaktur" type="date">
+                                            <div class="col-md-5">
+                                                <div class="mb-3 row">
+                                                    <div class="d-flex align-items-center justify-content-left">
+                                                        <label class="col-sm-5" style="padding-right: 5px;">Start
+                                                            Date:</label>
+                                                        <div class="col-sm-7">
+                                                            <input type="date" class="form-control me-2" id="startDate"
+                                                                name="startDate"
+                                                                value="<?php echo isset($_GET['startDate']) ? htmlspecialchars($_GET['startDate']) : ''; ?>">
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="col-md-5">
+                                                <div class="mb-3 row">
+                                                    <div class="d-flex align-items-center justify-content-left">
+                                                        <label class="col-sm-5 text-center"
+                                                            style="padding-right: 13px;">End Date:</label>
+                                                        <div class="col-sm-7">
+                                                            <input type="date" class="form-control me-2" id="endDate"
+                                                                name="endDate"
+                                                                value="<?php echo isset($_GET['endDate']) ? htmlspecialchars($_GET['endDate']) : ''; ?>">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <button class="btn btn-primary" onclick="resetDates()"><i
+                                                        class="icofont icofont-refresh"
+                                                        id="resetDatesButton"></i></button>
+                                            </div>
                                         </div>
-                                        <!--<button class="btn btn-primary" type="button" onclick="submitFilter()"><i class="fa fa-search"></i> Search</button>-->
-                                        <button class="btn btn-primary" name="btnSearch"><i class="fa fa-search"></i>
-                                            Search</button>
                                     </form>
                                 </div>
                             </div>
@@ -184,7 +194,6 @@
                                                                         AND rih.ReceptionID=rh.ReceptionID
                                                                         AND rh.PurchaseOrderID=po.PurchaseOrderID
                                                                         AND po.SupplierNum=s.SupplierNum";
-
                                                     if ($_POST["supplier"] != '') {
                                                         $suppliers = explode(" - ", $_POST["supplier"]);
                                                         $query .= " AND po.SupplierNum ='" . $suppliers[0] . "'";
@@ -195,7 +204,6 @@
                                                     if ($_POST["enddatefaktur"] != '') {
                                                         $query .= " AND rih.TaxInvoiceDate <='" . $_POST["enddatefaktur"] . "'";
                                                     }
-
                                                     $result = mysqli_query($conn, $query);
                                                     while ($row = mysqli_fetch_array($result)) {
                                                         echo ' <tr>
