@@ -25,30 +25,22 @@
   curl_setopt($curl, CURLOPT_URL, $url);
   curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 
-  // Headers (pastikan token Authorization benar)
-  
   $headers = array(
-    "Authorization: Bearer c:VSF-CjqmQkGmieLVm6E6gA",
+    "Authorization: Bearer c:pduAyTeTRMiw_cThila3FA",
   );
   curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
 
-  // Disable SSL verifikasi (hanya untuk testing, hindari pada production)
   curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
   curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 
-  // Eksekusi CURL dan dapatkan respons
   $resp = curl_exec($curl);
   curl_close($curl);
 
-
-
-  // Decode respons menjadi array
   $arr = json_decode($resp, true);
 
-  // Debug: Periksa apakah decoding berhasil
   if (json_last_error() !== JSON_ERROR_NONE) {
     echo "Error decoding JSON: " . json_last_error_msg();
-    exit; // Hentikan eksekusi jika JSON tidak valid
+    exit; 
   }
   ?>
   <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
@@ -246,7 +238,6 @@
                   </div>
                 </div>
               </div>
-
               <div class="card-body">
                 <h5><?php echo count($arr["data"]); ?> Produk</h5>
                 <br>
@@ -259,59 +250,102 @@
                   <div class="col-lg-2 col-xs-2"></div>
                   <div class="col-lg-2 col-xs-2"></div>
                 </div>
-
                 <?php if (isset($arr["data"])): ?>
-                  <?php foreach ($arr["data"] as $product): ?>
-                    <div class="row body-table">
-                      <div class="col-lg-1 col-xs-1">
-                        <img class="img-fluid" src="../../Product-Image/1.jpg" alt="product_image" width="75px">
-                      </div>
-                      <div class="col-lg-3 col-xs-3">
-                        <div style="height:40px; overflow-x: hidden;">
-                          <?php echo isset($product["basic"]["name"]) ? $product["basic"]["name"] : "Product name not available"; ?>
-                        </div>
-                        <div style="margin-top: 5px; color: #9AA0A6;">
-                          ID (SKU):
-                          <?php echo isset($product["other"]["sku"]) ? $product["other"]["sku"] : "Product SKU not available"; ?>
-                        </div>
-                      </div>
+                    <?php foreach ($arr["data"] as $product): ?>
+                        <div class="row body-table">
+                            <div class="col-lg-1 col-xs-1">
+                                <img class="img-fluid" src="../../Product-Image/1.jpg" alt="product_image" width="75px">
+                            </div>
+                            <div class="col-lg-3 col-xs-3">
+                                <div style="height:40px; overflow-x: hidden;">
+                                    <?php echo isset($product["basic"]["name"]) ? $product["basic"]["name"] : "Product name not available"; ?>
+                                </div>
+                                <div style="margin-top: 5px; color: #9AA0A6;">
+                                    ID (SKU):
+                                    <?php echo isset($product["other"]["sku"]) ? $product["other"]["sku"] : "Product SKU not available"; ?>
+                                </div>
+                            </div>
 
-                      <div class="col-lg-2 col-xs-2">
-                        <div style="width:80%;">
-                          <div class="input-group">
-                            <span class="input-group-text" id="basic-addon1">Rp </span>
-                            <input class="form-control price-input" type="text"
-                              value="<?php echo isset($product['price']['value']) ? $product['price']['value'] : 'Product price not available'; ?>"
-                              data-id="<?php echo isset($product['basic']['productID']) ? $product['basic']['productID'] : 'ID tidak tersedia'; ?>" />
-                          </div>
-                        </div>
-                      </div>
+                            <div class="col-lg-2 col-xs-2">
+                                <div style="width:80%;">
+                                    <div class="input-group">
+                                        <span class="input-group-text" id="basic-addon1">Rp </span>
+                                        <input class="form-control price-input" type="number"
+                                            value="<?php echo isset($product['price']['value']) ? $product['price']['value'] : 'Product price not available'; ?>"
+                                            data-id="<?php echo isset($product['basic']['productID']) ? $product['basic']['productID'] : 'ID tidak tersedia'; ?>" />
+                                    </div>
+                                </div>
+                            </div>
 
-                      <div class="col-lg-1 col-xs-1">
-                        <input class="form-control digits" type="text"
-                          value="<?php echo isset($product["stock"]["value"]) ? $product["stock"]["value"] : ""; ?>">
-                      </div>
-                      <div class="col-lg-2 col-xs-2">
-                        <input class="form-control digits" type="text" value="">
-                      </div>
+                            <div class="col-lg-1 col-xs-1">
+                                <input class="form-control stock-input" type="number"
+                                    value="<?php echo isset($product['stock']['value']) ? $product['stock']['value'] : 'Product stock not available'; ?>"
+                                    data-id="<?php echo isset($product['basic']['productID']) ? $product['basic']['productID'] : 'ID tidak tersedia'; ?>" />
+                            </div>
+                            <div class="col-lg-2 col-xs-2">
+                                <input class="form-control digits" type="text" value="">
+                            </div>
 
-                      <div class="col-lg-1 col-xs-1">
-                        <div class="flex-grow-1 icon-state">
-                          <label class="switch">
-                            <input type="checkbox" <?php echo isset($product["basic"]["status"]) && $product["basic"]["status"] == 1 ? 'checked' : ''; ?>>
-                            <span class="switch-state"></span>
-                          </label>
+                            <div class="col-lg-1 col-xs-1">
+                                <div class="flex-grow-1 icon-state">
+                                    <label class="switch">
+                                        <input type="checkbox" class="status" name="status" 
+                                            <?php echo isset($product["basic"]["status"]) && $product["basic"]["status"] == 1 ? 'checked' : ''; ?>
+                                            data-id="<?php echo isset($product['basic']['productID']) ? $product['basic']['productID'] : 'ID tidak tersedia'; ?>">
+                                        <span class="switch-state"></span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-2 col-xs-1">
+                                <select class="form-select" id="validationDefault04">
+                                    <option selected="" disabled="">Action</option>
+                                    <option>Edit Produk</option>
+                                    <option>Non-Aktif</option>
+                                </select>
+                            </div>
+                            <br>
+                        <?php
+                        $fs_id = 19044; 
+                        $product_id = $product['basic']['productID']; 
+                        $access_token = 'c:pduAyTeTRMiw_cThila3FA'; 
+
+                        $url = "https://fs.tokopedia.net/inventory/v1/fs/$fs_id/product/variant/$product_id";
+
+                        $ch = curl_init($url);
+                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                            'Authorization: Bearer ' . $access_token,
+                            'Content-Type: application/json'
+                        ]);
+
+                        $response = curl_exec($ch);
+                        if (curl_errno($ch)) {
+                            echo 'Error: ' . curl_error($ch);
+                        } else {
+                            $responseData = json_decode($response, true);
+                            if (isset($responseData['data']['children']) && !empty($responseData['data']['children'])) {
+                                ?>
+                                <div class="col-lg-2 col-xs-1">
+                                <select class="form-select variant-dropdown" onchange="showVariantDetails(this)">
+                                    <option selected="" disabled="">Lihat Varian</option>
+                                    <?php foreach ($responseData['data']['children'] as $variant): ?>
+                                        <option value="<?php echo $variant['product_id']; ?>" data-name="<?php echo $variant['name']; ?>" data-sku="<?php echo $variant['sku']; ?>" data-price="<?php echo $variant['price']; ?>" data-stock="<?php echo $variant['stock']; ?>">
+                                            <?php echo $variant['name']; ?> (Rp <?php echo $variant['price']; ?>, Stock: <?php echo $variant['stock']; ?>)
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            
+                                <?php
+                            }
+                        }
+                        curl_close($ch);
+                        ?>
                         </div>
-                      </div>
-                      <div class="col-lg-2 col-xs-1">
-                        <select class="form-select" id="validationDefault04">
-                          <option selected="" disabled="">Action</option>
-                          <option>Edit Produk</option>
-                          <option>Non-Aktif</option>
-                        </select>
-                      </div>
-                    </div>
-                  <?php endforeach; ?>
+
+
+                    <?php endforeach; ?>
                 <?php endif; ?>
               </div>
               <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -356,10 +390,70 @@
                     }
                   });
                 }
+                $(document).ready(function () {
+                  $('.stock-input').on('blur', function () {
+                    const newStock = $(this).val();
+                    const productID = $(this).data('id');
+
+                    console.log('New Stock:', newStock);
+                    console.log('Product ID:', productID);
+
+                    if (!isNaN(newStock) && newStock.trim() !== "" && productID !== 'ID tidak tersedia') {
+                      updateProductStockPHP(productID, newStock);
+                    } else {
+                      alert("Please enter a valid number for the stock.");
+                    }
+                  });
+                });
+
+                function updateProductStockPHP(productID, newStock) {
+                  $.ajax({
+                    url: '../RequestAPI/tokopedia-update-stock.php',
+                    type: 'POST',
+                    data: {
+                      product_id: productID,
+                      new_stock: newStock
+                    },
+                    success: function (response) {
+                      console.log('Response:', response);
+                      const responseData = JSON.parse(response);
+                      if (responseData.error) {
+                        alert('Error updating stock: ' + responseData.error);
+                      } else {
+                        alert('Stock updated successfully!');
+                      }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                      console.error('AJAX Error:', textStatus, errorThrown);
+                      alert('Error updating stock: ' + errorThrown);
+                    }
+                  });
+                }
+                document.querySelectorAll('.status').forEach(function(checkbox) {
+                checkbox.addEventListener('change', function () {
+                    var productID = parseInt(this.getAttribute('data-id'));
+                    var isChecked = this.checked; 
+
+                    var url = isChecked ? '../RequestAPI/tokopedia-set-active.php' : '../RequestAPI/tokopedia-set-inactive.php';
+
+                    $.ajax({
+                        type: 'POST',
+                        url: url,
+                        data: { product_id: [productID] },
+                        success: function (response) {
+                            console.log('Response: ', response);
+                            alert('Status berhasil diperbarui  ' );
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('Error: ' + error + ' | Product ID: ' + productID); 
+                            alert('Terjadi kesalahan saat memperbarui status untuk Product ID: ' + productID);
+                        }
+                    });
+                });
+            });
               </script>
             </div>
           </div>
-
           <!-- Container-fluid Ends-->
         </div>
       </div>

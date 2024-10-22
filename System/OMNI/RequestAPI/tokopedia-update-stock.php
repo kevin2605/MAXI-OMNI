@@ -1,24 +1,24 @@
 <?php
 // Ambil data int
 $productID = isset($_POST['product_id']) ? (int) $_POST['product_id'] : null;
-$newPrice = isset($_POST['new_price']) ? (int) $_POST['new_price'] : null;
+$newStock = isset($_POST['new_stock']) ? (int) $_POST['new_stock'] : null;
 
 error_log("Product ID: " . $productID);
-error_log("New Price: " . $newPrice);
+error_log("New Stock: " . $newStock);
 
-if ($productID === null || $newPrice === null) {
+if ($productID === null || $newStock === null) {
     http_response_code(400);
-    echo json_encode(['error' => 'Product ID and new price are required.']);
+    echo json_encode(['error' => 'Product ID and new stock are required.']);
     exit();
 }
 
-$url = 'https://fs.tokopedia.net/inventory/v1/fs/19044/price/update?shop_id=17971369';
+$url = 'https://fs.tokopedia.net/inventory/v1/fs/19044/stock/update?shop_id=17971369';
 $access_token = 'c:pduAyTeTRMiw_cThila3FA';
 
 $data = [
     [
         "product_id" => $productID,
-        "new_price" => $newPrice
+        "new_stock" => $newStock
     ]
 ];
 
@@ -32,14 +32,12 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, [
 ]);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
 
-curl_setopt($ch, CURLOPT_VERBOSE, true);
-
 $response = curl_exec($ch);
 
 if (curl_errno($ch)) {
-    echo 'Error: ' . curl_error($ch);
+    echo json_encode(['error' => 'Error: ' . curl_error($ch)]);
 } else {
-    echo 'Response: ' . $response;
+    echo $response; // Tampilkan respons dari API
 }
 
 curl_close($ch);
