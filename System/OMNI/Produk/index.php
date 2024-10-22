@@ -270,6 +270,7 @@
                         <div style="margin-top: 5px; color: #9AA0A6;">
                           ID (SKU):
                           <?php echo isset($product["other"]["sku"]) ? $product["other"]["sku"] : "Product SKU not available"; ?>
+                          (<?php echo isset($product['basic']['productID']) ? $product['basic']['productID'] : 'ID tidak tersedia'; ?>)
                         </div>
                       </div>
 
@@ -289,6 +290,7 @@
                           value="<?php echo isset($product['stock']['value']) ? $product['stock']['value'] : 'Product stock not available'; ?>"
                           data-id="<?php echo isset($product['basic']['productID']) ? $product['basic']['productID'] : 'ID tidak tersedia'; ?>" />
                       </div>
+
                       <div class="col-lg-2 col-xs-2">
                         <input class="form-control digits" type="text" value="">
                       </div>
@@ -332,9 +334,9 @@
                         $responseData = json_decode($response, true);
                         if (isset($responseData['data']['children']) && !empty($responseData['data']['children'])) {
                           ?>
-                          <div class="col-lg-2 col-xs-1">
+                          <div class="row" style="margin-top: 10px;margin-left:0px">
                             <!-- Tombol yang akan menampilkan collapse -->
-                            <button class="btn btn-primary" type="button" data-bs-toggle="collapse"
+                            <button class="btn btn-info" type="button" data-bs-toggle="collapse"
                               data-bs-target="#variantList" aria-expanded="false" aria-controls="variantList">
                               Lihat Varian
                             </button>
@@ -344,6 +346,49 @@
                               <ul class="list-group">
                                 <?php foreach ($responseData['data']['children'] as $variant): ?>
                                   <li class="list-group-item">
+                                    <div class="row">
+                                      <div class="col-lg-1 col-xs-1">
+                                        <?php
+                                        if (isset($variant['picture']['thumbnail']) && !empty($variant['picture']['thumbnail'])) {
+                                          $imageUrl = $variant['picture']['thumbnail'];
+                                          echo '<img class="img-fluid" src="' . $imageUrl . '" alt="product_image" width="75px">';
+                                        } else {
+                                          echo '<img class="img-fluid" src="../../Product-Image/default.jpg" alt="default_image" width="75px">';
+                                        }
+                                        ?>
+                                      </div>
+                                      <div class="col-lg-3 col-xs-3">
+                                        <div style="height:40px; overflow-x: hidden;">
+                                          <?php echo isset($variant['name']) ? $variant['name'] : "Product name not available"; ?>
+                                        </div>
+                                        <div style="margin-top: 5px; color: #9AA0A6;">
+                                          ID (SKU):
+                                          <?php echo isset($variant['sku']) ? $variant['sku'] : "Product SKU not available"; ?>
+                                          (<?php echo isset($variant['product_id']) ? $variant['product_id'] : 'ID tidak tersedia'; ?>)
+                                        </div>
+                                      </div>
+
+                                      <div class="col-lg-2 col-xs-2">
+                                        <div style="width:80%;">
+                                          <div class="input-group">
+                                            <span class="input-group-text" id="basic-addon1">Rp </span>
+                                            <input class="form-control price-input" type="number"
+                                              value="<?php echo isset($variant['price']) ? $variant['price'] : 'Product price not available'; ?>"
+                                              data-id="<?php echo isset($variant['product_id']) ? $variant['product_id'] : 'ID tidak tersedia'; ?>" />
+                                          </div>
+                                        </div>
+                                      </div>
+
+                                      <div class="col-lg-1 col-xs-1">
+                                        <input class="form-control stock-input" type="number"
+                                          value="<?php echo isset($variant['stock']) ? $variant['stock'] : 'Product stock not available'; ?>"
+                                          data-id="<?php echo isset($variant['product_id']) ? $variant['product_id'] : 'ID tidak tersedia'; ?>" />
+                                      </div>
+                                      <div class="col-lg-2 col-xs-2">
+                                        <input class="form-control digits" type="text" value="">
+                                      </div>
+                                    </div>
+                                    <!--
                                     <a href="javascript:void(0);"
                                       onclick="showVariantDetails('<?php echo $variant['product_id']; ?>')"
                                       data-name="<?php echo $variant['name']; ?>" data-sku="<?php echo $variant['sku']; ?>"
@@ -355,6 +400,7 @@
                                       <?php echo $variant['stock']; ?>,<?php echo $variant['enabled']; ?>,)
 
                                     </a>
+                                    -->
                                   </li>
                                 <?php endforeach; ?>
                               </ul>
