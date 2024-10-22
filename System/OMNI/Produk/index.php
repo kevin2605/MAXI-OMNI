@@ -40,7 +40,7 @@
 
   if (json_last_error() !== JSON_ERROR_NONE) {
     echo "Error decoding JSON: " . json_last_error_msg();
-    exit; 
+    exit;
   }
   ?>
   <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
@@ -251,101 +251,126 @@
                   <div class="col-lg-2 col-xs-2"></div>
                 </div>
                 <?php if (isset($arr["data"])): ?>
-                    <?php foreach ($arr["data"] as $product): ?>
-                        <div class="row body-table">
-                            <div class="col-lg-1 col-xs-1">
-                                <img class="img-fluid" src="../../Product-Image/1.jpg" alt="product_image" width="75px">
-                            </div>
-                            <div class="col-lg-3 col-xs-3">
-                                <div style="height:40px; overflow-x: hidden;">
-                                    <?php echo isset($product["basic"]["name"]) ? $product["basic"]["name"] : "Product name not available"; ?>
-                                </div>
-                                <div style="margin-top: 5px; color: #9AA0A6;">
-                                    ID (SKU):
-                                    <?php echo isset($product["other"]["sku"]) ? $product["other"]["sku"] : "Product SKU not available"; ?>
-                                </div>
-                            </div>
-
-                            <div class="col-lg-2 col-xs-2">
-                                <div style="width:80%;">
-                                    <div class="input-group">
-                                        <span class="input-group-text" id="basic-addon1">Rp </span>
-                                        <input class="form-control price-input" type="number"
-                                            value="<?php echo isset($product['price']['value']) ? $product['price']['value'] : 'Product price not available'; ?>"
-                                            data-id="<?php echo isset($product['basic']['productID']) ? $product['basic']['productID'] : 'ID tidak tersedia'; ?>" />
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-lg-1 col-xs-1">
-                                <input class="form-control stock-input" type="number"
-                                    value="<?php echo isset($product['stock']['value']) ? $product['stock']['value'] : 'Product stock not available'; ?>"
-                                    data-id="<?php echo isset($product['basic']['productID']) ? $product['basic']['productID'] : 'ID tidak tersedia'; ?>" />
-                            </div>
-                            <div class="col-lg-2 col-xs-2">
-                                <input class="form-control digits" type="text" value="">
-                            </div>
-
-                            <div class="col-lg-1 col-xs-1">
-                                <div class="flex-grow-1 icon-state">
-                                    <label class="switch">
-                                        <input type="checkbox" class="status" name="status" 
-                                            <?php echo isset($product["basic"]["status"]) && $product["basic"]["status"] == 1 ? 'checked' : ''; ?>
-                                            data-id="<?php echo isset($product['basic']['productID']) ? $product['basic']['productID'] : 'ID tidak tersedia'; ?>">
-                                        <span class="switch-state"></span>
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="col-lg-2 col-xs-1">
-                                <select class="form-select" id="validationDefault04">
-                                    <option selected="" disabled="">Action</option>
-                                    <option>Edit Produk</option>
-                                    <option>Non-Aktif</option>
-                                </select>
-                            </div>
-                            <br>
+                  <?php foreach ($arr["data"] as $product): ?>
+                    <div class="row body-table">
+                      <div class="col-lg-1 col-xs-1">
                         <?php
-                        $fs_id = 19044; 
-                        $product_id = $product['basic']['productID']; 
-                        $access_token = 'c:pduAyTeTRMiw_cThila3FA'; 
-
-                        $url = "https://fs.tokopedia.net/inventory/v1/fs/$fs_id/product/variant/$product_id";
-
-                        $ch = curl_init($url);
-                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-                            'Authorization: Bearer ' . $access_token,
-                            'Content-Type: application/json'
-                        ]);
-
-                        $response = curl_exec($ch);
-                        if (curl_errno($ch)) {
-                            echo 'Error: ' . curl_error($ch);
+                        if (isset($product['pictures']) && !empty($product['pictures'])) {
+                          $imageUrl = $product['pictures'][0]['OriginalURL'];
+                          echo '<img class="img-fluid" src="' . $imageUrl . '" alt="product_image" width="75px">';
                         } else {
-                            $responseData = json_decode($response, true);
-                            if (isset($responseData['data']['children']) && !empty($responseData['data']['children'])) {
-                                ?>
-                                <div class="col-lg-2 col-xs-1">
-                                <select class="form-select variant-dropdown" onchange="showVariantDetails(this)">
-                                    <option selected="" disabled="">Lihat Varian</option>
-                                    <?php foreach ($responseData['data']['children'] as $variant): ?>
-                                        <option value="<?php echo $variant['product_id']; ?>" data-name="<?php echo $variant['name']; ?>" data-sku="<?php echo $variant['sku']; ?>" data-price="<?php echo $variant['price']; ?>" data-stock="<?php echo $variant['stock']; ?>">
-                                            <?php echo $variant['name']; ?> (Rp <?php echo $variant['price']; ?>, Stock: <?php echo $variant['stock']; ?>)
-                                        </option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
-                            
-                                <?php
-                            }
+                          echo '<img class="img-fluid" src="../../Product-Image/default.jpg" alt="default_image" width="75px">';
                         }
-                        curl_close($ch);
                         ?>
+                      </div>
+                      <div class="col-lg-3 col-xs-3">
+                        <div style="height:40px; overflow-x: hidden;">
+                          <?php echo isset($product["basic"]["name"]) ? $product["basic"]["name"] : "Product name not available"; ?>
                         </div>
+                        <div style="margin-top: 5px; color: #9AA0A6;">
+                          ID (SKU):
+                          <?php echo isset($product["other"]["sku"]) ? $product["other"]["sku"] : "Product SKU not available"; ?>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-2 col-xs-2">
+                        <div style="width:80%;">
+                          <div class="input-group">
+                            <span class="input-group-text" id="basic-addon1">Rp </span>
+                            <input class="form-control price-input" type="number"
+                              value="<?php echo isset($product['price']['value']) ? $product['price']['value'] : 'Product price not available'; ?>"
+                              data-id="<?php echo isset($product['basic']['productID']) ? $product['basic']['productID'] : 'ID tidak tersedia'; ?>" />
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-1 col-xs-1">
+                        <input class="form-control stock-input" type="number"
+                          value="<?php echo isset($product['stock']['value']) ? $product['stock']['value'] : 'Product stock not available'; ?>"
+                          data-id="<?php echo isset($product['basic']['productID']) ? $product['basic']['productID'] : 'ID tidak tersedia'; ?>" />
+                      </div>
+                      <div class="col-lg-2 col-xs-2">
+                        <input class="form-control digits" type="text" value="">
+                      </div>
+
+                      <div class="col-lg-1 col-xs-1">
+                        <div class="flex-grow-1 icon-state">
+                          <label class="switch">
+                            <input type="checkbox" class="status" name="status" <?php echo isset($product["basic"]["status"]) && $product["basic"]["status"] == 1 ? 'checked' : ''; ?>
+                              data-id="<?php echo isset($product['basic']['productID']) ? $product['basic']['productID'] : 'ID tidak tersedia'; ?>">
+                            <span class="switch-state"></span>
+                          </label>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-2 col-xs-1">
+                        <select class="form-select" id="validationDefault04">
+                          <option selected="" disabled="">Action</option>
+                          <option>Edit Produk</option>
+                          <option>Non-Aktif</option>
+                        </select>
+                      </div>
+                      <br>
+                      <?php
+                      $fs_id = 19044;
+                      $product_id = $product['basic']['productID'];
+                      $access_token = 'c:pduAyTeTRMiw_cThila3FA';
+
+                      $url = "https://fs.tokopedia.net/inventory/v1/fs/$fs_id/product/variant/$product_id";
+
+                      $ch = curl_init($url);
+                      curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                      curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                        'Authorization: Bearer ' . $access_token,
+                        'Content-Type: application/json'
+                      ]);
+
+                      $response = curl_exec($ch);
+                      if (curl_errno($ch)) {
+                        echo 'Error: ' . curl_error($ch);
+                      } else {
+                        $responseData = json_decode($response, true);
+                        if (isset($responseData['data']['children']) && !empty($responseData['data']['children'])) {
+                          ?>
+                          <div class="col-lg-2 col-xs-1">
+                            <!-- Tombol yang akan menampilkan collapse -->
+                            <button class="btn btn-primary" type="button" data-bs-toggle="collapse"
+                              data-bs-target="#variantList" aria-expanded="false" aria-controls="variantList">
+                              Lihat Varian
+                            </button>
+
+                            <!-- Daftar varian dalam collapse -->
+                            <div class="collapse mt-2" id="variantList">
+                              <ul class="list-group">
+                                <?php foreach ($responseData['data']['children'] as $variant): ?>
+                                  <li class="list-group-item">
+                                    <a href="javascript:void(0);"
+                                      onclick="showVariantDetails('<?php echo $variant['product_id']; ?>')"
+                                      data-name="<?php echo $variant['name']; ?>" data-sku="<?php echo $variant['sku']; ?>"
+                                      data-price="<?php echo $variant['price']; ?>" data-stock="<?php echo $variant['stock']; ?>"
+                                      data-status="<?php echo $variant['enabled']; ?>">
+                                      <img class="img-fluid" src="../../Product-Image/1.jpg" alt="product_image"
+                                        width="75px"><?php echo $variant['product_id']; ?>,<?php echo $variant['name']; ?>,<?php echo $variant['sku']; ?>,
+                                      (Rp <?php echo $variant['price']; ?>, Stock:
+                                      <?php echo $variant['stock']; ?>,<?php echo $variant['enabled']; ?>,)
+
+                                    </a>
+                                  </li>
+                                <?php endforeach; ?>
+                              </ul>
+                            </div>
+                          </div>
 
 
-                    <?php endforeach; ?>
+                          <?php
+                        }
+                      }
+                      curl_close($ch);
+                      ?>
+                    </div>
+
+
+                  <?php endforeach; ?>
                 <?php endif; ?>
               </div>
               <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -429,28 +454,28 @@
                     }
                   });
                 }
-                document.querySelectorAll('.status').forEach(function(checkbox) {
-                checkbox.addEventListener('change', function () {
+                document.querySelectorAll('.status').forEach(function (checkbox) {
+                  checkbox.addEventListener('change', function () {
                     var productID = parseInt(this.getAttribute('data-id'));
-                    var isChecked = this.checked; 
+                    var isChecked = this.checked;
 
                     var url = isChecked ? '../RequestAPI/tokopedia-set-active.php' : '../RequestAPI/tokopedia-set-inactive.php';
 
                     $.ajax({
-                        type: 'POST',
-                        url: url,
-                        data: { product_id: [productID] },
-                        success: function (response) {
-                            console.log('Response: ', response);
-                            alert('Status berhasil diperbarui  ' );
-                        },
-                        error: function (xhr, status, error) {
-                            console.error('Error: ' + error + ' | Product ID: ' + productID); 
-                            alert('Terjadi kesalahan saat memperbarui status untuk Product ID: ' + productID);
-                        }
+                      type: 'POST',
+                      url: url,
+                      data: { product_id: [productID] },
+                      success: function (response) {
+                        console.log('Response: ', response);
+                        alert('Status berhasil diperbarui  ');
+                      },
+                      error: function (xhr, status, error) {
+                        console.error('Error: ' + error + ' | Product ID: ' + productID);
+                        alert('Terjadi kesalahan saat memperbarui status untuk Product ID: ' + productID);
+                      }
                     });
+                  });
                 });
-            });
               </script>
             </div>
           </div>
