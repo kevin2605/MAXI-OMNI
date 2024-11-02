@@ -1,4 +1,6 @@
 <?php
+include "../../APITokenTokopedia.php";
+
 // Ambil productID dari request POST
 $productIDs = $_POST['product_id'];
 
@@ -8,8 +10,11 @@ if (!is_array($productIDs)) {
 
 $productIDs = array_map('intval', $productIDs);
 
+// Inisialisasi API Tokopedia
+$apiToken = new APITokenTokopedia();
+$headers = $apiToken->getHeaders();
+
 $url = "https://fs.tokopedia.net/v1/products/fs/19044/active?shop_id=17971369";
-$access_token = 'c:pduAyTeTRMiw_cThila3FA';
 
 if (empty($productIDs)) {
     http_response_code(400);

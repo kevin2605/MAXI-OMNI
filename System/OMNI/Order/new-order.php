@@ -13,6 +13,11 @@
 
     session_start();
 
+    include "../../APITokenTokopedia.php";
+
+    include '../Process/addneworders.php';
+
+
     // Koneksi ke database
     include "../../DBConnection.php"; // Sesuaikan dengan file koneksi database Anda
     
@@ -42,7 +47,7 @@
 
 <body>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
+    <!-- <script>
         window.addEventListener('DOMContentLoaded', (event) => {
             Swal.fire({
                 icon: 'error',
@@ -56,7 +61,7 @@
                 }
             });
         });
-    </script>
+    </script> -->
     <!-- loader starts-->
     <div class="loader-wrapper">
         <div class="theme-loader">
@@ -175,93 +180,178 @@
                                         <table class="display" id="export-button">
                                             <thead>
                                                 <tr>
-                                                    <th>OrderID</th>
+                                                    <th>RefNumber</th>
                                                     <th>Tanggal</th>
                                                     <th>Omset</th>
                                                     <th>Status</th>
-                                                    <th>Courir</th>
+                                                    <th>Courier</th>
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <?php
-                                                if (isset($_POST["btnSearch"])) {
-                                                    $query = "SELECT rih.RCV_InvoiceID, rih.TaxInvoiceNumber, rih.TaxInvoiceDate, s.SupplierName, rid.ItemCD, rih.DPP, rih.PPN,
-                                                                         rih.TotalAmount
-                                                                  FROM receptioninvoiceheader rih, receptioninvoicedetail rid, receptionheader rh, purchaseorderheader po,
-                                                                       supplier s
-                                                                  WHERE rih.RCV_InvoiceID=rid.RCV_InvoiceID
-                                                                        AND rih.ReceptionID=rh.ReceptionID
-                                                                        AND rh.PurchaseOrderID=po.PurchaseOrderID
-                                                                        AND po.SupplierNum=s.SupplierNum";
-                                                    if ($_POST["supplier"] != '') {
-                                                        $suppliers = explode(" - ", $_POST["supplier"]);
-                                                        $query .= " AND po.SupplierNum ='" . $suppliers[0] . "'";
-                                                    }
-                                                    if ($_POST["startdatefaktur"] != '') {
-                                                        $query .= " AND rih.TaxInvoiceDate >='" . $_POST["startdatefaktur"] . "'";
-                                                    }
-                                                    if ($_POST["enddatefaktur"] != '') {
-                                                        $query .= " AND rih.TaxInvoiceDate <='" . $_POST["enddatefaktur"] . "'";
-                                                    }
-                                                    $result = mysqli_query($conn, $query);
-                                                    while ($row = mysqli_fetch_array($result)) {
-                                                        echo ' <tr>
-                                                                    <td>' . $row["RCV_InvoiceID"] . '</td>
-                                                                    <td>' . $row["TaxInvoiceNumber"] . '</td>
-                                                                    <td>' . $row["TaxInvoiceDate"] . '</td>
-                                                                    <td>' . $row["SupplierName"] . '</td>
-                                                                    <td>' . $row["ItemCD"] . '</td>
-                                                                    <td>' . number_format($row["DPP"], 0, '.', ',') . '</td>
-                                                                    <td> </td>
-                                                                    <td> </td>
-                                                                    <td>' . number_format($row["PPN"], 0, '.', ',') . '</td>
-                                                                    <td>' . number_format($row["TotalAmount"], 0, '.', ',') . '</td>
-                                                                </tr>';
-                                                    }
+
+
+                                                $addNewOrders = new AddNewOrders();
+
+                                                $fs_id = 15239; // Fulfillment Service ID
+                                                $shop_ids = [5312174, 8664717]; // Array of Shop IDs
+                                                $currentDate = date('Y-m-d');
+                                                $currentTime = time();
+
+                                                $twoDaysAgo = date('Y-m-d', strtotime('-2 days'));
+
+                                                $from_date = strtotime($twoDaysAgo . ' 00:00:00');
+
+                                                $to_date = $currentTime;
+                                                $page = 1;
+                                                $per_page = 10;
+                                                if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['action'] == 'add') {
+                                                    $orderToAdd = json_decode($_POST['order_data'], true);
+                                                    error_log("Received order data: " . print_r($orderToAdd, true));
+                                                    $result = $addNewOrders->processOrders([$orderToAdd]);
+
+                                                    // if ($result['status'] == 'success') {
+                                                    //     echo "<div class='alert alert-success'>" . $result['message'] . "</div>";
+                                                    // } else {
+                                                    //     echo "<div class='alert alert-danger'>" . $result['message'] . "</div>";
+                                                    // }
                                                 }
+                                                $apiToken = new APITokenTokopedia();
+                                                $headers = $apiToken->getHeaders();
+
+                                                $allOrders = [];
+
+                                                foreach ($shop_ids as $shop_id) {
+                                                    $url = "https://fs.tokopedia.net/v2/order/list?fs_id={$fs_id}&shop_id={$shop_id}&from_date={$from_date}&to_date={$to_date}&page={$page}&per_page={$per_page}";
+
+                                                    error_log("URL API untuk Shop ID $shop_id: " . $url);
+
+                                                    $curl = curl_init();
+                                                    curl_setopt($curl, CURLOPT_URL, $url);
+                                                    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+                                                    curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+
+                                                    $response = curl_exec($curl);
+
+                                                    if (curl_errno($curl)) {
+                                                        $error_message = 'Error: ' . curl_error($curl);
+                                                        error_log("Error pada Shop ID $shop_id: " . $error_message);
+                                                        echo '<tr><td colspan="6">' . $error_message . '</td></tr>';
+                                                    } else {
+                                                        error_log("Response dari API untuk Shop ID $shop_id: " . $response);
+
+                                                        $responseData = json_decode($response, true);
+                                                        if (isset($responseData['data']) && !empty($responseData['data'])) {
+                                                            $allOrders = array_merge($allOrders, $responseData['data']);
+                                                        } else {
+                                                            error_log("Data tidak ditemukan untuk Shop ID $shop_id.");
+                                                        }
+                                                    }
+
+                                                    curl_close($curl);
+                                                }
+
+                                                if (!empty($allOrders)) {
+                                                    foreach ($allOrders as $order) {
+                                                        $order_id = $order['order_id'];
+                                                        $tanggal = date('Y-m-d', strtotime($order['payment_date']));
+                                                        $omset = number_format($order['amt']['ttl_amount'], 0, ',', '.');
+                                                        $status = $order['order_status'] == 400 ? "Seller accept order" : "Unknown status";
+                                                        $courier = $order['logistics']['shipping_agency'];
+
+                                                        echo "<tr>
+                                                                <td>{$order_id}</td>
+                                                                <td>{$tanggal}</td>
+                                                                <td>Rp. {$omset}</td>
+                                                                <td>{$status}</td>
+                                                                <td>{$courier}</td>
+                                                                <td>
+                                                                    <form method='POST'>
+                                                                        <input type='hidden' name='action' value='add'>
+                                                                        <input type='hidden' name='order_data' value='" . htmlspecialchars(json_encode($order), ENT_QUOTES, 'UTF-8') . "'>
+                                                                        <button type='submit' class='action-button'>Add</button>
+                                                                    </form>
+                                                                    <a href='detail-order.php?order_id={$order_id}' class='action-button'>Detail</a>
+                                                                </td>
+                                                              </tr>";
+                                                    }
+                                                } else {
+                                                    echo "<tr><td colspan='6'>No orders found for both shop IDs.</td></tr>";
+                                                }
+
+
+                                                echo "</tbody></table>";
+
+
+
                                                 ?>
+
+
                                             </tbody>
                                         </table>
+                                        <!-- 
+                                        <script>
+                                            $(document).ready(function () {
+                                                // Inisialisasi DataTables dengan tombol export
+                                                $('#export-button').DataTable({
+                                                    dom: 'Bfrtip', // Menentukan posisi tombol
+
+                                                    buttons: ["copyHtml5", "excelHtml5", "csvHtml5", "pdfHtml5"],
+                                                    // Menambahkan opsi ini untuk memastikan tombol tetap muncul meskipun tidak ada data
+                                                    processing: true,
+                                                    serverSide: false,
+                                                    ajax: false, // Karena kita menggunakan data dari API
+                                                    data: [], // Data awal kosong
+                                                });
+                                            });
+                                        </script> -->
+
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- latest jquery-->
-                <script src="../../../assets/js/jquery.min.js"></script>
-                <!-- Bootstrap js-->
-                <script src="../../../assets/js/bootstrap/bootstrap.bundle.min.js"></script>
-                <!-- feather icon js-->
-                <script src="../../../assets/js/icons/feather-icon/feather.min.js"></script>
-                <script src="../../../assets/js/icons/feather-icon/feather-icon.js"></script>
-                <!-- scrollbar js-->
-                <script src="../../../assets/js/scrollbar/simplebar.js"></script>
-                <script src="../../../assets/js/scrollbar/custom.js"></script>
-                <!-- Sidebar jquery-->
-                <script src="../../../assets/js/config.js"></script>
-                <!-- Plugins JS start-->
-                <script src="../../../assets/js/sidebar-menu.js"></script>
-                <script src="../../../assets/js/sidebar-pin.js"></script>
-                <script src="../../../assets/js/slick/slick.min.js"></script>
-                <script src="../../../assets/js/slick/slick.js"></script>
-                <script src="../../../assets/js/header-slick.js"></script>
-                <script src="../../../assets/js/form-validation-custom.js"></script>
-                <script src="../../../assets/js/notify/bootstrap-notify.min.js"></script>
-                <script src="../../../assets/js/datatable/datatables/jquery.dataTables.min.js"></script>
-                <script src="../../../assets/js/datatable/datatable-extension/dataTables.buttons.min.js"></script>
-                <script src="../../../assets/js/datatable/datatable-extension/jszip.min.js"></script>
-                <script src="../../../assets/js/datatable/datatable-extension/buttons.colVis.min.js"></script>
-                <script src="../../../assets/js/datatable/datatable-extension/pdfmake.min.js"></script>
-                <script src="../../../assets/js/datatable/datatable-extension/buttons.bootstrap4.min.js"></script>
-                <script src="../../../assets/js/datatable/datatable-extension/buttons.html5.min.js"></script>
-                <script src="../../../assets/js/datatable/datatable-extension/custom.js"></script>
-                <!-- Plugins JS Ends-->
-                <!-- Theme js-->
-                <script src="../../../assets/js/script.js"></script>
-                <!-- Plugin used-->
-                <!-- Plugin used-->
+
+                                <!-- Include Scripts Only Once -->
+                                <script src="../../../assets/js/jquery.min.js"></script>
+                                <script src="../../../assets/js/bootstrap/bootstrap.bundle.min.js"></script>
+                                <script src="../../../assets/js/icons/feather-icon/feather.min.js"></script>
+                                <script src="../../../assets/js/icons/feather-icon/feather-icon.js"></script>
+                                <script src="../../../assets/js/scrollbar/simplebar.js"></script>
+                                <script src="../../../assets/js/scrollbar/custom.js"></script>
+                                <script src="../../../assets/js/config.js"></script>
+                                <script src="../../../assets/js/sidebar-menu.js"></script>
+                                <script src="../../../assets/js/sidebar-pin.js"></script>
+                                <script src="../../../assets/js/slick/slick.min.js"></script>
+                                <script src="../../../assets/js/slick/slick.js"></script>
+                                <script src="../../../assets/js/header-slick.js"></script>
+                                <script src="../../../assets/js/form-validation-custom.js"></script>
+                                <script src="../../../assets/js/notify/bootstrap-notify.min.js"></script>
+                                <script src="../../../assets/js/datatable/datatables/jquery.dataTables.min.js"></script>
+                                <script
+                                    src="../../../assets/js/datatable/datatable-extension/dataTables.buttons.min.js"></script>
+                                <script src="../../../assets/js/datatable/datatable-extension/jszip.min.js"></script>
+                                <script
+                                    src="../../../assets/js/datatable/datatable-extension/buttons.colVis.min.js"></script>
+                                <script src="../../../assets/js/datatable/datatable-extension/pdfmake.min.js"></script>
+                                <script
+                                    src="../../../assets/js/datatable/datatable-extension/buttons.bootstrap4.min.js"></script>
+                                <script
+                                    src="../../../assets/js/datatable/datatable-extension/buttons.html5.min.js"></script>
+                                <script
+                                    src="../../../assets/js/datatable/datatable-extension/buttons.print.min.js"></script>
+                                <script src="../../../assets/js/datatable/datatable-extension/custom.js"></script>
+                                <script src="../../../assets/js/script.js"></script>
+
+                                <!-- jQuery -->
+                                <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+                                <!-- DataTables JS -->
+                                <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+                                <script
+                                    src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
+                                <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+                                <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
+                                <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
+
 </body>
 
 </html>

@@ -1,4 +1,5 @@
 <?php
+include "../../APITokenTokopedia.php";
 $productIDs = $_POST['product_id'];
 
 if (!is_array($productIDs)) {
@@ -7,11 +8,11 @@ if (!is_array($productIDs)) {
 
 $productIDs = array_map('intval', $productIDs);
 
-// URL dan token akses
 $url = "https://fs.tokopedia.net/v1/products/fs/19044/inactive?shop_id=17971369";
-$access_token = 'c:pduAyTeTRMiw_cThila3FA';
 
-// Check if product IDs are not empty
+$apiToken = new APITokenTokopedia();
+$headers = $apiToken->getHeaders();
+
 if (empty($productIDs)) {
     http_response_code(400);
     echo json_encode(['error' => 'Product IDs are required.']);

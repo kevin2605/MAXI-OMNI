@@ -1,4 +1,6 @@
 <?php
+include "../../APITokenTokopedia.php";
+
 // Ambil data int
 $productID = isset($_POST['product_id']) ? (int) $_POST['product_id'] : null;
 $newPrice = isset($_POST['new_price']) ? (int) $_POST['new_price'] : null;
@@ -13,7 +15,7 @@ if ($productID === null || $newPrice === null) {
 }
 
 $url = 'https://fs.tokopedia.net/inventory/v1/fs/19044/price/update?shop_id=17971369';
-$access_token = 'c:pduAyTeTRMiw_cThila3FA';
+$access_token = 'c:Oiam__x1Roy-6xg708C55A';
 
 $data = [
     [
