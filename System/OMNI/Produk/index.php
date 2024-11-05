@@ -6,29 +6,30 @@
   include "../headcontent.php";
   session_start();
   include "../../DBConnection.php";
-  include "../../APITokenTokopedia.php";
-
   $userID = $_COOKIE['UserID'];
 
-  // Cek akses pengguna
   $query = "SELECT dashboard FROM useraccesslevel WHERE UserID = '$userID'";
   $result = mysqli_query($conn, $query);
   $row = mysqli_fetch_assoc($result);
-  $hasCRUDAccess = strpos($row['dashboard'], 'R') !== false;
 
-  if (!$hasCRUDAccess) {
-    die("Access Denied.");
-  }
-
-  // Inisialisasi API Tokopedia
-  $apiToken = new APITokenTokopedia();
-  $url = "https://fs.tokopedia.net/inventory/v1/fs/19044/product/info?shop_id=17971369&page=1&per_page=10";
-  $headers = $apiToken->getHeaders();
+  $hasCRUDAccess = strpos($row['dashboard'], 'R') !== false || // Create
+    strpos($row['dashboard'], 'R') !== false || // Read
+    strpos($row['dashboard'], 'R') !== false || // Update
+    strpos($row['dashboard'], 'R') !== false;  // Delete
+  
+  $accessDenied = !$hasCRUDAccess;
+  $url = "https://fs.tokopedia.net/inventory/v1/fs/15239/product/info?shop_id=8664717&page=1&per_page=10";
 
   // Inisialisasi CURL
   $curl = curl_init($url);
+  curl_setopt($curl, CURLOPT_URL, $url);
   curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+
+  $headers = array(
+    "Authorization: Bearer c:myeCuhAYTS68QAZCp7OcYQ",
+  );
   curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+
   curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
   curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 
@@ -41,10 +42,7 @@
     echo "Error decoding JSON: " . json_last_error_msg();
     exit;
   }
-
-  // Proses data sesuai kebutuhan
   ?>
-
   <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script>
@@ -301,13 +299,7 @@
                         <div class="flex-grow-1 icon-state">
                           <label class="switch">
                             <input type="checkbox" class="status" name="status" <?php echo isset($product["basic"]["status"]) && $product["basic"]["status"] == 1 ? 'checked' : ''; ?>
-                              data-id="<?php
-                              if (isset($product['variant']) && isset($product['variant']['childrenID'])) {
-                                echo implode(',', $product['variant']['childrenID']);
-                              } else {
-                                echo isset($product['basic']['productID']) ? $product['basic']['productID'] : 'ID tidak tersedia';
-                              }
-                              ?>">
+                              data-id="<?php echo isset($product['basic']['productID']) ? $product['basic']['productID'] : 'ID tidak tersedia'; ?>">
                             <span class="switch-state"></span>
                           </label>
                         </div>
@@ -322,19 +314,18 @@
                       </div>
                       <br>
                       <?php
-                      $apiToken = new APITokenTokopedia();
-                      $headers = $apiToken->getHeaders();
-
-                      $fs_id = 19044;
+                      $fs_id = 15239;
                       $product_id = $product['basic']['productID'];
+                      $access_token = 'c:myeCuhAYTS68QAZCp7OcYQ';
 
                       $url = "https://fs.tokopedia.net/inventory/v1/fs/$fs_id/product/variant/$product_id";
 
                       $ch = curl_init($url);
                       curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                      curl_setopt($ch, CURLOPT_HTTPHEADER, array_merge($headers, [
+                      curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                        'Authorization: Bearer ' . $access_token,
                         'Content-Type: application/json'
-                      ]));
+                      ]);
 
                       $response = curl_exec($ch);
                       if (curl_errno($ch)) {
@@ -345,13 +336,13 @@
                           ?>
                           <div class="row" style="margin-top: 10px;margin-left:0px">
                             <!-- Tombol yang akan menampilkan collapse -->
-                            <button class="btn btn-info" type="button" data-bs-toggle="collapse" data-bs-target="#variantList"
-                              aria-expanded="false" aria-controls="variantList">
+                            <button class="btn btn-info" type="button" data-bs-toggle="collapse"
+                              data-bs-target="#<?php echo $product['basic']['productID']; ?>" aria-expanded="false" aria-controls="variantList">
                               Lihat Varian
                             </button>
 
                             <!-- Daftar varian dalam collapse -->
-                            <div class="collapse mt-2" id="variantList">
+                            <div class="collapse mt-2" id="<?php echo $product['basic']['productID']; ?>">
                               <ul class="list-group">
                                 <?php foreach ($responseData['data']['children'] as $variant): ?>
                                   <li class="list-group-item">
@@ -393,18 +384,9 @@
                                           value="<?php echo isset($variant['stock']) ? $variant['stock'] : 'Product stock not available'; ?>"
                                           data-id="<?php echo isset($variant['product_id']) ? $variant['product_id'] : 'ID tidak tersedia'; ?>" />
                                       </div>
-                                      <!--<div class="col-lg-2 col-xs-2">
+                                      <div class="col-lg-2 col-xs-2">
                                         <input class="form-control digits" type="text" value="">
                                       </div>
-                                       <div class="col-lg-1 col-xs-1">
-                                        <div class="flex-grow-1 icon-state">
-                                          <label class="switch">
-                                            <input type="checkbox" class="status" name="status" <?php echo isset($variant["basic"]["enabled"]) && $variant["basic"]["enabled"] == 1 ? 'checked' : ''; ?>
-                                              data-id="<?php echo isset($variant['basic']['product_id']) ? $variant['basic']['product_id'] : 'ID tidak tersedia'; ?>">
-                                            <span class="switch-state"></span>
-                                          </label>
-                                        </div>
-                                      </div> -->
                                     </div>
                                     <!--
                                     <a href="javascript:void(0);"
@@ -518,11 +500,9 @@
                     }
                   });
                 }
-
                 document.querySelectorAll('.status').forEach(function (checkbox) {
                   checkbox.addEventListener('change', function () {
-                    // Get the data-id attribute and split it by comma
-                    var productIDs = this.getAttribute('data-id').split(',');
+                    var productID = parseInt(this.getAttribute('data-id'));
                     var isChecked = this.checked;
 
                     var url = isChecked ? '../RequestAPI/tokopedia-set-active.php' : '../RequestAPI/tokopedia-set-inactive.php';
@@ -530,21 +510,14 @@
                     $.ajax({
                       type: 'POST',
                       url: url,
-                      data: { product_id: productIDs },
+                      data: { product_id: [productID] },
                       success: function (response) {
                         console.log('Response: ', response);
-                        // Display the message with product IDs
-                        var message = 'Status berhasil diperbarui untuk varian dengan ID: ';
-                        if (productIDs.length > 1) {
-                          message += productIDs.join(', ');
-                        } else {
-                          message += productIDs[0];
-                        }
-                        alert(message);
+                        alert('Status berhasil diperbarui  ');
                       },
                       error: function (xhr, status, error) {
-                        console.error('Error: ' + error + ' | Product ID: ' + productIDs.join(', '));
-                        alert('Terjadi kesalahan saat memperbarui status untuk Product ID: ' + productIDs.join(', '));
+                        console.error('Error: ' + error + ' | Product ID: ' + productID);
+                        alert('Terjadi kesalahan saat memperbarui status untuk Product ID: ' + productID);
                       }
                     });
                   });

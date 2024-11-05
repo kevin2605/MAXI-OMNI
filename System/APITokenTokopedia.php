@@ -5,7 +5,7 @@ class APITokenTokopedia
 
     public function __construct()
     {
-        $this->token = "Bearer c:Kioy9qFbSYyxy_wmk0NsiA";
+        $this->token = "Bearer c:myeCuhAYTS68QAZCp7OcYQ";
     }
 
     public function getToken()
