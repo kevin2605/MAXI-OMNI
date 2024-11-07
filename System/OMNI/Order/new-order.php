@@ -13,18 +13,8 @@
 
     session_start();
 
-    include "../../APITokenTokopedia.php";
-
-    include '../Process/addneworders.php';
-
-
-    // Koneksi ke database
-    include "../../DBConnection.php"; // Sesuaikan dengan file koneksi database Anda
-    
-    // Ambil ID pengguna dari sesi atau cookie
-    $userID = $_COOKIE['UserID']; // Sesuaikan dengan cara Anda menyimpan ID pengguna
-    
-    // Ambil akses level dari database
+    include "../../DBConnection.php";
+    $userID = $_COOKIE['UserID'];
     $query = "SELECT Kota FROM useraccesslevel WHERE UserID = '$userID'";
     $result = mysqli_query($conn, $query);
     $row = mysqli_fetch_assoc($result);
@@ -190,67 +180,34 @@
                                             </thead>
                                             <tbody>
                                                 <?php
+                                                error_reporting(E_ALL);
+                                                ini_set('display_errors', 1);
 
+                                                include '../RequestAPI/tokopedia-get-new-order.php';
 
-                                                $addNewOrders = new AddNewOrders();
-
-                                                $fs_id = 15239; // Fulfillment Service ID
-                                                $shop_ids = [5312174, 8664717]; // Array of Shop IDs
                                                 $currentDate = date('Y-m-d');
                                                 $currentTime = time();
-
                                                 $twoDaysAgo = date('Y-m-d', strtotime('-2 days'));
-
                                                 $from_date = strtotime($twoDaysAgo . ' 00:00:00');
-
                                                 $to_date = $currentTime;
                                                 $page = 1;
                                                 $per_page = 10;
+
                                                 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['action'] == 'add') {
                                                     $orderToAdd = json_decode($_POST['order_data'], true);
                                                     error_log("Received order data: " . print_r($orderToAdd, true));
-                                                    $result = $addNewOrders->processOrders([$orderToAdd]);
+                                                    $result = processNewOrder($orderToAdd);
 
+                                                    // Uncomment jika ingin menampilkan pesan hasil
                                                     // if ($result['status'] == 'success') {
                                                     //     echo "<div class='alert alert-success'>" . $result['message'] . "</div>";
                                                     // } else {
                                                     //     echo "<div class='alert alert-danger'>" . $result['message'] . "</div>";
                                                     // }
                                                 }
-                                                $apiToken = new APITokenTokopedia();
-                                                $headers = $apiToken->getHeaders();
 
-                                                $allOrders = [];
-
-                                                foreach ($shop_ids as $shop_id) {
-                                                    $url = "https://fs.tokopedia.net/v2/order/list?fs_id={$fs_id}&shop_id={$shop_id}&from_date={$from_date}&to_date={$to_date}&page={$page}&per_page={$per_page}";
-
-                                                    error_log("URL API untuk Shop ID $shop_id: " . $url);
-
-                                                    $curl = curl_init();
-                                                    curl_setopt($curl, CURLOPT_URL, $url);
-                                                    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-                                                    curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-
-                                                    $response = curl_exec($curl);
-
-                                                    if (curl_errno($curl)) {
-                                                        $error_message = 'Error: ' . curl_error($curl);
-                                                        error_log("Error pada Shop ID $shop_id: " . $error_message);
-                                                        echo '<tr><td colspan="6">' . $error_message . '</td></tr>';
-                                                    } else {
-                                                        error_log("Response dari API untuk Shop ID $shop_id: " . $response);
-
-                                                        $responseData = json_decode($response, true);
-                                                        if (isset($responseData['data']) && !empty($responseData['data'])) {
-                                                            $allOrders = array_merge($allOrders, $responseData['data']);
-                                                        } else {
-                                                            error_log("Data tidak ditemukan untuk Shop ID $shop_id.");
-                                                        }
-                                                    }
-
-                                                    curl_close($curl);
-                                                }
+                                                $allOrders = getNewOrders($from_date, $to_date, $page, $per_page);
+                                                error_log("All Orders: " . print_r($allOrders, true));
 
                                                 if (!empty($allOrders)) {
                                                     foreach ($allOrders as $order) {
@@ -261,30 +218,26 @@
                                                         $courier = $order['logistics']['shipping_agency'];
 
                                                         echo "<tr>
-                                                                <td>{$order_id}</td>
-                                                                <td>{$tanggal}</td>
-                                                                <td>Rp. {$omset}</td>
-                                                                <td>{$status}</td>
-                                                                <td>{$courier}</td>
-                                                                <td>
-                                                                    <form method='POST'>
-                                                                        <input type='hidden' name='action' value='add'>
-                                                                        <input type='hidden' name='order_data' value='" . htmlspecialchars(json_encode($order), ENT_QUOTES, 'UTF-8') . "'>
-                                                                        <button type='submit' class='action-button'>Add</button>
-                                                                    </form>
-                                                                    <a href='detail-order.php?order_id={$order_id}' class='action-button'>Detail</a>
-                                                                </td>
-                                                              </tr>";
+                                                        <td>{$order_id}</td>
+                                                        <td>{$tanggal}</td>
+                                                        <td>Rp. {$omset}</td>
+                                                        <td>{$status}</td>
+                                                        <td>{$courier}</td>
+                                                        <td>
+                                                            <form method='POST'>
+                                                                <input type='hidden' name='action' value='add'>
+                                                                <input type='hidden' name='order_data' value='" . htmlspecialchars(json_encode($order), ENT_QUOTES, 'UTF-8') . "'>
+                                                                <button type='submit' class='action-button'>Add</button>
+                                                            </form>
+                                                            <a href='detail-order.php?order_id={$order_id}' class='action-button'>Detail</a>
+                                                        </td>
+                                                    </tr>";
                                                     }
                                                 } else {
                                                     echo "<tr><td colspan='6'>No orders found for both shop IDs.</td></tr>";
                                                 }
 
-
                                                 echo "</tbody></table>";
-
-
-
                                                 ?>
 
 

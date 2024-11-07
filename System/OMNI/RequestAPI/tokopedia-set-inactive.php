@@ -1,5 +1,7 @@
 <?php
-include "../../APITokenTokopedia.php";
+include "../APITokenTokopedia.php";
+
+// Ambil productID dari request POST
 $productIDs = $_POST['product_id'];
 
 if (!is_array($productIDs)) {
@@ -8,10 +10,15 @@ if (!is_array($productIDs)) {
 
 $productIDs = array_map('intval', $productIDs);
 
-$url = "https://fs.tokopedia.net/v1/products/fs/19044/inactive?shop_id=17971369";
-
+// Inisialisasi API Tokopedia
 $apiToken = new APITokenTokopedia();
 $headers = $apiToken->getHeaders();
+$fs_id = $apiToken->getFsId();
+$shop_ids = $apiToken->getShopIds();
+$shop_id = $shop_ids[0];
+
+// URL untuk menonaktifkan produk
+$url = "https://fs.tokopedia.net/v1/products/fs/{$fs_id}/inactive?shop_id={$shop_id}";
 
 if (empty($productIDs)) {
     http_response_code(400);
@@ -23,32 +30,37 @@ $data = [
     "product_id" => $productIDs
 ];
 
-error_log("Data yang dikirim ke API: " . json_encode($data));
+error_log("Data yang dikirim ke API Inactive: " . json_encode($data));
 
 $ch = curl_init($url);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_POST, true);
-curl_setopt($ch, CURLOPT_HTTPHEADER, [
-    'Authorization: Bearer ' . trim($access_token),
-    'Content-Type: application/json'
-]);
+curl_setopt($ch, CURLOPT_HTTPHEADER, array_merge($headers, ['Content-Type: application/json']));
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
 
 $response = curl_exec($ch);
+$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
-// Check for cURL errors
 if (curl_errno($ch)) {
-    $error_message = 'Error: ' . curl_error($ch);
-    error_log($error_message); // Log the error message
+    $error_message = 'Curl Error: ' . curl_error($ch);
+    error_log($error_message);
     echo json_encode(['error' => $error_message, 'product_ids' => $productIDs]);
 } else {
-    // Check if the response is empty
-    if (empty($response)) {
-        error_log("Response dari API adalah kosong untuk product IDs: " . json_encode($productIDs)); // Log the empty response
-        echo json_encode(['error ' => 'Response is empty', 'product_ids' => $productIDs]);
+    error_log("Response dari API Inactive: " . $response);
+    $responseData = json_decode($response, true);
+
+    if ($httpCode == 200) {
+        echo json_encode([
+            'success' => true,
+            'message' => 'Produk berhasil dinonaktifkan',
+            'response' => $responseData
+        ]);
     } else {
-        error_log("Response dari API: " . $response); // Log response to the server's error log
-        echo json_encode(['response' => json_decode($response), 'product_ids' => $productIDs]);
+        echo json_encode([
+            'error' => 'Gagal menonaktifkan produk',
+            'http_code' => $httpCode,
+            'response' => $responseData
+        ]);
     }
 }
 

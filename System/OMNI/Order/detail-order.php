@@ -13,7 +13,7 @@
 
     session_start();
 
-    include "../../APITokenTokopedia.php";
+    include "../APITokenTokopedia.php";
 
     include '../Process/addneworders.php';
 
