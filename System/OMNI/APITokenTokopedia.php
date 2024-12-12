@@ -7,9 +7,9 @@ class APITokenTokopedia
 
     public function __construct()
     {
-        $this->token = "Bearer c:BH5ccmX6Qg6upAtYrUbV6A"; // Pastikan token ini valid
+        $this->token = "Bearer c:YfTeg4baR6SQ3wperj2MJA";
         $this->fs_id = 15239;
-        $this->shop_ids = [5312174]; // Pastikan ID toko ini valid
+        $this->shop_ids = [5312174];
     }
 
     public function getToken()

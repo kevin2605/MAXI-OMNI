@@ -13,13 +13,8 @@
 
     session_start();
 
-    // Koneksi ke database
-    include "../../DBConnection.php"; // Sesuaikan dengan file koneksi database Anda
-    
-    // Ambil ID pengguna dari sesi atau cookie
-    $userID = $_COOKIE['UserID']; // Sesuaikan dengan cara Anda menyimpan ID pengguna
-    
-    // Ambil akses level dari database
+    include "../../DBConnection.php";
+    $userID = $_COOKIE['UserID'];
     $query = "SELECT Kota FROM useraccesslevel WHERE UserID = '$userID'";
     $result = mysqli_query($conn, $query);
     $row = mysqli_fetch_assoc($result);
@@ -42,7 +37,7 @@
 
 <body>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
+    <!-- <script>
         window.addEventListener('DOMContentLoaded', (event) => {
             Swal.fire({
                 icon: 'error',
@@ -56,7 +51,7 @@
                 }
             });
         });
-    </script>
+    </script> -->
     <!-- loader starts-->
     <div class="loader-wrapper">
         <div class="theme-loader">
@@ -90,14 +85,14 @@
                         if (isset($_GET["status"])) {
                             if ($_GET["status"] == "success") {
                                 echo '<div class="alert txt-success border-success outline-2x alert-dismissible fade show alert-icons" role="alert">
-                  <p><b> Selamat! </b>Kota baru berhasil disimpan ke database.</p>
-                  <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>';
+                                <p><b> Selamat! </b>Kota baru berhasil disimpan ke database.</p>
+                                <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>';
                             } else if ($_GET["status"] == "error") {
                                 echo '<div class="alert txt-danger border-danger outline-2x alert-dismissible fade show alert-icons" role="alert">
-                  <p><b> Error! </b>Terjadi kesalahan saat disimpan ke database.</p>
-                  <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>';
+                                <p><b> Error! </b>Terjadi kesalahan saat disimpan ke database.</p>
+                                <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>';
                             }
                         }
                         ?>
@@ -127,30 +122,40 @@
                                     <h3>FILTER</h3>
                                 </div>
                                 <div class="card-body">
-                                    <form class="form theme-form" method="POST">
+                                    <form method="GET" action="" class="d-flex flex-wrap align-items-center">
                                         <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="row">
-                                                    <div class="mb-3 row">
-                                                        <label class="col-sm-2">Tanggal Awal Faktur</label>
-                                                        <div class="col-sm-10">
-                                                            <input class="form-control" id="startdatefaktur"
-                                                                name="startdatefaktur" type="date">
-                                                        </div>
-                                                    </div>
-                                                    <div class="mb-3 row">
-                                                        <label class="col-sm-2">Tanggal Akhir Faktur</label>
-                                                        <div class="col-sm-10">
-                                                            <input class="form-control" id="enddatefaktur"
-                                                                name="enddatefaktur" type="date">
+                                            <div class="col-md-5">
+                                                <div class="mb-3 row">
+                                                    <div class="d-flex align-items-center justify-content-left">
+                                                        <label class="col-sm-5" style="padding-right: 5px;">Start
+                                                            Date:</label>
+                                                        <div class="col-sm-7">
+                                                            <input type="date" class="form-control me-2" id="startDate"
+                                                                name="startDate"
+                                                                value="<?php echo isset($_GET['startDate']) ? htmlspecialchars($_GET['startDate']) : ''; ?>">
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="col-md-5">
+                                                <div class="mb-3 row">
+                                                    <div class="d-flex align-items-center justify-content-left">
+                                                        <label class="col-sm-5 text-center"
+                                                            style="padding-right: 13px;">End Date:</label>
+                                                        <div class="col-sm-7">
+                                                            <input type="date" class="form-control me-2" id="endDate"
+                                                                name="endDate"
+                                                                value="<?php echo isset($_GET['endDate']) ? htmlspecialchars($_GET['endDate']) : ''; ?>">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <button class="btn btn-primary" onclick="resetDates()"><i
+                                                        class="icofont icofont-refresh"
+                                                        id="resetDatesButton"></i></button>
+                                            </div>
                                         </div>
-                                        <!--<button class="btn btn-primary" type="button" onclick="submitFilter()"><i class="fa fa-search"></i> Search</button>-->
-                                        <button class="btn btn-primary" name="btnSearch"><i class="fa fa-search"></i>
-                                            Search</button>
                                     </form>
                                 </div>
                             </div>
@@ -165,95 +170,181 @@
                                         <table class="display" id="export-button">
                                             <thead>
                                                 <tr>
-                                                    <th>OrderID</th>
+                                                    <th>RefNumber</th>
                                                     <th>Tanggal</th>
                                                     <th>Omset</th>
                                                     <th>Status</th>
-                                                    <th>Courir</th>
+                                                    <th>Courier</th>
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
+
                                             <tbody>
                                                 <?php
-                                                if (isset($_POST["btnSearch"])) {
-                                                    $query = "SELECT rih.RCV_InvoiceID, rih.TaxInvoiceNumber, rih.TaxInvoiceDate, s.SupplierName, rid.ItemCD, rih.DPP, rih.PPN,
-                                                                         rih.TotalAmount
-                                                                  FROM receptioninvoiceheader rih, receptioninvoicedetail rid, receptionheader rh, purchaseorderheader po,
-                                                                       supplier s
-                                                                  WHERE rih.RCV_InvoiceID=rid.RCV_InvoiceID
-                                                                        AND rih.ReceptionID=rh.ReceptionID
-                                                                        AND rh.PurchaseOrderID=po.PurchaseOrderID
-                                                                        AND po.SupplierNum=s.SupplierNum";
+                                                require_once '../Process/addneworders.php';
+                                                include '../RequestAPI/tokopedia-get-new-order.php';
+                                                include '../RequestAPI/tokopedia-get-single-order.php';
 
-                                                    if ($_POST["supplier"] != '') {
-                                                        $suppliers = explode(" - ", $_POST["supplier"]);
-                                                        $query .= " AND po.SupplierNum ='" . $suppliers[0] . "'";
-                                                    }
-                                                    if ($_POST["startdatefaktur"] != '') {
-                                                        $query .= " AND rih.TaxInvoiceDate >='" . $_POST["startdatefaktur"] . "'";
-                                                    }
-                                                    if ($_POST["enddatefaktur"] != '') {
-                                                        $query .= " AND rih.TaxInvoiceDate <='" . $_POST["enddatefaktur"] . "'";
+                                                $addNewOrders = new AddNewOrders();
+                                                date_default_timezone_set('Asia/Jakarta');
+
+                                                $query = "SELECT last_call FROM api_call_logs ORDER BY last_call DESC LIMIT 1";
+                                                $result = $conn->query($query);
+                                                $last_call = $result->fetch_assoc()['last_call'] ?? null;
+
+                                                $current_time = time();
+                                                $fifteen_minutes_ago = $current_time - (15 * 60);
+
+                                                if ($last_call && strtotime($last_call) >= $fifteen_minutes_ago) {
+                                                    error_log("API call skipped. Last call was less than 15 minutes ago.");
+                                                } else {
+                                                    $currentDate = date('Y-m-d');
+                                                    $threeDaysAgo = date('Y-m-d H:i:s', strtotime('-3 days'));
+                                                    $from_date = strtotime($threeDaysAgo);
+                                                    $to_date = $current_time;
+
+                                                    $allOrders = getNewOrders($from_date, $to_date, 1, 50);
+                                                    error_log("All Orders from API: " . print_r($allOrders, true));
+
+                                                    if (!empty($allOrders)) {
+                                                        $processResult = $addNewOrders->processOrders($allOrders);
+                                                        if ($processResult['status'] == 'success') {
+                                                            error_log("Orders successfully saved/updated.");
+
+                                                            $updateQuery = "INSERT INTO api_call_logs (last_call) VALUES (NOW())";
+                                                            $conn->query($updateQuery);
+                                                        } else {
+                                                            error_log("Error saving orders.");
+                                                        }
                                                     }
 
-                                                    $result = mysqli_query($conn, $query);
-                                                    while ($row = mysqli_fetch_array($result)) {
-                                                        echo ' <tr>
-                                                                    <td>' . $row["RCV_InvoiceID"] . '</td>
-                                                                    <td>' . $row["TaxInvoiceNumber"] . '</td>
-                                                                    <td>' . $row["TaxInvoiceDate"] . '</td>
-                                                                    <td>' . $row["SupplierName"] . '</td>
-                                                                    <td>' . $row["ItemCD"] . '</td>
-                                                                    <td>' . number_format($row["DPP"], 0, '.', ',') . '</td>
-                                                                    <td> </td>
-                                                                    <td> </td>
-                                                                    <td>' . number_format($row["PPN"], 0, '.', ',') . '</td>
-                                                                    <td>' . number_format($row["TotalAmount"], 0, '.', ',') . '</td>
-                                                                </tr>';
+
+
+
+                                                    $query = "SELECT OrderID FROM order_header WHERE OrderStatus NOT IN ('600', '700') AND OrderID IS NOT NULL";
+                                                    $result = $conn->query($query);
+                                                    $order_id = $result->fetch_assoc()['OrderID'] ?? null;
+                                                    if ($result && $result->num_rows > 0) {
+                                                        while ($row = $result->fetch_assoc()) {
+                                                            $order_id = $row['OrderID'];
+                                                            $singleorderData = getSingleOrder($order_id);
+
+                                                            // if ($singleorderData) {
+                                                            //     echo "<h3>Data untuk OrderID: {$order_id}</h3>";
+                                                            //     echo '<pre>';
+                                                            //     print_r($singleorderData);
+                                                            //     echo '</pre>';
+                                                            // } else {
+                                                            //     echo "Tidak ada data ditemukan untuk OrderID: {$order_id}.<br>";
+                                                            // }
+                                                        }
+                                                    } else {
+                                                        echo "Tidak ada Order ID yang ditemukan.<br>";
                                                     }
                                                 }
+
+                                                $query = "SELECT OrderID, OrderDate, TotalAmount, OrderStatusDesc, ShippingAgent 
+                                                FROM order_header 
+                                                WHERE OrderStatus IN (220, 221,400,450,500,501,520,530,540)";
+                                                $result = $conn->query($query);
+
+                                                if ($result->num_rows > 0) {
+                                                    while ($row = $result->fetch_assoc()) {
+                                                        $order_id = $row['OrderID'];
+                                                        $order_date = date('Y-m-d', strtotime($row['OrderDate']));
+
+                                                        $total_amount = number_format($row['TotalAmount'], 0, ',', '.');
+                                                        $order_status_desc = $row['OrderStatusDesc'];
+                                                        $shipping_agent = $row['ShippingAgent'];
+
+                                                        echo "<tr>
+                                                                <td>{$order_id}</td>
+                                                                <td>{$order_date}</td>
+                                                                
+                                                                <td>Rp. {$total_amount}</td>
+                                                                <td>{$order_status_desc}</td>
+                                                                <td>{$shipping_agent}</td>
+                                                                <td>
+                                                                    <a href='detail-order.php?order_id={$order_id}' class='action-button'>Detail</a>
+                                                                </td>
+                                                            </tr>";
+
+                                                    }
+                                                } else {
+                                                    echo "<tr><td colspan='7'>No orders found in the database.</td></tr>";
+                                                }
+
+
+                                                $conn->close();
+
+
                                                 ?>
+
+
                                             </tbody>
                                         </table>
+                                        <!-- 
+                                        <script>
+                                            $(document).ready(function () {
+                                                // Inisialisasi DataTables dengan tombol export
+                                                $('#export-button').DataTable({
+                                                    dom: 'Bfrtip', // Menentukan posisi tombol
+
+                                                    buttons: ["copyHtml5", "excelHtml5", "csvHtml5", "pdfHtml5"],
+                                                    // Menambahkan opsi ini untuk memastikan tombol tetap muncul meskipun tidak ada data
+                                                    processing: true,
+                                                    serverSide: false,
+                                                    ajax: false, // Karena kita menggunakan data dari API
+                                                    data: [], // Data awal kosong
+                                                });
+                                            });
+                                        </script> -->
+
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- latest jquery-->
-                <script src="../../../assets/js/jquery.min.js"></script>
-                <!-- Bootstrap js-->
-                <script src="../../../assets/js/bootstrap/bootstrap.bundle.min.js"></script>
-                <!-- feather icon js-->
-                <script src="../../../assets/js/icons/feather-icon/feather.min.js"></script>
-                <script src="../../../assets/js/icons/feather-icon/feather-icon.js"></script>
-                <!-- scrollbar js-->
-                <script src="../../../assets/js/scrollbar/simplebar.js"></script>
-                <script src="../../../assets/js/scrollbar/custom.js"></script>
-                <!-- Sidebar jquery-->
-                <script src="../../../assets/js/config.js"></script>
-                <!-- Plugins JS start-->
-                <script src="../../../assets/js/sidebar-menu.js"></script>
-                <script src="../../../assets/js/sidebar-pin.js"></script>
-                <script src="../../../assets/js/slick/slick.min.js"></script>
-                <script src="../../../assets/js/slick/slick.js"></script>
-                <script src="../../../assets/js/header-slick.js"></script>
-                <script src="../../../assets/js/form-validation-custom.js"></script>
-                <script src="../../../assets/js/notify/bootstrap-notify.min.js"></script>
-                <script src="../../../assets/js/datatable/datatables/jquery.dataTables.min.js"></script>
-                <script src="../../../assets/js/datatable/datatable-extension/dataTables.buttons.min.js"></script>
-                <script src="../../../assets/js/datatable/datatable-extension/jszip.min.js"></script>
-                <script src="../../../assets/js/datatable/datatable-extension/buttons.colVis.min.js"></script>
-                <script src="../../../assets/js/datatable/datatable-extension/pdfmake.min.js"></script>
-                <script src="../../../assets/js/datatable/datatable-extension/buttons.bootstrap4.min.js"></script>
-                <script src="../../../assets/js/datatable/datatable-extension/buttons.html5.min.js"></script>
-                <script src="../../../assets/js/datatable/datatable-extension/custom.js"></script>
-                <!-- Plugins JS Ends-->
-                <!-- Theme js-->
-                <script src="../../../assets/js/script.js"></script>
-                <!-- Plugin used-->
-                <!-- Plugin used-->
+
+                                <!-- Include Scripts Only Once -->
+                                <script src="../../../assets/js/jquery.min.js"></script>
+                                <script src="../../../assets/js/bootstrap/bootstrap.bundle.min.js"></script>
+                                <script src="../../../assets/js/icons/feather-icon/feather.min.js"></script>
+                                <script src="../../../assets/js/icons/feather-icon/feather-icon.js"></script>
+                                <script src="../../../assets/js/scrollbar/simplebar.js"></script>
+                                <script src="../../../assets/js/scrollbar/custom.js"></script>
+                                <script src="../../../assets/js/config.js"></script>
+                                <script src="../../../assets/js/sidebar-menu.js"></script>
+                                <script src="../../../assets/js/sidebar-pin.js"></script>
+                                <script src="../../../assets/js/slick/slick.min.js"></script>
+                                <script src="../../../assets/js/slick/slick.js"></script>
+                                <script src="../../../assets/js/header-slick.js"></script>
+                                <script src="../../../assets/js/form-validation-custom.js"></script>
+                                <script src="../../../assets/js/notify/bootstrap-notify.min.js"></script>
+                                <script src="../../../assets/js/datatable/datatables/jquery.dataTables.min.js"></script>
+                                <script
+                                    src="../../../assets/js/datatable/datatable-extension/dataTables.buttons.min.js"></script>
+                                <script src="../../../assets/js/datatable/datatable-extension/jszip.min.js"></script>
+                                <script
+                                    src="../../../assets/js/datatable/datatable-extension/buttons.colVis.min.js"></script>
+                                <script src="../../../assets/js/datatable/datatable-extension/pdfmake.min.js"></script>
+                                <script
+                                    src="../../../assets/js/datatable/datatable-extension/buttons.bootstrap4.min.js"></script>
+                                <script
+                                    src="../../../assets/js/datatable/datatable-extension/buttons.html5.min.js"></script>
+                                <script
+                                    src="../../../assets/js/datatable/datatable-extension/buttons.print.min.js"></script>
+                                <script src="../../../assets/js/datatable/datatable-extension/custom.js"></script>
+                                <script src="../../../assets/js/script.js"></script>
+
+                                <!-- jQuery -->
+                                <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+                                <!-- DataTables JS -->
+                                <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
+                                <script
+                                    src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
+                                <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+                                <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
+                                <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
+
 </body>
 
 </html>

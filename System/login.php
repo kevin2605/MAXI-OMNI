@@ -34,7 +34,7 @@ if ($row) {
     mysqli_query($conn, $logQuery);
 
     // Redirect to dashboard
-    header("Location:ui-navigator.php");
+    header("Location:OMNI/Dashboard/");
 } else {
     // Log failed login attempt
     $datetime = date('Y-m-d H:i:s');

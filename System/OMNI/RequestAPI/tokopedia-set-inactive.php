@@ -10,14 +10,13 @@ if (!is_array($productIDs)) {
 
 $productIDs = array_map('intval', $productIDs);
 
-// Inisialisasi API Tokopedia
+//  API Tokopedia
 $apiToken = new APITokenTokopedia();
 $headers = $apiToken->getHeaders();
 $fs_id = $apiToken->getFsId();
 $shop_ids = $apiToken->getShopIds();
 $shop_id = $shop_ids[0];
 
-// URL untuk menonaktifkan produk
 $url = "https://fs.tokopedia.net/v1/products/fs/{$fs_id}/inactive?shop_id={$shop_id}";
 
 if (empty($productIDs)) {

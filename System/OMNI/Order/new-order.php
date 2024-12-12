@@ -180,67 +180,73 @@
                                             </thead>
                                             <tbody>
                                                 <?php
-                                                error_reporting(E_ALL);
-                                                ini_set('display_errors', 1);
-
+                                                require_once '../Process/addneworders.php';
                                                 include '../RequestAPI/tokopedia-get-new-order.php';
 
-                                                $currentDate = date('Y-m-d');
-                                                $currentTime = time();
-                                                $twoDaysAgo = date('Y-m-d', strtotime('-2 days'));
-                                                $from_date = strtotime($twoDaysAgo . ' 00:00:00');
-                                                $to_date = $currentTime;
-                                                $page = 1;
-                                                $per_page = 10;
 
-                                                if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['action'] == 'add') {
-                                                    $orderToAdd = json_decode($_POST['order_data'], true);
-                                                    error_log("Received order data: " . print_r($orderToAdd, true));
-                                                    $result = processNewOrder($orderToAdd);
+                                                $addNewOrders = new AddNewOrders();
 
-                                                    // Uncomment jika ingin menampilkan pesan hasil
-                                                    // if ($result['status'] == 'success') {
-                                                    //     echo "<div class='alert alert-success'>" . $result['message'] . "</div>";
-                                                    // } else {
-                                                    //     echo "<div class='alert alert-danger'>" . $result['message'] . "</div>";
-                                                    // }
+                                                $query = "SELECT last_call FROM api_call_logs ORDER BY last_call DESC LIMIT 1";
+                                                $result = $conn->query($query);
+                                                $last_call = $result->fetch_assoc()['last_call'] ?? null;
+
+                                                $current_time = time();
+                                                $fifteen_minutes_ago = $current_time - (15 * 60);
+
+                                                if ($last_call && strtotime($last_call) >= $fifteen_minutes_ago) {
+                                                    error_log("API call skipped. Last call was less than 15 minutes ago.");
+                                                } else {
+                                                    $currentDate = date('Y-m-d');
+                                                    $threeDaysAgo = date('Y-m-d H:i:s', strtotime('-3 days'));
+                                                    $from_date = strtotime($threeDaysAgo);
+                                                    $to_date = $current_time;
+
+                                                    $allOrders = getNewOrders($from_date, $to_date, 1, 50);
+                                                    error_log("All Orders from API: " . print_r($allOrders, true));
+
+                                                    if (!empty($allOrders)) {
+                                                        $processResult = $addNewOrders->processOrders($allOrders);
+                                                        if ($processResult['status'] == 'success') {
+                                                            error_log("Orders successfully saved/updated.");
+
+                                                            $updateQuery = "INSERT INTO api_call_logs (last_call) VALUES (NOW())";
+                                                            $conn->query($updateQuery);
+                                                        } else {
+                                                            error_log("Error saving orders.");
+                                                        }
+                                                    }
                                                 }
 
-                                                $allOrders = getNewOrders($from_date, $to_date, $page, $per_page);
-                                                error_log("All Orders: " . print_r($allOrders, true));
+                                                $query = "SELECT OrderID, OrderDate, TotalAmount, OrderStatusDesc, ShippingAgent 
+                                                FROM order_header 
+                                                WHERE OrderStatus IN (100, 103)";
+                                                $result = $conn->query($query);
 
-                                                if (!empty($allOrders)) {
-                                                    foreach ($allOrders as $order) {
-                                                        $order_id = $order['order_id'];
-                                                        $tanggal = date('Y-m-d', strtotime($order['payment_date']));
-                                                        $omset = number_format($order['amt']['ttl_amount'], 0, ',', '.');
-                                                        $status = $order['order_status'] == 400 ? "Seller accept order" : "Unknown status";
-                                                        $courier = $order['logistics']['shipping_agency'];
+                                                if ($result->num_rows > 0) {
+                                                    while ($row = $result->fetch_assoc()) {
+                                                        $order_id = $row['OrderID'];
+                                                        $order_date = date('Y-m-d', strtotime($row['OrderDate']));
+                                                        $total_amount = number_format($row['TotalAmount'], 0, ',', '.');
+                                                        $order_status_desc = $row['OrderStatusDesc'];
+                                                        $shipping_agent = $row['ShippingAgent'];
 
                                                         echo "<tr>
-                                                        <td>{$order_id}</td>
-                                                        <td>{$tanggal}</td>
-                                                        <td>Rp. {$omset}</td>
-                                                        <td>{$status}</td>
-                                                        <td>{$courier}</td>
-                                                        <td>
-                                                            <form method='POST'>
-                                                                <input type='hidden' name='action' value='add'>
-                                                                <input type='hidden' name='order_data' value='" . htmlspecialchars(json_encode($order), ENT_QUOTES, 'UTF-8') . "'>
-                                                                <button type='submit' class='action-button'>Add</button>
-                                                            </form>
-                                                            <a href='detail-order.php?order_id={$order_id}' class='action-button'>Detail</a>
-                                                        </td>
-                                                    </tr>";
+                                                                <td>{$order_id}</td>
+                                                                <td>{$order_date}</td>
+                                                                <td>Rp. {$total_amount}</td>
+                                                                <td>{$order_status_desc}</td>
+                                                                <td>{$shipping_agent}</td>
+                                                                <td>
+                                                                    <a href='detail-order.php?order_id={$order_id}' class='action-button'>Detail</a>
+                                                                </td>
+                                                            </tr>";
                                                     }
                                                 } else {
-                                                    echo "<tr><td colspan='6'>No orders found for both shop IDs.</td></tr>";
+                                                    echo "<tr><td colspan='7'>No orders found in the database.</td></tr>";
                                                 }
 
-                                                echo "</tbody></table>";
+                                                $conn->close();
                                                 ?>
-
-
                                             </tbody>
                                         </table>
                                         <!-- 
