@@ -9,7 +9,7 @@ function getNewOrders($from_date, $to_date, $page, $per_page)
     $fs_id = $apiToken->getFsId();
     $shop_ids = $apiToken->getShopIds();
 
-    $allOrders = [];
+    $products = [];
 
     foreach ($shop_ids as $shop_id) {
         $url = "https://fs.tokopedia.net/v2/order/list?fs_id={$fs_id}&shop_id={$shop_id}&from_date={$from_date}&to_date={$to_date}&page={$page}&per_page={$per_page}";
@@ -31,7 +31,7 @@ function getNewOrders($from_date, $to_date, $page, $per_page)
 
             $responseData = json_decode($response, true);
             if (isset($responseData['data']) && !empty($responseData['data'])) {
-                $allOrders = array_merge($allOrders, $responseData['data']);
+                $allOrders = array_merge($products, $responseData['data']);
             } else {
                 error_log("Data tidak ditemukan untuk Shop ID $shop_id.");
             }
@@ -40,7 +40,7 @@ function getNewOrders($from_date, $to_date, $page, $per_page)
         curl_close($curl);
     }
 
-    return $allOrders;
+    return $products;
 }
 
 function processNewOrder($orderData)

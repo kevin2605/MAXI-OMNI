@@ -64,4 +64,11 @@ function getProductVariants($product_id)
 
     return json_decode($response, true);
 }
+
+function processSimpan($product)
+{
+    $addNewProduct = new ProdukTokopedia();
+    $result = $addNewProduct->processSimpan([$product]);
+    return $result;
+}
 ?>

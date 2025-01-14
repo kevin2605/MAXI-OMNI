@@ -107,89 +107,7 @@
           </div>
         </div>
         <div class="container-fluid <?php echo $accessDenied ? 'hiddenn' : ''; ?>">
-          <!-- Container-fluid start -->
-          <!-- <div class="col-xs-12">
-            <div class="card">
-              <div class="card-header pb-0 card-no-border">
-              </div>
-              <div class="card-body">
-                <div class="table-responsive custom-scrollbar">
-                  <table class="table">
-                    <thead>
-                      <tr class="border-bottom-primary">
-                        <th scope="col">INFO PRODUK</th>
-                        <th scope="col"></th>
-                        <th scope="col">HARGA</th>
-                        <th scope="col">STOCK</th>
-                        <th scope="col">STATUS</th>
-                        <th scope="col"></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr class="border-bottom-secondary">
-                        <td style="width: 10%;">  Set the width of the image column 
-                          <img class="img-fluid" src="../../Product-Image/1.jpg" alt="profile"
-                            style="width: 80px; height: auto;">  Set image size 
-                        </td>
-                        <td style="width: 30%;">IMP Mangkok Kertas 360ml 500ml 650ml 800ml 1000ml /
-                          Paper Bowl 12oz 17oz 23oz 28oz 33oz /
-                          Mangkok Kertas Polos + Tutup Isi 50 pcs</td>
-                        <td>Wolfe</td>
-                        <td>RamJacob@twitter</td>
-                        <td>Developer</td>
-                        <td>Apple Inc.</td>
-                      </tr>
-                      <tr class="border-bottom-secondary">
-                        <td style="width: 10%; "> 
-                          <img class="img-fluid" src="../../Product-Image/1.jpg" alt="profile"
-                            style="width: 80px; height: auto;"> 
-                        </td>
-                        <td style="width: 30%;">IMP Mangkok Kertas 360ml 500ml 650ml 800ml 1000ml /
-                          Paper Bowl 12oz 17oz 23oz 28oz 33oz /
-                          Mangkok Kertas Polos + Tutup Isi 50 pcs</td>
-                        <td>Wolfe</td>
-                        <td>RamJacob@twitter</td>
-                        <td>Developer</td>
-                        <td>Apple Inc.</td>
-                      </tr>
-                      <tr class="border-bottom-secondary">
-                        <td style="width: 10%; "> 
-                          <img class="img-fluid" src="../../Product-Image/1.jpg" alt="profile"
-                            style="width: 80px; height: auto;"> 
-                        </td>
-                        <td style="width: 30%;">IMP Mangkok Kertas 360ml 500ml 650ml 800ml 1000ml /
-                          Paper Bowl 12oz 17oz 23oz 28oz 33oz /
-                          Mangkok Kertas Polos + Tutup Isi 50 pcs</td>
-                        <td>Wolfe</td>
-                        <td>RamJacob@twitter</td>
-                        <td>Developer</td>
-                        <td>Apple Inc.</td>
-                      </tr>
-                      <tr class="border-bottom-secondary">
-                        <td style="width: 10%; "> 
-                          <img class="img-fluid" src="../../Product-Image/1.jpg" alt="profile"
-                            style="width: 80px; height: auto;">
-                        </td>
-                        <td style="width: 30%;">IMP Mangkok Kertas 360ml 500ml 650ml 800ml 1000ml /
-                          Paper Bowl 12oz 17oz 23oz 28oz 33oz /
-                          Mangkok Kertas Polos + Tutup Isi 50 pcs</td>
-                        <td style="width: 10%; ">
-                          <div class="col-lg-8">
-                            <input class="form-control digits" type="number" value="100">
-                          </div>
-                        </td>
-                        <td>RamJacob@twitter</td>
-                        <td>Developer</td>
-                        <td>Apple Inc.</td>
-                      </tr>
-                    </tbody>
 
-
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div> -->
 
           <div class="col-xs-12">
             <div class="card">
@@ -217,13 +135,28 @@
               </div>
               <?php
               require_once '../RequestAPI/tokopedia-get-all-product.php';
-              // Ambil semua produk
+              require_once '../Process/addproduct.php';
+
+              $addNewProduct = new ProdukTokopedia();
+
               $products = getAllProducts();
+
+              if ($products) {
+                $addNewProduct->processSimpan($products);
+              }
+              ?>
+              <?php
+
+              // Query untuk mengambil data produk utama dari tabel `productomni`
+              $query = "SELECT * FROM productomni";
+              $result = mysqli_query($conn, $query);
+
+              if (!$result) {
+                die("Query gagal dijalankan: " . mysqli_error($conn));
+              }
               ?>
 
               <div class="card-body">
-                <h5><?php echo count($products); ?> Produk</h5>
-                <br>
                 <div class="row header-table">
                   <div class="col-lg-4 col-xs-4">INFO PRODUK</div>
                   <div class="col-lg-2 col-xs-2">HARGA</div>
@@ -233,10 +166,167 @@
                   <div class="col-lg-2 col-xs-2"></div>
                 </div>
 
-                <?php if (!empty($products)): ?>
+                <?php if (mysqli_num_rows($result) > 0): ?>
+                  <?php while ($product = mysqli_fetch_assoc($result)): ?>
+                    <div class="row body-table">
+                      <!-- Bagian informasi produk -->
+                      <div class="col-lg-1 col-xs-1">
+                        <?php
+                        $imageUrl = !empty($product['Img']) ? $product['Img'] : 'default.jpg';
+                        echo '<img class="img-fluid" src="' . $imageUrl . '" alt="product_image" width="75px">';
+                        ?>
+                      </div>
+                      <div class="col-lg-3 col-xs-3">
+                        <div style="height:40px; overflow-x: hidden;">
+                          <?php echo htmlspecialchars($product['ProductName']); ?>
+                        </div>
+                        <div style="margin-top: 5px; color: #9AA0A6;">
+                          ID: <?php echo htmlspecialchars($product['ProductID']); ?>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-2 col-xs-2">
+                        <div style="width:80%;">
+                          <div class="input-group">
+                            <span class="input-group-text" id="basic-addon1">Rp </span>
+                            <input class="form-control price-input" type="number"
+                              value="<?php echo htmlspecialchars($product['SellingPrice']); ?>"
+                              data-id="<?php echo htmlspecialchars($product['ProductID']); ?>" />
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-1 col-xs-1">
+                        <input class="form-control stock-input" type="number"
+                          value="<?php echo htmlspecialchars($product['StockValue']); ?>"
+                          data-id="<?php echo htmlspecialchars($product['ProductID']); ?>" />
+                      </div>
+
+                      <div class="col-lg-2 col-xs-2">
+                        <input class="form-control digits" type="text"
+                          value="<?php echo htmlspecialchars($product['AvailableIn']); ?>">
+                      </div>
+
+                      <div class="col-lg-1 col-xs-1">
+                        <div class="flex-grow-1 icon-state">
+                          <label class="switch">
+                            <input type="checkbox" class="status" name="status" <?php echo $product['isParent'] == 1 ? 'checked' : ''; ?> data-id="<?php echo htmlspecialchars($product['ProductID']); ?>">
+                            <span class="switch-state"></span>
+                          </label>
+                        </div>
+                      </div>
+
+                      <div class="col-lg-2 col-xs-2">
+                        <select class="form-select" id="validationDefault04">
+                          <option selected="" disabled="">Action</option>
+                          <option>Edit Produk</option>
+                          <option>Non-Aktif</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <?php if (!empty($product['ChildID'])): ?>
+  <div class="row" style="margin-top: 10px; margin-left: 0px;">
+    <button class="btn btn-info" type="button" data-bs-toggle="collapse"
+      data-bs-target="#<?php echo $product['ProductID']; ?>" aria-expanded="false"
+      aria-controls="variantList">
+      Lihat Varian
+    </button>
+
+    <div class="collapse mt-2" id="<?php echo $product['ProductID']; ?>">
+      <ul class="list-group">
+        <?php
+        // Mengambil ChildIDs yang dipisahkan koma
+        $childIds = explode(',', $product['ChildID']);
+
+        // Menyiapkan query untuk mendapatkan varian produk berdasarkan ChildID
+        $variantQuery = "SELECT * FROM productvariantomni WHERE ProductIDVariant IN ('" . implode("', '", $childIds) . "')";
+        $variantResult = mysqli_query($conn, $variantQuery);
+
+        // Jika query gagal, tampilkan pesan error
+        if (!$variantResult) {
+          die("Query gagal dijalankan: " . mysqli_error($conn));
+        }
+
+        // Proses setiap varian yang didapat dari query
+        while ($variant = mysqli_fetch_assoc($variantResult)): ?>
+          <li class="list-group-item">
+            <div class="row">
+                <!-- Thumbnail Gambar -->
+                <div class="col-lg-1 col-xs-1">
+                    <img class="img-fluid" src="<?php echo 'default_variant.jpg'; ?>" alt="variant_image" width="75px">
+                </div>
+
+                <!-- Nama dan ID Produk -->
+                <div class="col-lg-3 col-xs-3">
+                    <div><?php echo htmlspecialchars($variant['ProductName']); ?></div>
+                    <div style="color: #9AA0A6;">
+                        ID: <?php echo htmlspecialchars($variant['ProductIDVariant']); ?>
+                    </div>
+                </div>
+
+                <!-- Harga -->
+                <div class="col-lg-2 col-xs-2">
+                    <div style="width:80%;">
+                        <div class="input-group">
+                            <span class="input-group-text" id="basic-addon1">Rp </span>
+                            <input class="form-control price-input" type="number"
+                                   value="<?php echo htmlspecialchars($variant['SellingPrice']); ?>"
+                                   data-id="<?php echo htmlspecialchars($variant['ProductIDVariant']); ?>"/>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stok -->
+                <div class="col-lg-1 col-xs-1">
+                    <input class="form-control stock-input" type="number"
+                           value="<?php echo htmlspecialchars($variant['StockValue']); ?>"/>
+                </div>
+
+                <!-- Status -->
+                <div class="col-lg-1 col-xs-1">
+                    <div class="flex-grow-1 icon-state">
+                        <label class="switch">
+                            <input type="checkbox" class="status" name="status" 
+                                   <?php echo $variant['isParent'] == 1 ? 'checked' : ''; ?>
+                                   data-id="<?php echo htmlspecialchars($variant['ProductIDVariant']); ?>">
+                            <span class="switch-state"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+          </li>
+        <?php endwhile; ?>
+      </ul>
+    </div>
+  </div>
+<?php endif; ?>
+
+
+                  <?php endwhile; ?>
+                <?php else: ?>
+                  <div class="row">
+                    <div class="col">
+                      <p>Tidak ada produk ditemukan</p>
+                    </div>
+                  </div>
+                <?php endif; ?>
+              </div>
+
+
+
+
+
+
+
+
+
+
+
+              <!-- <?php if (!empty($products)): ?>
                   <?php foreach ($products as $product): ?>
                     <div class="row body-table">
-                      <!-- Bagian informasi produk utama -->
+                    
                       <div class="col-lg-1 col-xs-1">
                         <?php
                         if (isset($product['pictures']) && !empty($product['pictures'])) {
@@ -297,9 +387,10 @@
                         </select>
                       </div>
 
-                      <!-- Bagian varian produk sesuai dengan kode asli Anda -->
                       <?php
+
                       $variants = getProductVariants($product['basic']['productID']);
+
                       if (isset($variants['data']['children']) && !empty($variants['data']['children'])):
                         ?>
                         <div class="row" style="margin-top: 10px;margin-left:0px">
@@ -375,287 +466,287 @@
                       <p>Tidak ada produk ditemukan</p>
                     </div>
                   </div>
-                <?php endif; ?>
-              </div>
-
-              <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-              <script>
-                $(document).ready(function () {
-                  $('.price-input').on('blur', function () {
-                    const newPrice = $(this).val();
-                    const productID = $(this).data('id');
-
-                    console.log('New Price:', newPrice);
-                    console.log('Product ID:', productID);
-
-                    if (!isNaN(newPrice) && newPrice.trim() !== "" && productID !== 'ID tidak tersedia') {
-                      updateProductPricePHP(productID, newPrice);
-                    } else {
-                      alert("Please enter a valid number for the price.");
-                    }
-                  });
-                });
-
-                function updateProductPricePHP(productID, newPrice) {
-                  $.ajax({
-                    url: '../RequestAPI/tokopedia-update-price.php',
-                    type: 'POST',
-                    data: {
-                      //parameter
-                      product_id: productID,
-                      new_price: newPrice
-                    },
-                    success: function (response) {
-                      console.log('Response:', response);
-                      const responseData = JSON.parse(response);
-                      if (responseData.error) {
-                        alert('Error updating price: ' + responseData.error);
-                      } else {
-                        alert('Price updated successfully!');
-                      }
-                    },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                      console.error('AJAX Error:', textStatus, errorThrown);
-                      alert('Error updating price: ' + errorThrown);
-                    }
-                  });
-                }
-
-                $(document).ready(function () {
-                  $('.stock-input').on('blur', function () {
-                    const newStock = $(this).val();
-                    const productID = $(this).data('id');
-
-                    console.log('New Stock:', newStock);
-                    console.log('Product ID:', productID);
-
-                    if (!isNaN(newStock) && newStock.trim() !== "" && productID !== 'ID tidak tersedia') {
-                      updateProductStockPHP(productID, newStock);
-                    } else {
-                      alert("Please enter a valid number for the stock.");
-                    }
-                  });
-                });
-
-                function updateProductStockPHP(productID, newStock) {
-                  $.ajax({
-                    url: '../RequestAPI/tokopedia-update-stock.php',
-                    type: 'POST',
-                    data: {
-                      product_id: productID,
-                      new_stock: newStock
-                    },
-                    success: function (response) {
-                      console.log('Response:', response);
-                      const responseData = JSON.parse(response);
-                      if (responseData.error) {
-                        alert('Error updating stock: ' + responseData.error);
-                      } else {
-                        alert('Stock updated successfully!');
-                      }
-                    },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                      console.error('AJAX Error:', textStatus, errorThrown);
-                      alert('Error updating stock: ' + errorThrown);
-                    }
-                  });
-                }
-                document.querySelectorAll('.status').forEach(function (checkbox) {
-                  checkbox.addEventListener('change', function () {
-                    var productID = parseInt(this.getAttribute('data-id'));
-                    var isChecked = this.checked;
-                    var productType = this.getAttribute('data-type');
-                    var parentID = this.getAttribute('data-parent-id');
-
-                    var url = isChecked ? '../RequestAPI/tokopedia-set-active.php' : '../RequestAPI/tokopedia-set-inactive.php';
-
-                    $.ajax({
-                      type: 'POST',
-                      url: url,
-                      data: { product_id: [productID] },
-                      success: function (response) {
-                        console.log('Response: ', response);
-
-                        try {
-                          var result = JSON.parse(response);
-                          if (result.success) {
-                            alert('Status berhasil diperbarui' + productID);
-
-                            // Update UI
-                            if (productType === 'main') {
-                              // Update status semua varian jika produk utama diubah
-                              document.querySelectorAll(`.variant-status[data-parent-id="${productID}"]`).forEach(function (variantCheckbox) {
-                                variantCheckbox.checked = isChecked;
-                              });
-                            } else if (productType === 'variant') {
-                              // Periksa apakah semua varian memiliki status yang sama
-                              var allVariants = document.querySelectorAll(`.variant-status[data-parent-id="${parentID}"]`);
-                              var allChecked = Array.from(allVariants).every(cb => cb.checked);
-                              var mainCheckbox = document.querySelector(`.main-product-status[data-id="${parentID}"]`);
-                              if (mainCheckbox) {
-                                mainCheckbox.checked = allChecked;
-                              }
-                            }
-                          } else {
-                            throw new Error(result.error || 'Unknown error');
-                          }
-                        } catch (e) {
-                          throw new Error('Failed to parse response: ' + e.message);
-                        }
-                      },
-                      error: function (xhr, status, error) {
-                        console.error('Error: ' + error + ' | Product ID: ' + productID);
-                        alert('Terjadi kesalahan saat memperbarui status untuk Product ID: ' + productID);
-                        // Kembalikan checkbox ke status sebelumnya jika terjadi error
-                        checkbox.checked = !isChecked;
-                      }
-                    });
-                  });
-                });
-              </script>
+                <?php endif; ?> -->
             </div>
+
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            <script>
+              $(document).ready(function () {
+                $('.price-input').on('blur', function () {
+                  const newPrice = $(this).val();
+                  const productID = $(this).data('id');
+
+                  console.log('New Price:', newPrice);
+                  console.log('Product ID:', productID);
+
+                  if (!isNaN(newPrice) && newPrice.trim() !== "" && productID !== 'ID tidak tersedia') {
+                    updateProductPricePHP(productID, newPrice);
+                  } else {
+                    alert("Please enter a valid number for the price.");
+                  }
+                });
+              });
+
+              function updateProductPricePHP(productID, newPrice) {
+                $.ajax({
+                  url: '../RequestAPI/tokopedia-update-price.php',
+                  type: 'POST',
+                  data: {
+                    //parameter
+                    product_id: productID,
+                    new_price: newPrice
+                  },
+                  success: function (response) {
+                    console.log('Response:', response);
+                    const responseData = JSON.parse(response);
+                    if (responseData.error) {
+                      alert('Error updating price: ' + responseData.error);
+                    } else {
+                      alert('Price updated successfully!');
+                    }
+                  },
+                  error: function (jqXHR, textStatus, errorThrown) {
+                    console.error('AJAX Error:', textStatus, errorThrown);
+                    alert('Error updating price: ' + errorThrown);
+                  }
+                });
+              }
+
+              $(document).ready(function () {
+                $('.stock-input').on('blur', function () {
+                  const newStock = $(this).val();
+                  const productID = $(this).data('id');
+
+                  console.log('New Stock:', newStock);
+                  console.log('Product ID:', productID);
+
+                  if (!isNaN(newStock) && newStock.trim() !== "" && productID !== 'ID tidak tersedia') {
+                    updateProductStockPHP(productID, newStock);
+                  } else {
+                    alert("Please enter a valid number for the stock.");
+                  }
+                });
+              });
+
+              function updateProductStockPHP(productID, newStock) {
+                $.ajax({
+                  url: '../RequestAPI/tokopedia-update-stock.php',
+                  type: 'POST',
+                  data: {
+                    product_id: productID,
+                    new_stock: newStock
+                  },
+                  success: function (response) {
+                    console.log('Response:', response);
+                    const responseData = JSON.parse(response);
+                    if (responseData.error) {
+                      alert('Error updating stock: ' + responseData.error);
+                    } else {
+                      alert('Stock updated successfully!');
+                    }
+                  },
+                  error: function (jqXHR, textStatus, errorThrown) {
+                    console.error('AJAX Error:', textStatus, errorThrown);
+                    alert('Error updating stock: ' + errorThrown);
+                  }
+                });
+              }
+              document.querySelectorAll('.status').forEach(function (checkbox) {
+                checkbox.addEventListener('change', function () {
+                  var productID = parseInt(this.getAttribute('data-id'));
+                  var isChecked = this.checked;
+                  var productType = this.getAttribute('data-type');
+                  var parentID = this.getAttribute('data-parent-id');
+
+                  var url = isChecked ? '../RequestAPI/tokopedia-set-active.php' : '../RequestAPI/tokopedia-set-inactive.php';
+
+                  $.ajax({
+                    type: 'POST',
+                    url: url,
+                    data: { product_id: [productID] },
+                    success: function (response) {
+                      console.log('Response: ', response);
+
+                      try {
+                        var result = JSON.parse(response);
+                        if (result.success) {
+                          alert('Status berhasil diperbarui' + productID);
+
+                          // Update UI
+                          if (productType === 'main') {
+                            // Update status semua varian jika produk utama diubah
+                            document.querySelectorAll(`.variant-status[data-parent-id="${productID}"]`).forEach(function (variantCheckbox) {
+                              variantCheckbox.checked = isChecked;
+                            });
+                          } else if (productType === 'variant') {
+                            // Periksa apakah semua varian memiliki status yang sama
+                            var allVariants = document.querySelectorAll(`.variant-status[data-parent-id="${parentID}"]`);
+                            var allChecked = Array.from(allVariants).every(cb => cb.checked);
+                            var mainCheckbox = document.querySelector(`.main-product-status[data-id="${parentID}"]`);
+                            if (mainCheckbox) {
+                              mainCheckbox.checked = allChecked;
+                            }
+                          }
+                        } else {
+                          throw new Error(result.error || 'Unknown error');
+                        }
+                      } catch (e) {
+                        throw new Error('Failed to parse response: ' + e.message);
+                      }
+                    },
+                    error: function (xhr, status, error) {
+                      console.error('Error: ' + error + ' | Product ID: ' + productID);
+                      alert('Terjadi kesalahan saat memperbarui status untuk Product ID: ' + productID);
+                      // Kembalikan checkbox ke status sebelumnya jika terjadi error
+                      checkbox.checked = !isChecked;
+                    }
+                  });
+                });
+              });
+            </script>
           </div>
-          <!-- Container-fluid Ends-->
+        </div>
+        <!-- Container-fluid Ends-->
+      </div>
+    </div>
+  </div>
+  <!-- footer start-->
+  <footer class="footer">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-6 p-0 footer-copyright">
+          <p class="mb-0">Copyright 2024 © MAXI.</p>
+        </div>
+        <div class="col-md-6 p-0">
+          <p class="heart mb-0">Business System and Information
+          </p>
         </div>
       </div>
     </div>
-    <!-- footer start-->
-    <footer class="footer">
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col-md-6 p-0 footer-copyright">
-            <p class="mb-0">Copyright 2024 © MAXI.</p>
-          </div>
-          <div class="col-md-6 p-0">
-            <p class="heart mb-0">Business System and Information
-            </p>
-          </div>
-        </div>
-      </div>
-    </footer>
-    <style>
-      .hidden {
-        display: none;
+  </footer>
+  <style>
+    .hidden {
+      display: none;
+    }
+
+    .hiddenn {
+      display: none;
+    }
+
+    .header-table {
+      border-top: 1px solid #DADCE0;
+      border-bottom: 1px solid #DADCE0;
+      padding: 10px;
+      /*padding-bottom:10px;*/
+    }
+
+    .body-table {
+      /*border-top: 1px solid #DADCE0;*/
+      border-bottom: 1px solid #DADCE0;
+      padding: 20px 10px 20px 10px;
+      /*padding-bottom:10px;*/
+    }
+
+    .bell-icon {
+      fill: gray;
+      /* Warna abu-abu untuk ikon */
+      transition: transform 0.3s ease;
+    }
+
+    @keyframes ringBell {
+      0% {
+        transform: rotate(0deg);
       }
 
-      .hiddenn {
-        display: none;
+      25% {
+        transform: rotate(10deg);
       }
 
-      .header-table {
-        border-top: 1px solid #DADCE0;
-        border-bottom: 1px solid #DADCE0;
-        padding: 10px;
-        /*padding-bottom:10px;*/
+      50% {
+        transform: rotate(-10deg);
       }
 
-      .body-table {
-        /*border-top: 1px solid #DADCE0;*/
-        border-bottom: 1px solid #DADCE0;
-        padding: 20px 10px 20px 10px;
-        /*padding-bottom:10px;*/
+      75% {
+        transform: rotate(5deg);
       }
 
-      .bell-icon {
-        fill: gray;
-        /* Warna abu-abu untuk ikon */
-        transition: transform 0.3s ease;
+      100% {
+        transform: rotate(0deg);
+      }
+    }
+
+    .bell-icon.ringing {
+      animation: ringBell 1s infinite;
+
+
+      .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: right;
+        height: 100vh;
       }
 
-      @keyframes ringBell {
-        0% {
-          transform: rotate(0deg);
-        }
-
-        25% {
-          transform: rotate(10deg);
-        }
-
-        50% {
-          transform: rotate(-10deg);
-        }
-
-        75% {
-          transform: rotate(5deg);
-        }
-
-        100% {
-          transform: rotate(0deg);
-        }
+      img {
+        max-width: 200px;
+        margin-bottom: 0px;
       }
 
-      .bell-icon.ringing {
-        animation: ringBell 1s infinite;
-
-
-        .container {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: right;
-          height: 100vh;
-        }
-
-        img {
-          max-width: 200px;
-          margin-bottom: 0px;
-        }
-
-        .button {
-          background-color: #4CAF50;
-          border: none;
-          color: white;
-          padding: 0px 0px;
-          text-align: center;
-          text-decoration: none;
-          display: inline-block;
-          font-size: 16px;
-          margin: 0px 0px;
-          cursor: pointer;
-          border-radius: 0px;
-        }
+      .button {
+        background-color: #4CAF50;
+        border: none;
+        color: white;
+        padding: 0px 0px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 0px 0px;
+        cursor: pointer;
+        border-radius: 0px;
       }
-    </style>
-    <script>
-      document.querySelector('.bell-icon').addEventListener('mouseenter', function () {
-        this.classList.add('ringing');
-      });
-      document.querySelector('.bell-icon').addEventListener('mouseleave', function () {
-        this.classList.remove('ringing');
-      });
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-    <!-- latest jquery-->
-    <script src="../../../assets/js/jquery.min.js"></script>
-    <!-- Bootstrap js-->
-    <script src="../../../assets/js/bootstrap/bootstrap.bundle.min.js"></script>
-    <!-- feather icon js-->
-    <script src="../../../assets/js/icons/feather-icon/feather.min.js"></script>
-    <script src="../../../assets/js/icons/feather-icon/feather-icon.js"></script>
-    <!-- scrollbar js-->
-    <script src="../../../assets/js/scrollbar/simplebar.js"></script>
-    <script src="../../../assets/js/scrollbar/custom.js"></script>
-    <!-- Sidebar jquery-->
-    <script src="../../../assets/js/config.js"></script>
-    <!-- Plugins JS start-->
-    <script src="../../../assets/js/sidebar-menu.js"></script>
-    <script src="../../../assets/js/sidebar-pin.js"></script>
-    <script src="../../../assets/js/slick/slick.min.js"></script>
-    <script src="../../../assets/js/slick/slick.js"></script>
-    <script src="../../../assets/js/header-slick.js"></script>
-    <script src="../../../assets/js/datatable/datatables/jquery.dataTables.min.js"></script>
-    <script src="../../../assets/js/datatable/datatables/datatable.custom.js"></script>
-    <!-- Plugins JS Ends-->
+    }
+  </style>
+  <script>
+    document.querySelector('.bell-icon').addEventListener('mouseenter', function () {
+      this.classList.add('ringing');
+    });
+    document.querySelector('.bell-icon').addEventListener('mouseleave', function () {
+      this.classList.remove('ringing');
+    });
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+  <!-- latest jquery-->
+  <script src="../../../assets/js/jquery.min.js"></script>
+  <!-- Bootstrap js-->
+  <script src="../../../assets/js/bootstrap/bootstrap.bundle.min.js"></script>
+  <!-- feather icon js-->
+  <script src="../../../assets/js/icons/feather-icon/feather.min.js"></script>
+  <script src="../../../assets/js/icons/feather-icon/feather-icon.js"></script>
+  <!-- scrollbar js-->
+  <script src="../../../assets/js/scrollbar/simplebar.js"></script>
+  <script src="../../../assets/js/scrollbar/custom.js"></script>
+  <!-- Sidebar jquery-->
+  <script src="../../../assets/js/config.js"></script>
+  <!-- Plugins JS start-->
+  <script src="../../../assets/js/sidebar-menu.js"></script>
+  <script src="../../../assets/js/sidebar-pin.js"></script>
+  <script src="../../../assets/js/slick/slick.min.js"></script>
+  <script src="../../../assets/js/slick/slick.js"></script>
+  <script src="../../../assets/js/header-slick.js"></script>
+  <script src="../../../assets/js/datatable/datatables/jquery.dataTables.min.js"></script>
+  <script src="../../../assets/js/datatable/datatables/datatable.custom.js"></script>
+  <!-- Plugins JS Ends-->
 
-    <!-- Plugin notification wajib start -->
-    <script src="../../../assets/js/notify/bootstrap-notify.min.js"></script>
-    <script src="../../../assets/js/notify/index.js"></script>
-    <!-- Plugin notification wajib end -->
+  <!-- Plugin notification wajib start -->
+  <script src="../../../assets/js/notify/bootstrap-notify.min.js"></script>
+  <script src="../../../assets/js/notify/index.js"></script>
+  <!-- Plugin notification wajib end -->
 
-    <!-- Theme js-->
-    <script src="../../../assets/js/script.js"></script>
+  <!-- Theme js-->
+  <script src="../../../assets/js/script.js"></script>
 
-    <!-- Plugin used-->
+  <!-- Plugin used-->
 </body>
 
 </html>
