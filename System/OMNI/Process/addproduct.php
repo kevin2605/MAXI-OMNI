@@ -88,6 +88,7 @@ class ProdukTokopedia
                 $pricemodal = isset($variantx['price_fmt']) ? intval(str_replace(['Rp', '.', ','], '', $variantx['price_fmt'])) : 0;
                 $stockvaluevariant = isset($variantx['stock']) ? intval($variantx['stock']) : 0;
                 $mainstockvariant = isset($variantx['main_stock']) ? intval($variantx['main_stock']) : 0;
+                $statusvariant = isset($variantx['enabled']) ? $variantx['enabled'] : 'Unknown';
 
 
                 error_log("Data yang akan disimpan: " . json_encode([
@@ -96,7 +97,8 @@ class ProdukTokopedia
                     'ModalPrice' => $pricemodal,
                     'SellingPrice' => $pricevariant,
                     'StockValue' => $stockvaluevariant,
-                    'MainStock' => $mainstockvariant
+                    'MainStock' => $mainstockvariant,
+                    'Enabled' => $statusvariant
                 ]));
 
                 $queryVariantCek = "SELECT * FROM productvariantomni WHERE ProductIDVariant = ?";
@@ -106,13 +108,13 @@ class ProdukTokopedia
                 $hasilVariantCek = $stmtVariant->get_result();
 
                 if ($hasilVariantCek->num_rows > 0) {
-                    $queryUpdateVariant = "UPDATE productvariantomni SET ProductName = ?, ModalPrice = ?, SellingPrice = ?, StockValue = ?, MainStock = ?, ReserveStock = ?  WHERE ProductIDVariant = ?";
+                    $queryUpdateVariant = "UPDATE productvariantomni SET ProductName = ?, ModalPrice = ?, SellingPrice = ?, StockValue = ?, MainStock = ?, ReserveStock = ?, Status = ?  WHERE ProductIDVariant = ?";
                     $stmtVariant = $this->conn->prepare($queryUpdateVariant);
-                    $stmtVariant->bind_param("siiiisi", $prodname, $pricemodal, $pricevariant, $stockvaluevariant, $mainstockvariant, $mainstockvariant, $productid);
+                    $stmtVariant->bind_param("siiiissi", $prodname, $pricemodal, $pricevariant, $stockvaluevariant, $mainstockvariant, $mainstockvariant, $statusvariant, $productid);
                 } else {
-                    $queryInsertVariant = "INSERT INTO productvariantomni (ProductIDVariant, ProductName, ModalPrice, SellingPrice, StockValue, MainStock, ReserveStock) VALUES (?, ?, ?, ?, ?, ?, ?)";
+                    $queryInsertVariant = "INSERT INTO productvariantomni (ProductIDVariant, ProductName, ModalPrice, SellingPrice, StockValue, MainStock, ReserveStock,Status) VALUES (?, ?, ?, ?, ?, ?, ?,?)";
                     $stmtVariant = $this->conn->prepare($queryInsertVariant);
-                    $stmtVariant->bind_param("isiiiis", $productid, $prodname, $pricemodal, $pricevariant, $stockvaluevariant, $mainstockvariant, $mainstockvariant);
+                    $stmtVariant->bind_param("isiiiiss", $productid, $prodname, $pricemodal, $pricevariant, $stockvaluevariant, $mainstockvariant, $mainstockvariant, $statusvariant);
                 }
 
                 if (!$stmtVariant->execute()) {
