@@ -40,7 +40,7 @@ function getNewOrders($from_date, $to_date, $page, $per_page)
         curl_close($curl);
     }
 
-    return $products;
+    return $allOrders;
 }
 
 function processNewOrder($orderData)

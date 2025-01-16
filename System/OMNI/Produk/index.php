@@ -145,6 +145,7 @@
                 <?php
                 require_once '../RequestAPI/tokopedia-get-all-product.php';
                 require_once '../Process/addproduct.php';
+                $imgFolder = '../Produk/ProductImg/';
 
                 $addNewProduct = new ProdukTokopedia();
                 $products = getAllProducts();
@@ -163,10 +164,13 @@
                   <?php while ($product = mysqli_fetch_assoc($result)): ?>
                     <div class="row body-table">
                       <div class="col-lg-1 col-xs-1">
-                        <?php
-                        $imageUrl = !empty($product['Img']) ? $product['Img'] : 'default.jpg';
-                        echo '<img class="img-fluid" src="' . $imageUrl . '" alt="product_image" width="75px">';
+                       <?php
+                        $images = explode(',', $product['Img']); 
+                        $firstImage = !empty($images[0]) ? $images[0] : 'default.jpg'; 
+
+                        $imageUrl = $imgFolder . $firstImage;
                         ?>
+                        <img class="img-fluid" src="<?php echo htmlspecialchars($imageUrl); ?>" alt="product_image" width="75px">
                       </div>
                       <div class="col-lg-3 col-xs-3">
                         <div style="height:40px; overflow-x: hidden;">
@@ -214,6 +218,7 @@
                           <option>Edit Produk</option>
                           <option>Non-Aktif</option>
                         </select>
+                        <button class="btn btn-danger" onclick="deleteProduct(<?php echo htmlspecialchars($product['ProductID']); ?>)">Hapus</button>
                       </div>
                     </div>
 
@@ -226,22 +231,28 @@
                         </button>
                         <div class="collapse mt-2" id="<?php echo $product['ProductID']; ?>">
                           <ul class="list-group">
-                            <?php
-                            $childIds = explode(',', $product['ChildID']);
+                          <?php
+                          $imgFolder = '../Produk/ProductImg/';
 
-                            $variantQuery = "SELECT * FROM productvariantomni WHERE ProductIDVariant IN ('" . implode("', '", $childIds) . "')";
-                            $variantResult = mysqli_query($conn, $variantQuery);
+                          $childIds = explode(',', $product['ChildID']);
 
-                            if (!$variantResult) {
+                          $variantQuery = "SELECT * FROM productvariantomni WHERE ProductIDVariant IN ('" . implode("', '", $childIds) . "')";
+                          $variantResult = mysqli_query($conn, $variantQuery);
+
+                          if (!$variantResult) {
                               die("Query gagal dijalankan: " . mysqli_error($conn));
-                            }
+                          }
 
-                            while ($variant = mysqli_fetch_assoc($variantResult)): ?>
+                          while ($variant = mysqli_fetch_assoc($variantResult)):  
+                              $imgPath = $imgFolder . $variant['Img'];
+                          ?>
                               <li class="list-group-item">
-                                <div class="row">
-                                    <div class="col-lg-1 col-xs-1">
-                                        <img class="img-fluid" src="<?php echo 'default_variant.jpg'; ?>" alt="variant_image" width="75px">
-                                    </div>
+                                  <div class="row">
+                                      <div class="col-lg-1 col-xs-1">
+                                          <!-- Tampilkan gambar varian -->
+                                          <img class="img-fluid" src="<?php echo $imgPath; ?>" alt="variant_image" width="75px">
+                                      </div>
+          
                                     <div class="col-lg-3 col-xs-3">
                                         <div><?php echo htmlspecialchars($variant['ProductName']); ?></div>
                                         <div style="color: #9AA0A6;">
@@ -307,6 +318,30 @@
                   }
                 });
               });
+              function deleteProduct(productID) {
+                $.ajax({
+                  url: '../RequestAPI/tokopedia-delete-product.php',
+                  type: 'POST',
+                  data: {
+                    product_id: [productID]  // Kirimkan productID yang valid (bukan array)
+                  },
+                  success: function(response) {
+                    console.log('Response:', response);
+                    const responseData = JSON.parse(response);
+                    if (responseData.error) {
+                      alert('Error deleting product ' + productID + ': ' + responseData.error);
+                    } else {
+                      alert('Product ' + productID + ' deleted successfully!');
+                      location.reload();
+                    }
+                  },
+                  error: function(jqXHR, textStatus, errorThrown) {
+                    console.error('AJAX Error:', textStatus, errorThrown);
+                    alert('Error deleting product ' + productID + ': ' + errorThrown);
+                  }
+                });
+              }
+
 
               function updateProductPricePHP(productID, newPrice) {
                 $.ajax({
@@ -424,6 +459,7 @@
                   });
                 });
               });
+              
             </script>
           </div>
         </div>

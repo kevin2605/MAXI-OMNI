@@ -79,55 +79,7 @@ class ProdukTokopedia
         $variants = getProductVariants($productId);
 
 
-        if (isset($variants['data']['children']) && !empty($variants['data']['children'])) {
-            foreach ($variants['data']['children'] as $variantx) {
 
-                $productid = isset($variantx['product_id']) ? intval($variantx['product_id']) : 0;
-                $prodname = isset($variantx['name']) ? $variantx['name'] : 'Unknown';
-                $pricevariant = isset($variantx['price']) ? intval($variantx['price']) : 0;
-                $pricemodal = isset($variantx['price_fmt']) ? intval(str_replace(['Rp', '.', ','], '', $variantx['price_fmt'])) : 0;
-                $stockvaluevariant = isset($variantx['stock']) ? intval($variantx['stock']) : 0;
-                $mainstockvariant = isset($variantx['main_stock']) ? intval($variantx['main_stock']) : 0;
-                $statusvariant = isset($variantx['enabled']) ? $variantx['enabled'] : 'Unknown';
-
-
-                error_log("Data yang akan disimpan: " . json_encode([
-                    'ProductIDVariant' => $productid,
-                    'ProductName' => $prodname,
-                    'ModalPrice' => $pricemodal,
-                    'SellingPrice' => $pricevariant,
-                    'StockValue' => $stockvaluevariant,
-                    'MainStock' => $mainstockvariant,
-                    'Enabled' => $statusvariant
-                ]));
-
-                $queryVariantCek = "SELECT * FROM productvariantomni WHERE ProductIDVariant = ?";
-                $stmtVariant = $this->conn->prepare($queryVariantCek);
-                $stmtVariant->bind_param("i", $productid);
-                $stmtVariant->execute();
-                $hasilVariantCek = $stmtVariant->get_result();
-
-                if ($hasilVariantCek->num_rows > 0) {
-                    $queryUpdateVariant = "UPDATE productvariantomni SET ProductName = ?, ModalPrice = ?, SellingPrice = ?, StockValue = ?, MainStock = ?, ReserveStock = ?, Status = ?  WHERE ProductIDVariant = ?";
-                    $stmtVariant = $this->conn->prepare($queryUpdateVariant);
-                    $stmtVariant->bind_param("siiiissi", $prodname, $pricemodal, $pricevariant, $stockvaluevariant, $mainstockvariant, $mainstockvariant, $statusvariant, $productid);
-                } else {
-                    $queryInsertVariant = "INSERT INTO productvariantomni (ProductIDVariant, ProductName, ModalPrice, SellingPrice, StockValue, MainStock, ReserveStock,Status) VALUES (?, ?, ?, ?, ?, ?, ?,?)";
-                    $stmtVariant = $this->conn->prepare($queryInsertVariant);
-                    $stmtVariant->bind_param("isiiiiss", $productid, $prodname, $pricemodal, $pricevariant, $stockvaluevariant, $mainstockvariant, $mainstockvariant, $statusvariant);
-                }
-
-                if (!$stmtVariant->execute()) {
-                    error_log("Gagal menyimpan data varian: " . $stmtVariant->error);
-                } else {
-                    error_log("Data varian berhasil disimpan.");
-                }
-
-                $stmtVariant->close();
-            }
-        } else {
-            error_log("Tidak ada data varian yang ditemukan.");
-        }
 
         $imageNames = [];
         if (isset($product['pictures']) && !empty($product['pictures'])) {
@@ -153,6 +105,7 @@ class ProdukTokopedia
 
         $img = $isParent ? implode(',', $imageNames) : (isset($imageNames[0]) ? $imageNames[0] : '');
 
+
         if ($hasilCek->num_rows > 0) {
             $queryUpdate = "UPDATE productomni SET ProductName = ?, Img = ?, Description = ?, ModalPrice = ?, SellingPrice = ?, isParent = ?, ChildID = ?, StockValue = ?, MainStock = ?, CreatedOn = ?, LastUpdated= ?, AvailableIn = ?, Status = ? WHERE ProductID = ?";
             $stmt = $this->conn->prepare($queryUpdate);
@@ -167,6 +120,55 @@ class ProdukTokopedia
             error_log("Error executing query: " . $stmt->error);
         }
         $stmt->close();
+
+        if (isset($variants['data']['children']) && !empty($variants['data']['children'])) {
+            foreach ($variants['data']['children'] as $index => $variantx) {
+                $productid = isset($variantx['product_id']) ? intval($variantx['product_id']) : 0;
+                $prodname = isset($variantx['name']) ? $variantx['name'] : 'Unknown';
+                $pricevariant = isset($variantx['price']) ? intval($variantx['price']) : 0;
+                $pricemodal = isset($variantx['price_fmt']) ? intval(str_replace(['Rp', '.', ','], '', $variantx['price_fmt'])) : 0;
+                $stockvaluevariant = isset($variantx['stock']) ? intval($variantx['stock']) : 0;
+                $mainstockvariant = isset($variantx['main_stock']) ? intval($variantx['main_stock']) : 0;
+                $statusvariant = isset($variantx['enabled']) ? $variantx['enabled'] : 'Unknown';
+
+                // Ambil gambar yang sesuai berdasarkan indeks varian
+                $img = isset($imageNames[$index]) ? $imageNames[$index] : (isset($imageNames[0]) ? $imageNames[0] : '');
+
+                // Cek jika gambar tersedia dalam $imageNames
+                if (!empty($img)) {
+                    error_log("Gambar yang akan disimpan untuk varian $productid: " . $img);
+
+                    $queryVariantCek = "SELECT * FROM productvariantomni WHERE ProductIDVariant = ?";
+                    $stmtVariant = $this->conn->prepare($queryVariantCek);
+                    $stmtVariant->bind_param("i", $productid);
+                    $stmtVariant->execute();
+                    $hasilVariantCek = $stmtVariant->get_result();
+
+                    if ($hasilVariantCek->num_rows > 0) {
+                        $queryUpdateVariant = "UPDATE productvariantomni SET ProductName = ?, Img = ?, ModalPrice = ?, SellingPrice = ?, StockValue = ?, MainStock = ?, ReserveStock = ?, Status = ? WHERE ProductIDVariant = ?";
+                        $stmtVariant = $this->conn->prepare($queryUpdateVariant);
+                        $stmtVariant->bind_param("ssiiiissi", $prodname, $img, $pricemodal, $pricevariant, $stockvaluevariant, $mainstockvariant, $mainstockvariant, $statusvariant, $productid);
+                    } else {
+                        $queryInsertVariant = "INSERT INTO productvariantomni (ProductIDVariant, ProductName, Img, ModalPrice, SellingPrice, StockValue, MainStock, ReserveStock, Status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                        $stmtVariant = $this->conn->prepare($queryInsertVariant);
+                        $stmtVariant->bind_param("issiiiiss", $productid, $prodname, $img, $pricemodal, $pricevariant, $stockvaluevariant, $mainstockvariant, $mainstockvariant, $statusvariant);
+                    }
+
+                    if (!$stmtVariant->execute()) {
+                        error_log("Gagal menyimpan data varian: " . $stmtVariant->error);
+                    } else {
+                        error_log("Data varian berhasil disimpan.");
+                    }
+                } else {
+                    error_log("Gambar tidak tersedia untuk varian $productid.");
+                }
+
+                $stmtVariant->close();
+            }
+        } else {
+            error_log("Tidak ada data varian yang ditemukan.");
+        }
+
 
 
     }
