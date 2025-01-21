@@ -153,7 +153,8 @@
                   $addNewProduct->processSimpan($products);
                 }
 
-                $query = "SELECT * FROM productomni";
+                $query = "SELECT * FROM productomni WHERE Status != 3";
+
                 $result = mysqli_query($conn, $query);
 
                 if (!$result) {
@@ -215,82 +216,82 @@
                       <div class="col-lg-2 col-xs-2">
                         <select class="form-select" id="validationDefault04">
                           <option selected="" disabled="">Action</option>
-                          <option>Edit Produk</option>
+                          <option  onclick="deleteProduct(<?php echo htmlspecialchars($product['ProductID']); ?>)">Hapus</option>
                           <option>Non-Aktif</option>
                         </select>
-                        <button class="btn btn-danger" onclick="deleteProduct(<?php echo htmlspecialchars($product['ProductID']); ?>)">Hapus</button>
+                     
                       </div>
+                      <?php if (!empty($product['ChildID'])): ?>
+                        <div class="row" style="margin-top: 10px; margin-left: 0px;">
+                          <button class="btn btn-info" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#<?php echo $product['ProductID']; ?>" aria-expanded="false"
+                            aria-controls="variantList">
+                            Lihat Varian
+                          </button>
+                          <div class="collapse mt-2" id="<?php echo $product['ProductID']; ?>">
+                            <ul class="list-group">
+                            <?php
+                            $imgFolder = '../Produk/ProductImg/';
+  
+                            $childIds = explode(',', $product['ChildID']);
+  
+                            $variantQuery = "SELECT * FROM productvariantomni WHERE ProductIDVariant IN ('" . implode("', '", $childIds) . "')";
+                            $variantResult = mysqli_query($conn, $variantQuery);
+  
+                            if (!$variantResult) {
+                                die("Query gagal dijalankan: " . mysqli_error($conn));
+                            }
+  
+                            while ($variant = mysqli_fetch_assoc($variantResult)):  
+                                $imgPath = $imgFolder . $variant['Img'];
+                            ?>
+                                <li class="list-group-item">
+                                    <div class="row">
+                                        <div class="col-lg-1 col-xs-1">
+                                            <!-- Tampilkan gambar varian -->
+                                            <img class="img-fluid" src="<?php echo $imgPath; ?>" alt="variant_image" width="75px">
+                                        </div>
+            
+                                      <div class="col-lg-3 col-xs-3">
+                                          <div><?php echo htmlspecialchars($variant['ProductName']); ?></div>
+                                          <div style="color: #9AA0A6;">
+                                              ID: <?php echo htmlspecialchars($variant['ProductIDVariant']); ?>
+                                          </div>
+                                      </div>
+                                      <div class="col-lg-2 col-xs-2">
+                                          <div style="width:80%;">
+                                              <div class="input-group">
+                                                  <span class="input-group-text" id="basic-addon1">Rp </span>
+                                                  <input class="form-control price-input" type="number"
+                                                        value="<?php echo htmlspecialchars($variant['SellingPrice']); ?>"
+                                                        data-id="<?php echo htmlspecialchars($variant['ProductIDVariant']); ?>"/>
+                                              </div>
+                                          </div>
+                                      </div>
+                                      <div class="col-lg-1 col-xs-1">
+                                          <input class="form-control stock-input" type="number"
+                                                value="<?php echo htmlspecialchars($variant['StockValue']); ?>"
+                                                data-id="<?php echo htmlspecialchars($variant['ProductIDVariant']); ?>"/>
+                                      </div>
+                                      <div class="col-lg-1 col-xs-1">
+                                          <div class="flex-grow-1 icon-state">
+                                              <label class="switch">
+                                                  <input type="checkbox" class="status" name="status" 
+                                                        <?php echo $variant['Status'] == 1 ? 'checked' : ''; ?>
+                                                        data-id="<?php echo htmlspecialchars($variant['ProductIDVariant']); ?>">
+                                                  <span class="switch-state"></span>
+                                              </label>
+                                          </div>
+                                      </div>
+                                  </div>
+                                </li>
+                              <?php endwhile; ?>
+                            </ul>
+                          </div>
+                        </div>
+                      <?php endif; ?>
                     </div>
 
-                    <?php if (!empty($product['ChildID'])): ?>
-                      <div class="row" style="margin-top: 10px; margin-left: 0px;">
-                        <button class="btn btn-info" type="button" data-bs-toggle="collapse"
-                          data-bs-target="#<?php echo $product['ProductID']; ?>" aria-expanded="false"
-                          aria-controls="variantList">
-                          Lihat Varian
-                        </button>
-                        <div class="collapse mt-2" id="<?php echo $product['ProductID']; ?>">
-                          <ul class="list-group">
-                          <?php
-                          $imgFolder = '../Produk/ProductImg/';
-
-                          $childIds = explode(',', $product['ChildID']);
-
-                          $variantQuery = "SELECT * FROM productvariantomni WHERE ProductIDVariant IN ('" . implode("', '", $childIds) . "')";
-                          $variantResult = mysqli_query($conn, $variantQuery);
-
-                          if (!$variantResult) {
-                              die("Query gagal dijalankan: " . mysqli_error($conn));
-                          }
-
-                          while ($variant = mysqli_fetch_assoc($variantResult)):  
-                              $imgPath = $imgFolder . $variant['Img'];
-                          ?>
-                              <li class="list-group-item">
-                                  <div class="row">
-                                      <div class="col-lg-1 col-xs-1">
-                                          <!-- Tampilkan gambar varian -->
-                                          <img class="img-fluid" src="<?php echo $imgPath; ?>" alt="variant_image" width="75px">
-                                      </div>
-          
-                                    <div class="col-lg-3 col-xs-3">
-                                        <div><?php echo htmlspecialchars($variant['ProductName']); ?></div>
-                                        <div style="color: #9AA0A6;">
-                                            ID: <?php echo htmlspecialchars($variant['ProductIDVariant']); ?>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-2 col-xs-2">
-                                        <div style="width:80%;">
-                                            <div class="input-group">
-                                                <span class="input-group-text" id="basic-addon1">Rp </span>
-                                                <input class="form-control price-input" type="number"
-                                                      value="<?php echo htmlspecialchars($variant['SellingPrice']); ?>"
-                                                      data-id="<?php echo htmlspecialchars($variant['ProductIDVariant']); ?>"/>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-1 col-xs-1">
-                                        <input class="form-control stock-input" type="number"
-                                              value="<?php echo htmlspecialchars($variant['StockValue']); ?>"
-                                              data-id="<?php echo htmlspecialchars($variant['ProductIDVariant']); ?>"/>
-                                    </div>
-                                    <div class="col-lg-1 col-xs-1">
-                                        <div class="flex-grow-1 icon-state">
-                                            <label class="switch">
-                                                <input type="checkbox" class="status" name="status" 
-                                                      <?php echo $variant['Status'] == 1 ? 'checked' : ''; ?>
-                                                      data-id="<?php echo htmlspecialchars($variant['ProductIDVariant']); ?>">
-                                                <span class="switch-state"></span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                              </li>
-                            <?php endwhile; ?>
-                          </ul>
-                        </div>
-                      </div>
-                    <?php endif; ?>
                   <?php endwhile; ?>
                 <?php else: ?>
                   <div class="row">
@@ -319,14 +320,20 @@
                 });
               });
               function deleteProduct(productID) {
+                const parsedProductID = parseInt(productID, 10); 
+                if (isNaN(parsedProductID)) {
+                  alert("Invalid product ID format.");
+                  return;
+                }
+
                 $.ajax({
                   url: '../RequestAPI/tokopedia-delete-product.php',
                   type: 'POST',
-                  data: {
-                    product_id: [productID]  // Kirimkan productID yang valid (bukan array)
-                  },
+                  data: JSON.stringify({
+                    product_id: [parsedProductID] 
+                  }),
+                  contentType: 'application/json', 
                   success: function(response) {
-                    console.log('Response:', response);
                     const responseData = JSON.parse(response);
                     if (responseData.error) {
                       alert('Error deleting product ' + productID + ': ' + responseData.error);

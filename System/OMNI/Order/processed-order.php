@@ -193,7 +193,7 @@
                                                 $last_call = $result->fetch_assoc()['last_call'] ?? null;
 
                                                 $current_time = time();
-                                                $fifteen_minutes_ago = $current_time - (15 * 60);
+                                                $fifteen_minutes_ago = $current_time - (1 * 6);
 
                                                 if ($last_call && strtotime($last_call) >= $fifteen_minutes_ago) {
                                                     error_log("API call skipped. Last call was less than 15 minutes ago.");
