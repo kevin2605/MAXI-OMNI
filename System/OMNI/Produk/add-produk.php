@@ -5,6 +5,12 @@
   <?php
   include "../headcontent.php";
   session_start();
+
+
+  if (isset($_SESSION['success_message'])) {
+    echo "<script>alert('" . $_SESSION['success_message'] . "');</script>";
+    unset($_SESSION['success_message']); // Hapus pesan setelah ditampilkan
+  }
   include "../../DBConnection.php";
   $userID = $_COOKIE['UserID'];
 
@@ -218,58 +224,33 @@
                     <div class="card">
                       <div class="card-body">
                         <div class="sidebar-body">
-                          <form class="row g-2" action="/submit.php" method="POST"> <!-- Single form tag -->
-                            <label class="form-label col-12 m-0" for="productID1">ID Produk (SKU) </label>
-                            <div class="col-12 custom-input">
-                              <input class="form-control" id="productID1" type="text">
+                          <form class="row g-2" action="../RequestAPI/tokopedia-create-product.php" method="POST">
 
-                            </div>
+                            <!-- Nama Produk -->
                             <label class="form-label col-12 m-0" for="productTitle1">Nama Produk <span
                                 class="txt-danger">*</span></label>
                             <div class="col-12 custom-input">
-                              <input class="form-control" id="productTitle1" type="text" required="">
-
-                            </div>
-                            <div class="col-12">
-                              <div class="toolbar-box">
-                                <div id="toolbar2">
-                                  <span class="ql-formats">
-                                    <select class="ql-size"></select>
-                                  </span>
-                                  <span class="ql-formats">
-                                    <button class="ql-bold">Bold </button>
-                                    <button class="ql-italic">Italic </button>
-                                    <button class="ql-underline">underline</button>
-                                    <button class="ql-strike">Strike </button>
-                                  </span>
-                                  <span class="ql-formats">
-                                    <button class="ql-list" value="ordered">List </button>
-                                    <button class="ql-list" value="bullet"> </button>
-                                    <button class="ql-indent" value="-1"> </button>
-                                    <button class="ql-indent" value="+1"></button>
-                                  </span>
-                                  <span class="ql-formats">
-                                    <button class="ql-link"></button>
-                                    <button class="ql-image"></button>
-                                    <button class="ql-video"></button>
-                                  </span>
-                                </div>
-                                <div id="editor2"></div>
-                              </div>
-                              <p class="f-light">Silahkan mengisi deskripsi produk di kotak ini.</p>
+                              <input class="form-control" id="productTitle1" name="name" type="text" required>
                             </div>
 
+                            <label class="form-label col-12 m-0" for="productTitle1">Deskripsi Produk <span
+                                class="txt-danger">*</span></label>
+                            <div class="col-12 custom-input">
+                              <textarea class="form-control" id="productTitle1" name="description" rows="4"
+                                required></textarea>
+                            </div>
+                            <!-- Upload Gambar Produk -->
                             <div class="card mb-3">
                               <div class="card-body">
                                 <div class="sidebar-body">
                                   <div class="product-upload">
-                                    <p>Product Image </p>
+                                    <p>Product Image</p>
                                     <div class="dropzone dropzone-light" id="multiFileUploadA" action="/upload.php">
                                       <div class="dz-message needsclick">
                                         <svg>
                                           <use href="../assets/svg/icon-sprite.svg#file-upload"></use>
                                         </svg>
-                                        <h6>Drag your image here, or <a class="txt-primary" href="#!">browser</a></h6>
+                                        <h6>Drag your image here, or <a class="txt-primary" href="#!">browse</a></h6>
                                         <span class="note needsclick">SVG, PNG, JPG or GIF</span>
                                       </div>
                                     </div>
@@ -290,6 +271,40 @@
                               </div>
                             </div>
 
+                            <?php
+                            require_once '../RequestAPI/tokopedia-get-all-category.php';
+
+                            $categories = getAllCategories();
+
+                            /**
+                             * 
+                             * @param array $categories -
+                             * @return string -
+                             */
+                            function generateCategoryOptions($categories)
+                            {
+                              $html = '';
+                              foreach ($categories as $category) {
+                                $html .= "<optgroup label='{$category['name']}'>";
+
+                                if (!empty($category['child'])) {
+                                  foreach ($category['child'] as $subcategory) {
+                                    $html .= "<option value='{$subcategory['id']}'>{$subcategory['name']}</option>";
+
+                                    if (!empty($subcategory['child'])) {
+                                      foreach ($subcategory['child'] as $subSubcategory) {
+                                        $html .= "<option value='{$subSubcategory['id']}'> &nbsp;&nbsp; {$subSubcategory['name']}</option>";
+                                      }
+                                    }
+                                  }
+                                }
+
+                                $html .= "</optgroup>";
+                              }
+                              return $html;
+                            }
+                            ?>
+
                             <div class="card mb-3">
                               <div class="card-body">
                                 <div class="sidebar-body">
@@ -299,75 +314,23 @@
                                         <div class="col-sm-4">
                                           <div class="row g-2">
                                             <div class="col-12">
-                                              <label class="form-label m-0" for="validationDefault04">Add
-                                                Category</label>
-                                            </div>
-                                            <div class="col-12">
-                                              <select class="form-select" id="validationDefault04" required="">
-                                                <option selected="" value="">Toys & games</option>
-                                                <option>Sportswear </option>
-                                                <option>Jewellery </option>
-                                                <option>Furniture and Decor</option>
-                                                <option>Health, Personal Care, and Beauty</option>
-                                                <option>Auto and Parts </option>
-                                                <option>Baby Care Products</option>
-                                              </select>
-                                              <p class="f-light">A product can be added to a category</p>
-                                            </div>
-                                          </div>
-                                        </div>
-                                        <div class="col-sm-4">
-                                          <div class="row g-2">
-                                            <div class="col-12">
                                               <label class="form-label m-0" for="categoryDropdown">Add Category</label>
                                             </div>
                                             <div class="col-12">
-                                              <select class="form-select" id="categoryDropdown" required="">
-                                                <optgroup label="Toys & Games">
-                                                  <option value="Toy Cars">Toy Cars</option>
-                                                  <option value="Puzzles">Puzzles</option>
-                                                  <option value="Board Games">Board Games</option>
-                                                </optgroup>
-                                                <optgroup label="Sportswear">
-                                                  <option value="Running Shoes">Running Shoes</option>
-                                                  <option value="Fitness Wear">Fitness Wear</option>
-                                                  <option value="Swimwear">Swimwear</option>
-                                                </optgroup>
-                                                <optgroup label="Jewellery">
-                                                  <option value="Necklaces">Necklaces</option>
-                                                  <option value="Earrings">Earrings</option>
-                                                  <option value="Rings">Rings</option>
-                                                </optgroup>
+                                              <select class="form-select" id="categoryDropdown" name="category_id"
+                                                required>
+                                                <?php
+                                                if (!empty($categories)) {
+                                                  echo generateCategoryOptions($categories);
+                                                } else {
+                                                  echo '<option value="">No categories available</option>';
+                                                }
+                                                ?>
                                               </select>
                                               <p class="f-light">A product can be added to a category</p>
                                             </div>
                                           </div>
                                         </div>
-                                        <div class="col-sm-4">
-                                          <div class="row g-2">
-                                            <div class="col-12">
-                                              <label class="form-label m-0" for="validationDefault04">Add
-                                                Category</label>
-                                            </div>
-                                            <div class="col-12">
-                                              <select class="form-select" id="validationDefault04" required="">
-                                                <option selected="" value="">Toys & games</option>
-                                                <option>Sportswear </option>
-                                                <option>Jewellery </option>
-                                                <option>Furniture and Decor</option>
-                                                <option>Health, Personal Care, and Beauty</option>
-                                                <option>Auto and Parts </option>
-                                                <option>Baby Care Products</option>
-                                              </select>
-                                              <p class="f-light">A product can be added to a category</p>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <div class="col-12">
-                                      <div class="row g-3">
-                                        <!-- Additional fields can be added here -->
                                       </div>
                                     </div>
                                   </div>
@@ -375,6 +338,7 @@
                               </div>
                             </div>
 
+                            <!-- Harga dan PPN -->
                             <div class="card">
                               <div class="card-body">
                                 <div class="sidebar-body">
@@ -382,12 +346,14 @@
                                     <div class="col-sm-4">
                                       <label class="form-label" for="initialCost">Initial cost <span
                                           class="txt-danger">*</span></label>
-                                      <input class="form-control" id="initialCost" type="number" required>
+                                      <input class="form-control" id="initialCost" name="initial_cost" type="number"
+                                        required>
                                     </div>
                                     <div class="col-sm-4">
                                       <label class="form-label" for="sellingPrice">Selling price <span
                                           class="txt-danger">*</span></label>
-                                      <input class="form-control" id="sellingPrice" type="number" required>
+                                      <input class="form-control" id="sellingPrice" name="selling_price" type="number"
+                                        required>
                                     </div>
                                     <div class="col-sm-4">
                                       <input id="ppnCheck" type="checkbox" name="tax" value="1" onclick="withPPN()">
@@ -395,11 +361,24 @@
                                       <input class="form-control" id="usetax" name="usetax" type="text" value="-"
                                         readonly>
                                     </div>
+
+                                    <div class="col-2">
+                                      <label class="form-label m-0" for="qty1">Qty</label>
+                                      <input class="form-control" id="qty1" name="qty" type="number"
+                                        placeholder="Enter Quantity">
+                                    </div>
+
+                                    <div class="col-2">
+                                      <label class="form-label m-0" for="qty1">Weight (Gr)</label>
+                                      <input class="form-control" id="qty1" name="weight" type="number"
+                                        placeholder="Enter Weight">
+                                    </div>
                                   </div>
                                 </div>
                               </div>
                             </div>
 
+                            <!-- Komponen Produk (Opsional) -->
                             <div class="card mb-3">
                               <div class="card-body">
                                 <div class="sidebar-body">
@@ -407,24 +386,22 @@
                                   <div class="row g-lg-4 g-3" id="input-container">
                                     <div class="col-sm-5">
                                       <div class="row g-2">
-                                        <div class="col-12">
-                                          <label class="form-label m-0" for="sku1">Product ID (SKU)</label>
-                                        </div>
-                                        <div class="col-12">
-                                          <input class="form-control" id="sku1" type="text"
-                                            placeholder="Enter Product ID">
+
+                                        <label class="form-label col-12 m-0" for="productID1">SKU</label>
+                                        <div class="col-12 custom-input">
+                                          <input class="form-control" id="productID1" name="sku" type="text" required>
                                         </div>
                                       </div>
                                     </div>
                                     <div class="col-sm-5">
                                       <div class="row g-2">
-                                        <div class="col-12">
+                                        <!-- <div class="col-12">
                                           <label class="form-label m-0" for="qty1">Qty</label>
-                                        </div>
-                                        <div class="col-12">
-                                          <input class="form-control" id="qty1" type="number"
+                                        </div> -->
+                                        <!-- <div class="col-12">
+                                          <input class="form-control" id="qty1" name="qty" type="number"
                                             placeholder="Enter Quantity">
-                                        </div>
+                                        </div> -->
                                       </div>
                                     </div>
                                     <div class="col-sm-2">
@@ -435,8 +412,8 @@
                                       </div>
                                     </div>
                                   </div>
-                                  <script>
-                                    let counter = 2;
+                                  <!-- <script>
+                                    let counter = 1;
                                     const inputContainer = document.getElementById('input-container');
                                     inputContainer.addEventListener('input', function () {
                                       const inputs = inputContainer.querySelectorAll('input');
@@ -445,40 +422,39 @@
                                       });
                                       if (allFilled) {
                                         const newInput = `
-                                                <div class="input-group" id="group${counter}" style="margin-bottom: 15px;">
-                                                    <div class="col-sm-5" style="padding-right: 15px;">
-                                                        <div class="row g-2">
-                                                            <div class="col-12">
-                                                                <label class="form-label m-0" for="sku${counter}">Product ID (SKU)</label>
-                                                            </div>
-                                                            <div class="col-12">
-                                                                <input class="form-control" id="sku${counter}" type="text" placeholder="Enter Product ID" style="margin-bottom: 10px;">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-sm-5" style="padding-right: 5px;">
-                                                        <div class="row g-2">
-                                                            <div class="col-12">
-                                                                <label class="form-label m-0" for="qty${counter}">Qty</label>
-                                                            </div>
-                                                            <div class="col-12">
-                                                                <input class="form-control" id="qty${counter}" type="number" placeholder="Enter Quantity" style="margin-bottom: 10px;">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-sm-2">
-                                                        <div class="row g-2">
-                                                            <div class="col-12">
-                                                                <label></label>
-                                                            </div>
-                                                            <div class="col-12">
-                                                                <button class="btn btn-danger" onclick="removeInput('group${counter}')">Remove</button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <p><span class="txt-danger">*</span>remove input jika tidak diperlukan</p>
-                                                </div>
-                                            `;
+                                <div class="input-group" id="group${counter}" style="margin-bottom: 15px;">
+                                    <div class="col-sm-5" style="padding-right: 15px;">
+                                        <div class="row g-2">
+                                            <div class="col-12">
+                                                <label class="form-label m-0" for="sku${counter}">Product ID (SKU)</label>
+                                            </div>
+                                            <div class="col-12">
+                                                <input class="form-control" id="sku${counter}" name="components[${counter}][sku]" type="text" placeholder="Enter Product ID">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-5" style="padding-right: 5px;">
+                                        <div class="row g-2">
+                                            <div class="col-12">
+                                                <label class="form-label m-0" for="qty${counter}">Qty</label>
+                                            </div>
+                                            <div class="col-12">
+                                                <input class="form-control" id="qty${counter}" name="components[${counter}][qty]" type="number" placeholder="Enter Quantity">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <div class="row g-2">
+                                            <div class="col-12">
+                                                <label></label>
+                                            </div>
+                                            <div class="col-12">
+                                                <button class="btn btn-danger" onclick="removeInput('group${counter}')">Remove</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
                                         inputContainer.insertAdjacentHTML('beforeend', newInput);
                                         counter++;
                                       }
@@ -489,31 +465,32 @@
                                         inputGroup.remove();
                                       }
                                     }
-                                  </script>
+                                  </script> -->
                                 </div>
                               </div>
                             </div>
 
+                            <!-- Platform Pilihan (Tokopedia, Shopee, Tiktok) -->
                             <div class="col-xl-12 col-sm-12 order-xl-0 order-sm-1">
                               <div class="card-wrapper border rounded-3 h-100 checkbox-checked">
-                                <h6 class="sub-title">Icon Checkbox </h6>
+                                <h6 class="sub-title">Icon Checkbox</h6>
                                 <div class="form-check checkbox checkbox-primary ps-0 main-icon-checkbox">
                                   <ul class="checkbox-wrapper">
                                     <li>
                                       <input class="form-check-input checkbox-shadow" id="checkbox-icon"
-                                        type="checkbox">
+                                        name="platform[]" type="checkbox" value="Tokopedia">
                                       <label class="form-check-label" for="checkbox-icon"><i
                                           class="fa fa-sliders"></i><span>Tokopedia</span></label>
                                     </li>
                                     <li>
                                       <input class="form-check-input checkbox-shadow" id="checkbox-icon1"
-                                        type="checkbox" checked="">
+                                        name="platform[]" type="checkbox" value="Shopee" disabled>
                                       <label class="form-check-label" for="checkbox-icon1"><i
                                           class="fa fa-user"></i><span>Shopee</span></label>
                                     </li>
                                     <li>
                                       <input class="form-check-input checkbox-shadow" id="checkbox-icon2"
-                                        type="checkbox">
+                                        name="platform[]" type="checkbox" value="Tiktok" disabled>
                                       <label class="form-check-label" for="checkbox-icon2"><i
                                           class="fa fa-tags"></i><span>Tiktok</span></label>
                                     </li>
@@ -522,13 +499,12 @@
                               </div>
                             </div>
 
-                            <br>
+                            <!-- Tombol Submit dan Cancel -->
                             <div class="card-footer">
-                              <button class="btn btn-light" type="button" onclick="window.history.back();">Cancel
-                              </button>
+                              <button class="btn btn-light" type="button"
+                                onclick="window.history.back();">Cancel</button>
                               <button class="btn btn-primary m-r-15" type="submit">Submit</button>
                             </div>
-                            <br>
                           </form> <!-- End of single form tag -->
                         </div>
                       </div>

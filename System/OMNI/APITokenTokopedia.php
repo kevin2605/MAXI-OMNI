@@ -7,7 +7,7 @@ class APITokenTokopedia
 
     public function __construct()
     {
-        $this->token = "Bearer c:cie6aueR7y_Dj-Gn4EMXQ";
+        $this->token = "Bearer c:0W7vQEycRKiAF4wnBXZBdA";
         $this->fs_id = 19044;
         $this->shop_ids = [17971369];
     }
